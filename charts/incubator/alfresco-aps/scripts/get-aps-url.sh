@@ -18,8 +18,8 @@ CONTEXT=$(kubectl config current-context)
 if [[ $CONTEXT == "minikube" ]] ; then
     IP=$(minikube ip)
     PORT=$(kubectl get service $RELEASE $NAMESPACE -o jsonpath={.spec.ports[0].nodePort})
-    echo "http://$IP:$PORT/aps/activiti-app"
+    echo "http://$IP:$PORT/activiti-app"
 else
     DNSNAME=$(kubectl get services $RELEASE $NAMESPACE -o jsonpath={.status.loadBalancer.ingress[0].hostname})
-    echo "http://$DNSNAME/aps/activiti-app"
+    echo "http://$DNSNAME/activiti-app"
 fi

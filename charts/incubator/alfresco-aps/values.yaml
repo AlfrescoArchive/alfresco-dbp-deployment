@@ -5,8 +5,8 @@ replicaCount: 1
 registryPullSecrets: quay-registry-secret
 
 image:
-  repository: quay.io/alfresco-aps
-  tag: 1.8.0
+  repository: docker-internal.alfresco.com/alfresco/process-services-ci
+  tag: "dev-1.x-37"
   pullPolicy: IfNotPresent
   internalPort: 8080
 service:

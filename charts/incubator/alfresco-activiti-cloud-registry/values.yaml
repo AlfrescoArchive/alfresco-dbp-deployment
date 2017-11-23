@@ -2,7 +2,7 @@ replicaCount: 1
 image:
   repository: activiti/activiti-cloud-registry
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 service:
   name: activiti-cloud-registry
   type: NodePort

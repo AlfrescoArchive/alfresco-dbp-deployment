@@ -2,7 +2,7 @@ replicaCount: 1
 image:
   repository: activiti/activiti-cloud-sso-idm
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 service:
   name: activiti-sso
   type: NodePort

@@ -1,0 +1,20 @@
+# Default values for Alfresco Process Services.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+registryPullSecrets: quay-registry-secret
+
+alfresco-aps:
+  nginx-ingress:
+    enabled: false
+alfresco-activiti-cloud-registry:
+  nginx-ingress:
+    enabled: false
+alfresco-activiti-cloud-gateway:
+  keycloakURL: "http://192.168.99.101:32766/auth/"
+  eurekaURL: "http://192.168.99.101:32766/registry"
+  rabbitmqReleaseName: "illocutionary-fish-rabbitmq"
+
+# Global:
+#   nginx-ingress:
+#     enabled: false

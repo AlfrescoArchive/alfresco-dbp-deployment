@@ -1,0 +1,11 @@
+dependencies:
+  - name: alfresco-aps
+    version: ^0.1.0
+  - name: activiti-sso
+    version: ^0.1.0
+  - name: alfresco-activiti-cloud-registry
+    version: ^0.1.0
+  - name: alfresco-activiti-cloud-gateway
+    version: ^0.1.0
+  - name: system_share
+    version: ^0.1.0

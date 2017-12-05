@@ -1,0 +1,1 @@
+Place your simple module JAR files in this folder and they'll be deployed within the container.

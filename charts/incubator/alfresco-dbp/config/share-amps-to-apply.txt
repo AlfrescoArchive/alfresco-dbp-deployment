@@ -1,0 +1,1 @@
+https://artifacts.alfresco.com/nexus/service/local/repositories/enterprise-releases/content/org/alfresco/alfresco-rm-enterprise-share/2.5.1/alfresco-rm-enterprise-share-2.5.1.amp

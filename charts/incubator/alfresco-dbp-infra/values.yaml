@@ -1,0 +1,6 @@
+rabbitmq:
+  persistence:
+    size: 10Gi
+volume_nfs:
+  nfs:
+    server: fs-d660549f.efs.us-east-1.amazonaws.com

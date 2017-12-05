@@ -1,0 +1,15 @@
+replicaCount: 1
+image:
+  repository: activiti/activiti-cloud-gateway
+  tag: latest
+  pullPolicy: Always
+service:
+  name: activiti-cloud-gateway
+  type: NodePort
+  externalPort: 8080
+  internalPort: 8080
+ingress:
+  enable: false
+keycloakURL:
+eurekaURL:
+rabbitmqReleaseName:

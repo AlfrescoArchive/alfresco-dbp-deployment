@@ -16,3 +16,8 @@ service:
   externalPort: 80
 ingress:
   path: /activiti-app
+alfresco-aps:
+  nginx-ingress:
+    enabled: true
+postgresql:
+  nameOverride: postgresql-aps

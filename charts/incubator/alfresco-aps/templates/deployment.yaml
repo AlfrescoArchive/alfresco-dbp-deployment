@@ -29,7 +29,7 @@ spec:
             - name: ACTIVITI_DATASOURCE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Release.Name }}-postgresql
+                  name: {{ .Release.Name }}-postgresql-aps
                   key: postgres-password
             - name: ACTIVITI_DATASOURCE_USERNAME
               value: postgres
@@ -38,7 +38,7 @@ spec:
             - name: ACTIVITI_HIBERNATE_DIALECT
               value: org.hibernate.dialect.PostgreSQLDialect
             - name: ACTIVITI_DATASOURCE_URL
-              value: 'jdbc:postgresql://{{ .Release.Name }}-postgresql/postgres?characterEncoding=UTF-8'
+              value: 'jdbc:postgresql://{{ .Release.Name }}-postgresql-aps/postgres?characterEncoding=UTF-8'
           ports:
             - containerPort: {{ .Values.image.internalPort }}
           resources:

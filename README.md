@@ -1,12 +1,16 @@
 # alfresco-dbp-deployment
 
-setup instructions:
+Setup instructions:
 
-helm init
-export DESIREDNAMESPACE=svidrascu
+1. helm init
+2. export DESIREDNAMESPACE=svidrascu
 
-cd alfresco-dbp-deployment/charts/incubator
+cd charts/incubator
+
+Create your registry secrets
 kubectl create -f secrets.yaml --namespace $DESIREDNAMESPACE
+
+deploy infrastructure
 helm install alfresco-dbp-infra --namespace $DESIREDNAMESPACE
 
 - get the nginx-ingress-controller port associated to the 80 port and export it as a variable:
@@ -14,9 +18,9 @@ example: handy-chinchilla-nginx-ingress-controller       10.0.0.8    <pending>  
 in our case 32260
 export INFRAPORT=80
 - get minikube ip and set it as a variable:
-export ELBADDRESS=http://a40d9f9f0d9b611e7a6910a8fa36acdf-920357989.us-east-1.elb.amazonaws.com
+export ELBADDRESS=a3a1e2125d9ba11e7a6910a8fa36acdf-1722764392.us-east-1.elb.amazonaws.com
  - get the release name and set it as a variable
-export INFRARELEASE=brown-racoon
+export INFRARELEASE=sappy-chimp
 
 export LDAP_USERNAME=your username
 export LDAP_PASSWORD=your pass

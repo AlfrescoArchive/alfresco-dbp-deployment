@@ -44,7 +44,7 @@ export INFRAPORT=31923
 export ELBADDRESS=$(minikube ip)
 
 #for AWS
-export ELBADDRESS=$(kubectl get services $INFRARELEASE $DESIREDNAMESPACE -o jsonpath={.status.loadBalancer.ingress[0].hostname})
+export ELBADDRESS=$(kubectl get services $INFRARELEASE --namespace=$DESIREDNAMESPACE -o jsonpath={.status.loadBalancer.ingress[0].hostname})
 ```
 
 8. Set your auth credentials, will be used for downloading amps and setting registries for acs
@@ -72,7 +72,7 @@ Create a EFS storage on aws and make sure it is in the same VPC as your cluster 
 11. Deploy the dbp
 
   ```bash
-helm install alfresco-dbp --set alfresco-activiti-cloud-gateway.keycloakURL="http://$ELBADDRESS:$INFRAPORT/auth/" --set alfresco-activiti-cloud-gateway.eurekaURL="http://$ELBADDRESS:$INFRAPORT/registry/" --set alfresco-activiti-cloud-gateway.rabbitmqReleaseName="$INFRARELEASE-rabbitmq" --namespace=$DESIREDNAMESPACE --set volume_nfs.nfs.server: "fs-d660549f.efs.us-east-1.amazonaws.com"
+helm install alfresco-dbp --set alfresco-activiti-cloud-gateway.keycloakURL="http://$ELBADDRESS:$INFRAPORT/auth/" --set alfresco-activiti-cloud-gateway.eurekaURL="http://$ELBADDRESS:$INFRAPORT/registry/" --set alfresco-activiti-cloud-gateway.rabbitmqReleaseName="$INFRARELEASE-rabbitmq" --namespace=$DESIREDNAMESPACE --set volume_nfs.nfs.server="fs-d660549f.efs.us-east-1.amazonaws.com"
   ```
 
 12. Checkout the status of your deployment:

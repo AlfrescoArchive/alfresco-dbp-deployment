@@ -1,0 +1,34 @@
+{{- if and .Values.persistence.enabled (not .Values.persistence.existingClaim) }}
+{{- if eq .Values.persistence.volumeEnv "aws" -}}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: alfresco-volume
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: "{{ .Values.persistence.nfs.server }}"
+    path: "/"
+  storageClassName: efs
+---
+{{- end -}}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: alfresco-volume-claim
+spec:
+  accessModes:
+  {{ if eq .Values.persistence.volumeEnv "aws" }}
+    - ReadWriteMany
+  storageClassName: efs
+  volumeName: alfresco-volume
+  {{ else }}
+    - ReadWriteOnce
+  {{ end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.size | quote }}
+{{- end }}

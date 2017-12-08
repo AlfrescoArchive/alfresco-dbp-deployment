@@ -1,6 +1,10 @@
 rabbitmq:
   persistence:
     size: 10Gi
-volume_nfs:
+
+persistence:
+  enabled: true
+  size: 3Gi
+  volumeEnv: minikube #Choose between aws and minikube
   nfs:
-    server: fs-d660549f.efs.us-east-1.amazonaws.com
+    server: fs-6570472c.efs.us-east-1.amazonaws.com #For aws you will need to specify the EFS server

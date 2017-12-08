@@ -14,7 +14,9 @@ alfresco-activiti-cloud-gateway:
   keycloakURL: "http://192.168.99.101:32766/auth/"
   eurekaURL: "http://192.168.99.101:32766/registry"
   rabbitmqReleaseName: "illocutionary-fish-rabbitmq"
-
+activiti-sso:
+  image:
+    tag: 7-201710-EA
 # Global:
 #   nginx-ingress:
 #     enabled: false

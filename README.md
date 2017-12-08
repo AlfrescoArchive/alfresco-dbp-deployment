@@ -12,19 +12,32 @@ export DESIREDNAMESPACE=svidrascu
 ```bash
 kubectl create -f secrets.yaml --namespace $DESIREDNAMESPACE
 ```
-4. Deploy infrastructure
+
+4. NOTE! ONLY FOR AWS!   
+
+Create a EFS storage on aws and make sure it is in the same VPC as your cluster is. Save the name of the server ex: 
+```bash
+export NFSSERVER=fs-d660549f.efs.us-east-1.amazonaws.com
+```
+
+5. Deploy infrastructure
 
 ```bash
+#ON AWS
+helm install alfresco-dbp-infra --set persistence.volumeEnv=aws --set persistence.nfs.server="$NFSSERVER" --namespace $DESIREDNAMESPACE
+
+#ON MINIKUBE
 helm install alfresco-dbp-infra --namespace $DESIREDNAMESPACE
 ```
 
-5. Get the Infra release name and set it as a variable
+6. Wait for the infra release to get deployed (when running helm status infrarelease, all your pods should be available 1/1).
+Get the Infra release name from the previous command and set it as a variable
 
   ```bash
 export INFRARELEASE=enervated-deer
   ```
 
-6. NOTE! ONLY FOR MINIKUBE   
+7. NOTE! ONLY FOR MINIKUBE   
 
 On AWS you must not add a port to the the command ran at point 11!    
 
@@ -37,7 +50,7 @@ You will find this port when deploying the infra, in the result message from hel
 export INFRAPORT=31923
 ```
 
-7. get minikube or elb ip and set it as a variable, will be used in step 11:
+8. get minikube or elb ip and set it as a variable, will be used in step 11:
 
 ```Bash
 #for minikube
@@ -47,7 +60,7 @@ export ELBADDRESS=$(minikube ip)
 export ELBADDRESS=$(kubectl get services $INFRARELEASE --namespace=$DESIREDNAMESPACE -o jsonpath={.status.loadBalancer.ingress[0].hostname})
 ```
 
-8. Set your auth credentials, will be used for downloading amps and setting registries for acs
+9. Set your auth credentials, will be used for downloading amps and setting registries for acs
 
   ```bash
   export LDAP_USERNAME=your username 
@@ -55,7 +68,7 @@ export ELBADDRESS=$(kubectl get services $INFRARELEASE --namespace=$DESIREDNAMES
   export EMAIL=your email
   ```
   
-9. Create Secrets and Config Maps for ACS
+10. Create Secrets and Config Maps for ACS
 
   ```bash
   kubectl create secret docker-registry docker-internal-secret --docker-server=docker-internal.alfresco.com --docker-username=$LDAP_USERNAME --docker-password=$LDAP_PASSWORD --docker-email=$EMAIL --namespace=$DESIREDNAMESPACE
@@ -65,14 +78,10 @@ export ELBADDRESS=$(kubectl get services $INFRARELEASE --namespace=$DESIREDNAMES
   kubectl create configmap repo-amps --from-file=urls=alfresco-dbp/config/repository-amps-to-apply.txt --namespace=$DESIREDNAMESPACE
   ```
 
-10. NOTE! ONLY FOR AWS!   
-
-Create a EFS storage on aws and make sure it is in the same VPC as your cluster is. Save the name of the server ex: fs-d660549f.efs.us-east-1.amazonaws.com
-
 11. Deploy the dbp
 
   ```bash
-helm install alfresco-dbp --set alfresco-activiti-cloud-gateway.keycloakURL="http://$ELBADDRESS:$INFRAPORT/auth/" --set alfresco-activiti-cloud-gateway.eurekaURL="http://$ELBADDRESS:$INFRAPORT/registry/" --set alfresco-activiti-cloud-gateway.rabbitmqReleaseName="$INFRARELEASE-rabbitmq" --namespace=$DESIREDNAMESPACE --set volume_nfs.nfs.server="fs-d660549f.efs.us-east-1.amazonaws.com"
+helm install alfresco-dbp --set alfresco-activiti-cloud-gateway.keycloakURL="http://$ELBADDRESS:$INFRAPORT/auth/" --set alfresco-activiti-cloud-gateway.eurekaURL="http://$ELBADDRESS:$INFRAPORT/registry/" --set alfresco-activiti-cloud-gateway.rabbitmqReleaseName="$INFRARELEASE-rabbitmq" --namespace=$DESIREDNAMESPACE
   ```
 
 12. Checkout the status of your deployment:

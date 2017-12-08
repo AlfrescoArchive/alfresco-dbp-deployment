@@ -2,6 +2,13 @@
 
 Setup instructions:
 
+@Prerequisites for Minikube:
+Minikube machine must have 12 gigs of memory for the dbp deployment to work.   
+Use this command to create it:
+```bash
+minikube start --memory 12000
+```
+
 1. helm init
 
 2. Set your desired namespace as a variable. This will be used in further steps.

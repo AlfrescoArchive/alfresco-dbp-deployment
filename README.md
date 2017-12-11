@@ -30,7 +30,6 @@ export NFSSERVER=fs-d660549f.efs.us-east-1.amazonaws.com
 ```
 
 5. Deploy infrastructure
-
 ```bash
 cd charts/incubator
 
@@ -96,4 +95,6 @@ helm install alfresco-dbp --set alfresco-activiti-cloud-gateway.keycloakURL="htt
 
 12. Checkout the status of your deployment:
 
+  ```bash
 helm status Your Release Name
+  ```

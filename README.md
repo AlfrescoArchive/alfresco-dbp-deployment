@@ -13,18 +13,18 @@ A VPC with 5 nodes. Each node should be a m4.xlarge EC2 instance.
 
 1. helm init
 
-2. Set your desired namespace as a variable. This will be used in further steps.
+2. Create and Set your desired namespace as a variable. This will be used in further steps.
 ```bash
+kubectl create namespace svidrascu
 export DESIREDNAMESPACE=svidrascu
 ```
-3. Create your registry secrets
-```bash
-kubectl create -f secrets.yaml --namespace $DESIREDNAMESPACE
-```
+
+3. Create your registry secrets after adding the base64 version of your docker config file in the secrets.yaml.
+More information [here](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/examples/README.md#prerequisites)
 
 4. NOTE! ONLY FOR AWS!   
 
-Create a EFS storage on aws and make sure it is in the same VPC as your cluster is. Save the name of the server ex: 
+Create a EFS storage on aws and make sure it is in the same VPC as your cluster is. Make sure you open inbound traffic in the security group to allow NFS traffic. Save the name of the server ex: 
 ```bash
 export NFSSERVER=fs-d660549f.efs.us-east-1.amazonaws.com
 ```
@@ -32,15 +32,17 @@ export NFSSERVER=fs-d660549f.efs.us-east-1.amazonaws.com
 5. Deploy infrastructure
 
 ```bash
+cd charts/incubator
+
 #ON AWS
-helm install alfresco-dbp-infra --set persistence.volumeEnv=aws --set persistence.nfs.server="$NFSSERVER" --namespace $DESIREDNAMESPACE
+helm install alfresco-dbp-infrastructure --set persistence.volumeEnv=aws --set persistence.nfs.server="$NFSSERVER" --namespace $DESIREDNAMESPACE
 
 #ON MINIKUBE
-helm install alfresco-dbp-infra --namespace $DESIREDNAMESPACE
+helm install alfresco-dbp-infrastructure --namespace $DESIREDNAMESPACE
 ```
 
-6. Wait for the infra release to get deployed (when running helm status infrarelease, all your pods should be available 1/1).
-Get the Infra release name from the previous command and set it as a variable
+6. Wait for the infrastructure release to get deployed (when running helm status infrastructure release, all your pods should be available 1/1).
+Get the Infrastructure release name from the previous command and set it as a variable
 
   ```bash
 export INFRARELEASE=enervated-deer
@@ -48,15 +50,10 @@ export INFRARELEASE=enervated-deer
 
 7. NOTE! ONLY FOR MINIKUBE   
 
-On AWS you must not add a port to the the command ran at point 11!    
-
-Get the nginx-ingress-controller port associated to the 80 port and export it as a variable:   
-example: handy-chinchilla-nginx-ingress-controller       10.0.0.8    <pending>    80:32260/TCP,443:32301/TCP   
-in our case 32260   
-You will find this port when deploying the infra, in the result message from helm.
+Get the nginx-ingress-controller port for the infrastructure:   
 
 ```bash
-export INFRAPORT=31923
+export INFRAPORT=$(kubectl get service $INFRARELEASE-nginx-ingress-controller -o jsonpath={.spec.ports[0].nodePort})
 ```
 
 8. get minikube or elb ip and set it as a variable, will be used in step 11:

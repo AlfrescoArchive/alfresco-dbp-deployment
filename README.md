@@ -64,7 +64,7 @@ export INFRAPORT=31923
 export ELBADDRESS=$(minikube ip)
 
 #for AWS
-export ELBADDRESS=$(kubectl get services $INFRARELEASE --namespace=$DESIREDNAMESPACE -o jsonpath={.status.loadBalancer.ingress[0].hostname})
+export ELBADDRESS=$(kubectl get services $INFRARELEASE-nginx-ingress-controller --namespace=$DESIREDNAMESPACE -o jsonpath={.status.loadBalancer.ingress[0].hostname})
 ```
 
 9. Set your auth credentials, will be used for downloading amps and setting registries for acs
@@ -88,7 +88,11 @@ export ELBADDRESS=$(kubectl get services $INFRARELEASE --namespace=$DESIREDNAMES
 11. Deploy the dbp
 
   ```bash
+#On MINIKUBE
 helm install alfresco-dbp --set alfresco-activiti-cloud-gateway.keycloakURL="http://$ELBADDRESS:$INFRAPORT/auth/" --set alfresco-activiti-cloud-gateway.eurekaURL="http://$ELBADDRESS:$INFRAPORT/registry/" --set alfresco-activiti-cloud-gateway.rabbitmqReleaseName="$INFRARELEASE-rabbitmq" --namespace=$DESIREDNAMESPACE
+
+#On AWS
+helm install alfresco-dbp --set alfresco-activiti-cloud-gateway.keycloakURL="http://$ELBADDRESS/auth/" --set alfresco-activiti-cloud-gateway.eurekaURL="http://$ELBADDRESS/registry/" --set alfresco-activiti-cloud-gateway.rabbitmqReleaseName="$INFRARELEASE-rabbitmq" --namespace=$DESIREDNAMESPACE
   ```
 
 12. Checkout the status of your deployment:

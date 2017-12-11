@@ -8,6 +8,8 @@ Use this command to create it:
 ```bash
 minikube start --memory 12000
 ```
+@Prerequisites for AWS:
+A VPC with 5 nodes. Each node should be a m4.xlarge EC2 instance.
 
 1. helm init
 

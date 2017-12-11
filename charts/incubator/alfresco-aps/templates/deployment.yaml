@@ -1,0 +1,49 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "aps.fullname" . }}
+  labels:
+    app: {{ template "aps.fullname" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "aps.fullname" . }}
+        release: {{ .Release.Name }}
+    spec:
+      imagePullSecrets:
+        - name: {{ .Values.registryPullSecrets }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: ACTIVITI_CORS_ENABLED
+              value: 'true'
+            - name: ACTIVITI_CSRF_DISABLED
+              value: 'true'
+            - name: ACTIVITI_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-postgresql-aps
+                  key: postgres-password
+            - name: ACTIVITI_DATASOURCE_USERNAME
+              value: postgres
+            - name: ACTIVITI_DATASOURCE_DRIVER
+              value: org.postgresql.Driver
+            - name: ACTIVITI_HIBERNATE_DIALECT
+              value: org.hibernate.dialect.PostgreSQLDialect
+            - name: ACTIVITI_DATASOURCE_URL
+              value: 'jdbc:postgresql://{{ .Release.Name }}-postgresql-aps/postgres?characterEncoding=UTF-8'
+          ports:
+            - containerPort: {{ .Values.image.internalPort }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+    {{- end }}

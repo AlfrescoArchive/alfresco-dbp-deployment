@@ -1,0 +1,6 @@
+apiVersion: v1
+description: A Helm chart for Alfresco Activiti Cloud Gateway
+name: alfresco-activiti-cloud-gateway
+version: 0.1.0
+maintainers:
+  - name: Alfresco 

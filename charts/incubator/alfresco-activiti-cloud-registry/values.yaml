@@ -1,0 +1,13 @@
+replicaCount: 1
+image:
+  repository: activiti/activiti-cloud-registry
+  tag: latest
+  pullPolicy: Always
+service:
+  name: activiti-cloud-registry
+  type: NodePort
+  externalPort: 8761
+  internalPort: 8761
+ingress:
+  enable: true
+  path: /registry/*

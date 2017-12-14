@@ -13,6 +13,13 @@ minikube start --memory 12000
 ```
 * AWS: A VPC and cluster with 5 nodes. Each node should be a m4.xlarge EC2 instance.
 
+### Helm Tiller
+
+Initialize the Helm Tiller:
+```bash
+helm init
+```
+
 ### K8s Cluster Namespace
 
 As mentioned as part of the Anaxes Shipyard guidelines, you should deploy into a separate namespace in the cluster to avoid conflicts:
@@ -28,13 +35,6 @@ This environment variable will be used in the deployment steps.
 See the Anaxes Shipyard documentation on [secrets](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/SECRETS.md).
 
 Be sure to use the same namespace as above.
-
-### Helm Tiller
-
-Initialize the Helm Tiller:
-```bash
-helm init
-```
 
 ## Deployment
 
@@ -67,7 +67,6 @@ helm status $INFRARELEASE
 ```
 
 5. Get the nginx-ingress-controller port for the infrastructure (**NOTE! ONLY FOR MINIKUBE**):
-
 ```bash
 export INFRAPORT=$(kubectl get service $INFRARELEASE-nginx-ingress-controller -o jsonpath={.spec.ports[0].nodePort})
 ```

@@ -38,14 +38,14 @@ Be sure to use the same namespace as above.
 
 ## Deployment
 
-1. EFS Storage (**NOTE! ONLY FOR AWS!**)
+### 1. EFS Storage (**NOTE! ONLY FOR AWS!**)
 
 Create a EFS storage on AWS and make sure it is in the same VPC as your cluster. Make sure you open inbound traffic in the security group to allow NFS traffic. Save the name of the server ex: 
 ```bash
 export NFSSERVER=fs-d660549f.efs.us-east-1.amazonaws.com
 ```
 
-2. Deploy the infrastructure charts:
+### 2. Deploy the infrastructure charts:
 ```bash
 cd charts/incubator
 
@@ -56,22 +56,22 @@ helm install alfresco-dbp-infrastructure --namespace $DESIREDNAMESPACE
 helm install alfresco-dbp-infrastructure --namespace $DESIREDNAMESPACE --set persistence.volumeEnv=aws --set persistence.nfs.server="$NFSSERVER"
 ```
 
-3. Get the infrastructure release name from the previous command and set it as a variable:
+### 3. Get the infrastructure release name from the previous command and set it as a variable:
 ```bash
 export INFRARELEASE=enervated-deer
 ```
 
-4. Wait for the infrastructure release to get deployed.  When checking status all your pods should be AVAILABLE 1/1):
+### 4. Wait for the infrastructure release to get deployed.  When checking status all your pods should be AVAILABLE 1/1):
 ```bash
 helm status $INFRARELEASE
 ```
 
-5. Get the nginx-ingress-controller port for the infrastructure (**NOTE! ONLY FOR MINIKUBE**):
+### 5. Get the nginx-ingress-controller port for the infrastructure (**NOTE! ONLY FOR MINIKUBE**):
 ```bash
 export INFRAPORT=$(kubectl get service $INFRARELEASE-nginx-ingress-controller -o jsonpath={.spec.ports[0].nodePort})
 ```
 
-6. Get Minikube or ELB IP and set it as a variable for future use:
+### 6. Get Minikube or ELB IP and set it as a variable for future use:
 
 ```bash
 #ON MINIKUBE
@@ -81,7 +81,7 @@ export ELBADDRESS=$(minikube ip)
 export ELBADDRESS=$(kubectl get services $INFRARELEASE-nginx-ingress-controller --namespace=$DESIREDNAMESPACE -o jsonpath={.status.loadBalancer.ingress[0].hostname})
 ```
 
-7. Set your auth credentials, will be used for downloading amps and setting registries for ACS (remember to escape any special characters):
+### 7. Set your auth credentials, will be used for downloading amps and setting registries for ACS (remember to escape any special characters):
 
 ```bash
 export LDAP_USERNAME="your username"
@@ -89,7 +89,7 @@ export LDAP_PASSWORD="your pass"
 export EMAIL="your email"
 ```
   
-8. Create Secrets and ConfigMaps for ACS
+### 8. Create Secrets and ConfigMaps for ACS
 
 ```bash
 kubectl create secret docker-registry docker-internal-secret --docker-server=docker-internal.alfresco.com --docker-username=$LDAP_USERNAME --docker-password=$LDAP_PASSWORD --docker-email=$EMAIL --namespace=$DESIREDNAMESPACE
@@ -99,23 +99,38 @@ kubectl create configmap share-amps --from-file=urls=alfresco-dbp/config/share-a
 kubectl create configmap repo-amps --from-file=urls=alfresco-dbp/config/repository-amps-to-apply.txt --namespace=$DESIREDNAMESPACE
 ```
 
-9. Deploy the DBP
+### 9. Deploy the DBP
 
-  ```bash
+```bash
 #On MINIKUBE
 helm install alfresco-dbp --set alfresco-activiti-cloud-gateway.keycloakURL="http://$ELBADDRESS:$INFRAPORT/auth/" --set alfresco-activiti-cloud-gateway.eurekaURL="http://$ELBADDRESS:$INFRAPORT/registry/" --set alfresco-activiti-cloud-gateway.rabbitmqReleaseName="$INFRARELEASE-rabbitmq" --namespace=$DESIREDNAMESPACE
 
 #On AWS
 helm install alfresco-dbp --set alfresco-activiti-cloud-gateway.keycloakURL="http://$ELBADDRESS/auth/" --set alfresco-activiti-cloud-gateway.eurekaURL="http://$ELBADDRESS/registry/" --set alfresco-activiti-cloud-gateway.rabbitmqReleaseName="$INFRARELEASE-rabbitmq" --namespace=$DESIREDNAMESPACE
-  ```
+```
 
-10. Get the DBP release name from the previous command and set it as a variable:
+### 10. Get the DBP release name from the previous command and set it as a variable:
 ```bash
 export DBPRELEASE=littering-lizzard
 ```
 
-12. Checkout the status of your deployment:
+### 12. Checkout the status of your DBP deployment:
 
-  ```bash
+```bash
+helm status $INFRARELEASE
 helm status $DBPRELEASE
-  ```
+```
+
+### 13. Teardown:
+
+```bash
+helm delete $INFRARELEASE
+helm delete $DBPRELEASE
+kubectl delete namespace $DESIREDNAMESPACE
+```
+Depending on your cluster type you should be able to also delete it if you want.
+For minikube you can just run 
+```bash
+minikube delete
+```
+For more information on running and tearing down k8s environemnts, follow this [guide](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/docs/running-a-cluster.md).

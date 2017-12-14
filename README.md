@@ -1,89 +1,106 @@
-# alfresco-dbp-deployment
+# Alfresco Digital Business Platform Deployment
 
-Setup instructions:
+## Prerequisites
 
-@Prerequisites for Minikube:
-Minikube machine must have 12 gigs of memory for the dbp deployment to work.   
-Use this command to create it:
+### Kubernetes Cluster
+
+See the Anaxes Shipyard documentation on [running a cluster](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/SECRETS.md).
+
+Note the DBP resource requirements:
+* Minikube: At least 12 gigs of memory, i.e.:
 ```bash
 minikube start --memory 12000
 ```
-@Prerequisites for AWS:
-A VPC with 5 nodes. Each node should be a m4.xlarge EC2 instance.
+* AWS: A VPC and cluster with 5 nodes. Each node should be a m4.xlarge EC2 instance.
 
-1. helm init
+### K8s Cluster Namespace
 
-2. Create and Set your desired namespace as a variable. This will be used in further steps.
+As mentioned as part of the Anaxes Shipyard guidelines, you should deploy into a separate namespace in the cluster to avoid conflicts:
 ```bash
-kubectl create namespace svidrascu
-export DESIREDNAMESPACE=svidrascu
+export DESIREDNAMESPACE=example
+kubectl create namespace $DESIREDNAMESPACE
 ```
 
-3. Create your registry secrets after adding the base64 version of your docker config file in the secrets.yaml.
-More information [here](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/examples/README.md#prerequisites)
+This environment variable will be used in the deployment steps.
 
-4. NOTE! ONLY FOR AWS!   
+### Docker Registry Pull Secrets
 
-Create a EFS storage on aws and make sure it is in the same VPC as your cluster is. Make sure you open inbound traffic in the security group to allow NFS traffic. Save the name of the server ex: 
+See the Anaxes Shipyard documentation on [secrets](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/SECRETS.md).
+
+Be sure to use the same namespace as above.
+
+### Helm Tiller
+
+Initialize the Helm Tiller:
+```bash
+helm init
+```
+
+## Deployment
+
+1. EFS Storage (**NOTE! ONLY FOR AWS!**)
+
+Create a EFS storage on AWS and make sure it is in the same VPC as your cluster. Make sure you open inbound traffic in the security group to allow NFS traffic. Save the name of the server ex: 
 ```bash
 export NFSSERVER=fs-d660549f.efs.us-east-1.amazonaws.com
 ```
 
-5. Deploy infrastructure
+2. Deploy the infrastructure charts:
 ```bash
 cd charts/incubator
 
-#ON AWS
-helm install alfresco-dbp-infrastructure --set persistence.volumeEnv=aws --set persistence.nfs.server="$NFSSERVER" --namespace $DESIREDNAMESPACE
-
 #ON MINIKUBE
 helm install alfresco-dbp-infrastructure --namespace $DESIREDNAMESPACE
+
+#ON AWS
+helm install alfresco-dbp-infrastructure --namespace $DESIREDNAMESPACE --set persistence.volumeEnv=aws --set persistence.nfs.server="$NFSSERVER"
 ```
 
-6. Wait for the infrastructure release to get deployed (when running helm status infrastructure release, all your pods should be available 1/1).
-Get the Infrastructure release name from the previous command and set it as a variable
-
-  ```bash
+3. Get the infrastructure release name from the previous command and set it as a variable:
+```bash
 export INFRARELEASE=enervated-deer
-  ```
+```
 
-7. NOTE! ONLY FOR MINIKUBE   
+4. Wait for the infrastructure release to get deployed.  When checking status all your pods should be AVAILABLE 1/1):
+```bash
+helm status $INFRARELEASE
+```
 
-Get the nginx-ingress-controller port for the infrastructure:   
+5. Get the nginx-ingress-controller port for the infrastructure (**NOTE! ONLY FOR MINIKUBE**):
 
 ```bash
 export INFRAPORT=$(kubectl get service $INFRARELEASE-nginx-ingress-controller -o jsonpath={.spec.ports[0].nodePort})
 ```
 
-8. get minikube or elb ip and set it as a variable, will be used in step 11:
+6. Get Minikube or ELB IP and set it as a variable for future use:
 
-```Bash
-#for minikube
+```bash
+#ON MINIKUBE
 export ELBADDRESS=$(minikube ip)
 
-#for AWS
+#ON AWS
 export ELBADDRESS=$(kubectl get services $INFRARELEASE-nginx-ingress-controller --namespace=$DESIREDNAMESPACE -o jsonpath={.status.loadBalancer.ingress[0].hostname})
 ```
 
-9. Set your auth credentials, will be used for downloading amps and setting registries for acs
+7. Set your auth credentials, will be used for downloading amps and setting registries for ACS (remember to escape any special characters):
 
-  ```bash
-  export LDAP_USERNAME=your username 
-  export LDAP_PASSWORD=your pass
-  export EMAIL=your email
-  ```
+```bash
+export LDAP_USERNAME="your username"
+export LDAP_PASSWORD="your pass"
+export EMAIL="your email"
+```
   
-10. Create Secrets and Config Maps for ACS
+8. Create Secrets and ConfigMaps for ACS
 
-  ```bash
-  kubectl create secret docker-registry docker-internal-secret --docker-server=docker-internal.alfresco.com --docker-username=$LDAP_USERNAME --docker-password=$LDAP_PASSWORD --docker-email=$EMAIL --namespace=$DESIREDNAMESPACE
-  kubectl create secret generic ldap-credentials --from-literal=username=$LDAP_USERNAME  --from-literal=password=$LDAP_PASSWORD --namespace=$DESIREDNAMESPACE
-  kubectl create configmap agp --from-file=alfresco-dbp/config/alfresco-global.properties --namespace=$DESIREDNAMESPACE
-  kubectl create configmap share-amps --from-file=urls=alfresco-dbp/config/share-amps-to-apply.txt --namespace=$DESIREDNAMESPACE
-  kubectl create configmap repo-amps --from-file=urls=alfresco-dbp/config/repository-amps-to-apply.txt --namespace=$DESIREDNAMESPACE
-  ```
+```bash
+kubectl create secret docker-registry docker-internal-secret --docker-server=docker-internal.alfresco.com --docker-username=$LDAP_USERNAME --docker-password=$LDAP_PASSWORD --docker-email=$EMAIL --namespace=$DESIREDNAMESPACE
+kubectl create secret generic ldap-credentials --from-literal=username=$LDAP_USERNAME  --from-literal=password=$LDAP_PASSWORD --namespace=$DESIREDNAMESPACE
+kubectl create configmap agp --from-file=alfresco-dbp/config/alfresco-global.properties --namespace=$DESIREDNAMESPACE
+kubectl create configmap share-amps --from-file=urls=alfresco-dbp/config/share-amps-to-apply.txt --namespace=$DESIREDNAMESPACE
+kubectl create configmap repo-amps --from-file=urls=alfresco-dbp/config/repository-amps-to-apply.txt --namespace=$DESIREDNAMESPACE
+```
 
-11. Deploy the dbp
+9. Deploy the DBP
 
   ```bash
 #On MINIKUBE
@@ -93,8 +110,13 @@ helm install alfresco-dbp --set alfresco-activiti-cloud-gateway.keycloakURL="htt
 helm install alfresco-dbp --set alfresco-activiti-cloud-gateway.keycloakURL="http://$ELBADDRESS/auth/" --set alfresco-activiti-cloud-gateway.eurekaURL="http://$ELBADDRESS/registry/" --set alfresco-activiti-cloud-gateway.rabbitmqReleaseName="$INFRARELEASE-rabbitmq" --namespace=$DESIREDNAMESPACE
   ```
 
+10. Get the DBP release name from the previous command and set it as a variable:
+```bash
+export DBPRELEASE=littering-lizzard
+```
+
 12. Checkout the status of your deployment:
 
   ```bash
-helm status Your Release Name
+helm status $DBPRELEASE
   ```

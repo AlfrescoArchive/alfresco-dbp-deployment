@@ -11,9 +11,17 @@
     <properties>
         <alfresco.rm.repo.version>2.6.0</alfresco.rm.repo.version>
         <alfresco.rm.share.version>2.6.0</alfresco.rm.share.version>
+        <alfresco.sync.service.version>2.2-SNAPSHOT</alfresco.sync.service.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.alfresco.services.sync</groupId>
+            <artifactId>alfresco-device-sync-repo</artifactId>
+            <version>${alfresco.sync.service.version}</version>
+            <classifier>enterprise</classifier>
+            <type>amp</type>
+        </dependency>
         <dependency>
             <groupId>org.alfresco</groupId>
             <artifactId>alfresco-rm-enterprise-repo</artifactId>
@@ -45,6 +53,14 @@
                         </goals>
                         <configuration>
                             <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.alfresco.services.sync</groupId>
+                                    <artifactId>alfresco-device-sync-repo</artifactId>
+                                    <version>${alfresco.sync.service.version}</version>
+                                    <type>amp</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/amps_repo</outputDirectory>
+                                </artifactItem>
                                 <artifactItem>
                                     <groupId>org.alfresco</groupId>
                                     <artifactId>alfresco-rm-enterprise-repo</artifactId>

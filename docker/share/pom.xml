@@ -3,32 +3,16 @@
     <modelVersion>4.0.0</modelVersion>
     
     <groupId>org.alfresco</groupId>
-    <artifactId>dbp-repo-share-packaging</artifactId>
+    <artifactId>dbp-share-packaging</artifactId>
     <version>0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>Alfresco DBP Repo and Share Packaging</name>
+    <name>Alfresco DBP Share Packaging</name>
 
     <properties>
-        <alfresco.rm.repo.version>2.6.0</alfresco.rm.repo.version>
         <alfresco.rm.share.version>2.6.0</alfresco.rm.share.version>
-        <alfresco.sync.service.version>2.2-SNAPSHOT</alfresco.sync.service.version>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.alfresco.services.sync</groupId>
-            <artifactId>alfresco-device-sync-repo</artifactId>
-            <version>${alfresco.sync.service.version}</version>
-            <classifier>enterprise</classifier>
-            <type>amp</type>
-        </dependency>
-        <dependency>
-            <groupId>org.alfresco</groupId>
-            <artifactId>alfresco-rm-enterprise-repo</artifactId>
-            <version>${alfresco.rm.repo.version}</version>
-            <classifier>enterprise</classifier>
-            <type>amp</type>
-        </dependency>
         <dependency>
             <groupId>org.alfresco</groupId>
             <artifactId>alfresco-rm-share-repo</artifactId>
@@ -54,28 +38,12 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.alfresco.services.sync</groupId>
-                                    <artifactId>alfresco-device-sync-repo</artifactId>
-                                    <version>${alfresco.sync.service.version}</version>
-                                    <type>amp</type>
-                                    <overWrite>false</overWrite>
-                                    <outputDirectory>${project.build.directory}/amps_repo</outputDirectory>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.alfresco</groupId>
-                                    <artifactId>alfresco-rm-enterprise-repo</artifactId>
-                                    <version>${alfresco.rm.repo.version}</version>
-                                    <type>amp</type>
-                                    <overWrite>false</overWrite>
-                                    <outputDirectory>${project.build.directory}/amps_repo</outputDirectory>
-                                </artifactItem>
-                                <artifactItem>
                                     <groupId>org.alfresco</groupId>
                                     <artifactId>alfresco-rm-enterprise-share</artifactId>
                                     <version>${alfresco.rm.share.version}</version>
                                     <type>amp</type>
                                     <overWrite>false</overWrite>
-                                    <outputDirectory>${project.build.directory}/amps_share</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/amps</outputDirectory>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>

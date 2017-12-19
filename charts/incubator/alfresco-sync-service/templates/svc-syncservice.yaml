@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "syncservice.fullname" . }}
+  labels:
+    app: {{ template "syncservice.fullname" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.syncservice.service.type }}
+  ports:
+  - port: 9090
+    targetPort: serviceport
+    name: serviceport
+    protocol: TCP
+  selector:
+    app: {{ template "syncservice.fullname" . }}
+    release: {{ .Release.Name }}

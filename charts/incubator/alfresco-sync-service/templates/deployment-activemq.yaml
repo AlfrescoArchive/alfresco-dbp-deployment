@@ -1,0 +1,39 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "syncservice.fullname" . }}-activemq
+  labels:
+    app: {{ template "syncservice.fullname" . }}-activemq
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "syncservice.fullname" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: activemq
+        image: "{{ .Values.activemq.image.repository }}:{{ .Values.activemq.image.tag }}"
+        imagePullPolicy: {{ .Values.activemq.image.pullPolicy }}
+        env:
+        - name: ACTIVEMQ_CONFIG_MINMEMORY
+          value: "{{ .Values.activemq.image.configMinMemory }}"
+        - name: ACTIVEMQ_CONFIG_MAXMEMORY
+          value: "{{ .Values.activemq.image.configMaxMemory }}"
+        ports:
+        - name: listenport
+          containerPort: 61616
+        - name: monitoringport
+          containerPort: 8161
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8161
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+{{ toYaml .Values.activemq.resources | indent 12 }}

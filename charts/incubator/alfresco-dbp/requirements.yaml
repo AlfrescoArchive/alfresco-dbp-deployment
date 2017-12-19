@@ -1,11 +1,19 @@
 dependencies:
   - name: alfresco-aps
     version: ^0.1.0
+    condition: alfresco-aps.enabled
   - name: activiti-sso
     version: ^0.1.0
+    condition: activiti-sso.enabled
   - name: alfresco-activiti-cloud-registry
     version: ^0.1.0
+    condition: alfresco-activiti-cloud-registry.enabled
   - name: alfresco-activiti-cloud-gateway
     version: ^0.1.0
-  - name: system_share
+    condition: alfresco-activiti-cloud-gateway.enabled
+  - name: alfresco-content-services
+    version: ^0.0.1
+    condition: alfresco-content-services.enabled
+  - name: alfresco-sync-service
     version: ^0.1.0
+    condition: alfresco-sync-service.enabled

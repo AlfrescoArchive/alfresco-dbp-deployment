@@ -3,7 +3,7 @@ rabbitmq:
     size: 10Gi
 
 persistence:
-  enabled: true
+  enabled: false
   size: 3Gi
   volumeEnv: minikube #Choose between aws and minikube
   nfs:

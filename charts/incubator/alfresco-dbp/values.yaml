@@ -2,21 +2,44 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 replicaCount: 1
-registryPullSecrets: quay-registry-secret
 
 alfresco-aps:
+  enabled: false
+  registryPullSecrets: quay-registry-secret
   nginx-ingress:
     enabled: false
+  postgresql:
+    persistence:
+      enabled: false
 alfresco-activiti-cloud-registry:
+  enabled: false
   nginx-ingress:
     enabled: false
 alfresco-activiti-cloud-gateway:
-  keycloakURL: "http://192.168.99.101:32766/auth/"
-  eurekaURL: "http://192.168.99.101:32766/registry"
-  rabbitmqReleaseName: "illocutionary-fish-rabbitmq"
+  enabled: false
+  keycloakURL: "http://192.168.99.100:31248/auth/"
+  eurekaURL: "http://192.168.99.100:31248/registry"
+  rabbitmqReleaseName: "jaunty-walrus-rabbitmq"
 activiti-sso:
+  enabled: false
   image:
     tag: 7-201710-EA
-# Global:
-#   nginx-ingress:
-#     enabled: false
+
+alfresco-content-services:
+  enabled: true
+  nginx-ingress:
+    enabled: false
+  repository:
+    image:
+      repository: quay.io/alfresco/alfresco-dbp-repository
+      tag: "0.1-SNAPSHOT"
+  share:
+    image:
+      repository: quay.io/alfresco/alfresco-dbp-share
+      tag: "0.1-SNAPSHOT"
+
+alfresco-sync-service:
+  enabled: true
+  postgresql:
+    persistence:
+      enabled: false

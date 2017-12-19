@@ -1,0 +1,42 @@
+replicaCount: 1
+registryPullSecrets: quay-registry-secret
+
+syncservice:
+  image:
+    repository: quay.io/alfresco/service-sync
+    tag: 2.2-SNAPSHOT
+    pullPolicy: Always
+  service:
+    name: servicePort
+    type: NodePort
+  resources:
+    requests:
+      memory: "1000Mi"
+    limits:
+      memory: "2000Mi"
+  #activemq_host:
+  #activemq_port:
+  #repository_host:
+  #repository_port:
+
+activemq:
+  image:
+    repository: webcenter/activemq
+    tag: latest
+    pullPolicy: Always
+    configMinMemory: "512"
+    configMaxMemory: "2048"
+  service:
+    name: activemq
+    type: ClusterIP
+  resources:
+    requests:
+      memory: "512Mi"
+    limits:
+      memory: "2048Mi"
+
+postgresql:
+  nameOverride: postgresql-syncservice
+  postgresUser: alfresco
+  postgresPassword: admin
+  postgresDatabase: syncservice-postgresql

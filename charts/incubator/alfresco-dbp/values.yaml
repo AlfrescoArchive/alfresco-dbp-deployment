@@ -4,24 +4,29 @@
 replicaCount: 1
 
 alfresco-aps:
-  enabled: false
+  enabled: true
   registryPullSecrets: quay-registry-secret
+  resources:
+    requests:
+      memory: "1000Mi"
+    limits:
+      memory: "1500Mi"
   nginx-ingress:
     enabled: false
   postgresql:
     persistence:
       enabled: false
 alfresco-activiti-cloud-registry:
-  enabled: false
+  enabled: true
   nginx-ingress:
     enabled: false
 alfresco-activiti-cloud-gateway:
-  enabled: false
-  keycloakURL: "http://192.168.99.100:31248/auth/"
-  eurekaURL: "http://192.168.99.100:31248/registry"
+  enabled: true
+  keycloakURL: "http://192.168.99.101:31436/auth/"
+  eurekaURL: "http://192.168.99.101:31436/registry"
   rabbitmqReleaseName: "jaunty-walrus-rabbitmq"
 activiti-sso:
-  enabled: false
+  enabled: true
   image:
     tag: 7-201710-EA
 

@@ -1,6 +1,0 @@
-apiVersion: v1
-description: A Helm chart for Alresco Process Services
-name: alfresco-aps
-version: 0.1.0
-maintainers:
-  - name: Alfresco

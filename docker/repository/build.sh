@@ -3,11 +3,11 @@ set -o errexit
 
 . ./build.properties
 
-echo "Downloading required AMPs..."
-if [[ "$bamboo_capability_system_builder_mvn3_Maven_3_3" == "" ]]; then
-	mvn clean package
+if [ -d ./target ]; then
+    echo "Required AMPs already present!"
 else
-    $bamboo_capability_system_builder_mvn3_Maven_3_3/bin/mvn clean package
+    echo "Downloading required AMPs..."
+    mvn clean package
 fi
 
 echo "Building image ($DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG)..."

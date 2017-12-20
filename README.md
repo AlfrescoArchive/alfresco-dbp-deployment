@@ -68,7 +68,7 @@ helm status $INFRARELEASE
 
 ### 5. Get the nginx-ingress-controller port for the infrastructure (**NOTE! ONLY FOR MINIKUBE**):
 ```bash
-export INFRAPORT=$(kubectl get service $INFRARELEASE-nginx-ingress-controller -o jsonpath={.spec.ports[0].nodePort})
+export INFRAPORT=$(kubectl get service $INFRARELEASE-nginx-ingress-controller --namespace $DESIREDNAMESPACE -o jsonpath={.spec.ports[0].nodePort})
 ```
 
 ### 6. Get Minikube or ELB IP and set it as a variable for future use:
@@ -92,10 +92,20 @@ alfresco-content-services:
 
 ```bash
 #On MINIKUBE
-helm install alfresco-dbp --set alfresco-activiti-cloud-gateway.keycloakURL="http://$ELBADDRESS:$INFRAPORT/auth/" --set alfresco-activiti-cloud-gateway.eurekaURL="http://$ELBADDRESS:$INFRAPORT/registry/" --set alfresco-activiti-cloud-gateway.rabbitmqReleaseName="$INFRARELEASE-rabbitmq" --namespace=$DESIREDNAMESPACE
+helm install alfresco-dbp \
+--set alfresco-content-services.repository.environment.SYNC_SERVICE_URI="http://$ELBADDRESS:$INFRAPORT/syncservice" \
+--set alfresco-activiti-cloud-gateway.keycloakURL="http://$ELBADDRESS:$INFRAPORT/auth/" \
+--set alfresco-activiti-cloud-gateway.eurekaURL="http://$ELBADDRESS:$INFRAPORT/registry/" \
+--set alfresco-activiti-cloud-gateway.rabbitmqReleaseName="$INFRARELEASE-rabbitmq" \
+--namespace=$DESIREDNAMESPACE
 
 #On AWS
-helm install alfresco-dbp --set alfresco-activiti-cloud-gateway.keycloakURL="http://$ELBADDRESS/auth/" --set alfresco-activiti-cloud-gateway.eurekaURL="http://$ELBADDRESS/registry/" --set alfresco-activiti-cloud-gateway.rabbitmqReleaseName="$INFRARELEASE-rabbitmq" --namespace=$DESIREDNAMESPACE
+helm install alfresco-dbp \
+--set alfresco-content-services.repository.environment.SYNC_SERVICE_URI="http://$ELBADDRESS/syncservice" \
+--set alfresco-activiti-cloud-gateway.keycloakURL="http://$ELBADDRESS/auth/" \
+--set alfresco-activiti-cloud-gateway.eurekaURL="http://$ELBADDRESS/registry/" \
+--set alfresco-activiti-cloud-gateway.rabbitmqReleaseName="$INFRARELEASE-rabbitmq" \
+--namespace=$DESIREDNAMESPACE
 ```
 
 ### 9. Get the DBP release name from the previous command and set it as a variable:

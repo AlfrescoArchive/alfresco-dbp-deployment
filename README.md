@@ -120,6 +120,16 @@ export DBPRELEASE=littering-lizzard
 ```bash
 helm status $INFRARELEASE
 helm status $DBPRELEASE
+
+#On MINIKUBE: Open Alfresco Repository in Browser
+open http://$ELBADDRESS:`kubectl get service $DBPRELEASE-alfresco-content-services-repository --namespace $DESIREDNAMESPACE -o jsonpath={.spec.ports[0].nodePort}`/alfresco
+
+#On MINIKUBE: Open Alfresco Share in Browser
+open http://$ELBADDRESS:`kubectl get service $DBPRELEASE-alfresco-content-services-share --namespace $DESIREDNAMESPACE -o jsonpath={.spec.ports[0].nodePort}`/share
+
+#On MINIKUBE: Open Alfresco Process Services in Browser
+open http://$ELBADDRESS:`kubectl get service $DBPRELEASE-alfresco-aps --namespace $DESIREDNAMESPACE -o jsonpath={.spec.ports[0].nodePort}`/activiti-app
+
 ```
 
 ### 11. Teardown:

@@ -5,7 +5,6 @@ replicaCount: 1
 
 alfresco-aps:
   enabled: true
-  registryPullSecrets: quay-registry-secret
   resources:
     requests:
       memory: "2000Mi"

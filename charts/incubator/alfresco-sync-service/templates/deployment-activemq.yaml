@@ -15,15 +15,6 @@ spec:
         app: {{ template "syncservice.fullname" . }}
         release: {{ .Release.Name }}
     spec:
-      initContainers:
-      - name: init-repository
-        image: busybox
-        env:
-        - name: REPOSITORY_HOST
-          value: {{ .Values.syncservice.repository_host | default (printf "%s-alfresco-content-services-repository" .Release.Name) | quote }}
-        - name: REPOSITORY_PORT
-          value: {{ .Values.syncservice.repository_port | default 80 | quote }}
-        command: ['sh', '-c', 'until $(wget -qO- -t 1 --timeout=1 http://$REPOSITORY_HOST:$REPOSITORY_PORT &> /dev/null); do echo "waiting for alfresco repo to start"; sleep 5; done;']
       containers:
       - name: activemq
         image: "{{ .Values.activemq.image.repository }}:{{ .Values.activemq.image.tag }}"

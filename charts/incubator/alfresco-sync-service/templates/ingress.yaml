@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "syncservice.fullname" . }}-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    ingress.kubernetes.io/ssl-redirect: "false"
+    ingress.kubernetes.io/rewrite-target: /alfresco
+spec:
+  rules:
+  - http:
+      paths:
+      - path: {{ .Values.syncservice.ingress.path }}
+        backend:
+          serviceName: {{ template "syncservice.fullname" . }}
+          servicePort: {{ .Values.syncservice.service.externalPort }}

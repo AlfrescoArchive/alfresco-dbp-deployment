@@ -1,0 +1,4 @@
+apiVersion: v1
+description: A Helm chart Providing the required Infrastructure deployments for the Alfresco DBP. This includes nginx-ingress, activemq and the content services volume.
+name: alfresco-dbp-infrastructure
+version: 0.1.0

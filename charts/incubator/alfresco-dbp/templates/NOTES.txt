@@ -1,0 +1,3 @@
+Get the APS url by running "scripts/get-app-url.sh aps {{ .Release.Name }} {{ .Release.Namespace }}".
+Get the Keycloak url by running "scripts/get-aps-url.sh auth {{ .Release.Name }} {{ .Release.Namespace }}".
+Get the Registry gateway url by running "scripts/get-aps-url.sh {{ .Release.Name }} {{ .Release.Namespace }}".

@@ -1,0 +1,13 @@
+name: alfresco-sync-service
+version: 0.1.0
+description: Alfresco Syncservice
+keywords:
+- syncservice
+- alfresco
+- application
+# home:
+# sources:
+#   -
+maintainers:
+- name: Alfresco
+engine: gotpl

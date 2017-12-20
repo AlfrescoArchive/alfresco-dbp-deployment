@@ -1,0 +1,65 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "syncservice.fullname" . }}
+  labels:
+    app: {{ template "syncservice.fullname" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "syncservice.fullname" . }}
+        release: {{ .Release.Name }}
+    spec:
+      imagePullSecrets:
+        - name: {{ .Values.registryPullSecrets }}
+      initContainers:
+      - name: init-activemq
+        image: busybox
+        env:
+        - name: ACTIVEMQ_HOST
+          value: {{ .Values.syncservice.activemq_host | default (printf "%s-activemq" (include "syncservice.fullname" .)) | quote }}
+        - name: ACTIVEMQ_PORT
+          value: {{ .Values.syncservice.activemq_monitor_port | default 8161  | quote }}
+        command: ['sh', '-c', 'until $(wget -qO- -t 1 --timeout=1 http://$ACTIVEMQ_HOST:$ACTIVEMQ_PORT &> /dev/null); do echo "waiting for activemq to start"; sleep 5; done;']
+      - name: init-repository
+        image: busybox
+        env:
+        - name: REPOSITORY_HOST
+          value: {{ .Values.syncservice.repository_host | default (printf "%s-alfresco-content-services-repository" .Release.Name) | quote }}
+        - name: REPOSITORY_PORT
+          value: {{ .Values.syncservice.repository_port | default 80 | quote }}
+        command: ['sh', '-c', 'until $(wget -qO- -t 1 --timeout=1 http://$REPOSITORY_HOST:$REPOSITORY_PORT &> /dev/null); do echo "waiting for alfresco repo to start"; sleep 5; done;']
+      - name: init-postgres
+        image: busybox
+        command: ['sh', '-c', 'until nslookup {{ .Release.Name }}-postgresql-syncservice; do echo "waiting for postgres"; sleep 2; done;']
+      containers:
+      - name: syncservice
+        image: "{{ .Values.syncservice.image.repository }}:{{ .Values.syncservice.image.tag }}"
+        imagePullPolicy: {{ .Values.syncservice.image.pullPolicy }}
+        env:
+        - name: DB_HOST
+          value: {{ .Release.Name }}-postgresql-syncservice
+        - name: REPO_HOST
+          value: {{ .Values.syncservice.repository_host | default (printf "%s-alfresco-content-services-repository" .Release.Name) | quote }}
+        - name: REPO_PORT
+          value: {{ .Values.syncservice.repository_port | default 80 | quote }}
+        - name: ACTIVEMQ_HOST
+          value: {{ .Values.syncservice.activemq_host | default (printf "%s-activemq" (include "syncservice.fullname" .)) | quote }}
+        - name: ACTIVEMQ_PORT
+          value: {{ .Values.syncservice.activemq_port | default 61616  | quote }}
+        ports:
+        - name: serviceport
+          containerPort: 9090
+        resources:
+{{ toYaml .Values.syncservice.resources | indent 12 }}
+        livenessProbe:
+          httpGet:
+            path: /alfresco/healthcheck
+            port: serviceport
+          initialDelaySeconds: 10
+          periodSeconds: 10

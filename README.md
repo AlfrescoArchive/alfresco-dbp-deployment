@@ -81,25 +81,14 @@ export ELBADDRESS=$(minikube ip)
 export ELBADDRESS=$(kubectl get services $INFRARELEASE-nginx-ingress-controller --namespace=$DESIREDNAMESPACE -o jsonpath={.status.loadBalancer.ingress[0].hostname})
 ```
 
-### 7. Set your auth credentials, will be used for downloading amps and setting registries for ACS (remember to escape any special characters):
+### 7. Enable or disable the components you want up from the dbp deployment.
+To do this open the alfresco-dbp/values.yaml file and set to true/false the components you want enabled.
 
-```bash
-export LDAP_USERNAME="your username"
-export LDAP_PASSWORD="your pass"
-export EMAIL="your email"
-```
-  
-### 8. Create Secrets and ConfigMaps for ACS
+Example:
+alfresco-content-services:
+  enabled: true
 
-```bash
-kubectl create secret docker-registry docker-internal-secret --docker-server=docker-internal.alfresco.com --docker-username=$LDAP_USERNAME --docker-password=$LDAP_PASSWORD --docker-email=$EMAIL --namespace=$DESIREDNAMESPACE
-kubectl create secret generic ldap-credentials --from-literal=username=$LDAP_USERNAME  --from-literal=password=$LDAP_PASSWORD --namespace=$DESIREDNAMESPACE
-kubectl create configmap agp --from-file=alfresco-dbp/config/alfresco-global.properties --namespace=$DESIREDNAMESPACE
-kubectl create configmap share-amps --from-file=urls=alfresco-dbp/config/share-amps-to-apply.txt --namespace=$DESIREDNAMESPACE
-kubectl create configmap repo-amps --from-file=urls=alfresco-dbp/config/repository-amps-to-apply.txt --namespace=$DESIREDNAMESPACE
-```
-
-### 9. Deploy the DBP
+### 8. Deploy the DBP
 
 ```bash
 #On MINIKUBE
@@ -109,19 +98,19 @@ helm install alfresco-dbp --set alfresco-activiti-cloud-gateway.keycloakURL="htt
 helm install alfresco-dbp --set alfresco-activiti-cloud-gateway.keycloakURL="http://$ELBADDRESS/auth/" --set alfresco-activiti-cloud-gateway.eurekaURL="http://$ELBADDRESS/registry/" --set alfresco-activiti-cloud-gateway.rabbitmqReleaseName="$INFRARELEASE-rabbitmq" --namespace=$DESIREDNAMESPACE
 ```
 
-### 10. Get the DBP release name from the previous command and set it as a variable:
+### 9. Get the DBP release name from the previous command and set it as a variable:
 ```bash
 export DBPRELEASE=littering-lizzard
 ```
 
-### 12. Checkout the status of your DBP deployment:
+### 10. Checkout the status of your DBP deployment:
 
 ```bash
 helm status $INFRARELEASE
 helm status $DBPRELEASE
 ```
 
-### 13. Teardown:
+### 11. Teardown:
 
 ```bash
 helm delete $INFRARELEASE

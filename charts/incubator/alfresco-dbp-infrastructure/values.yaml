@@ -1,5 +1,9 @@
-rabbitmq:
+rabbitmq-ha:
+  enabled: true
+  rbac:
+    create: false
   persistence:
+    enabled: false
     size: 10Gi
 
 persistence:

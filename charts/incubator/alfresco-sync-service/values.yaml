@@ -6,9 +6,13 @@ syncservice:
     repository: quay.io/alfresco/service-sync
     tag: 2.2-SNAPSHOT
     pullPolicy: Always
+    internalPort: 9090
   service:
-    name: servicePort
+    name: syncservice
     type: NodePort
+    externalPort: 80
+  ingress:
+    path: /syncservice
   resources:
     requests:
       memory: "1000Mi"

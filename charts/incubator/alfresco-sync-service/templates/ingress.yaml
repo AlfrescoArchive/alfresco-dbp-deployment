@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: syncservice
+  name: {{ template "syncservice.fullname" . }}-ingress
   annotations:
     kubernetes.io/ingress.class: "nginx"
     ingress.kubernetes.io/ssl-redirect: "false"
@@ -10,7 +10,7 @@ spec:
   rules:
   - http:
       paths:
-      - path: /syncservice
+      - path: {{ .Values.syncservice.ingress.path }}
         backend:
-          serviceName: syncservice
-          servicePort: 9090
+          serviceName: {{ template "syncservice.fullname" . }}
+          servicePort: {{ .Values.syncservice.service.externalPort }}

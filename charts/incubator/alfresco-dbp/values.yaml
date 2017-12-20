@@ -8,9 +8,9 @@ alfresco-aps:
   registryPullSecrets: quay-registry-secret
   resources:
     requests:
-      memory: "1000Mi"
+      memory: "2000Mi"
     limits:
-      memory: "1500Mi"
+      memory: "3000Mi"
   nginx-ingress:
     enabled: false
   postgresql:
@@ -22,11 +22,11 @@ alfresco-activiti-cloud-registry:
     enabled: false
 alfresco-activiti-cloud-gateway:
   enabled: true
-  keycloakURL: "http://192.168.99.101:31436/auth/"
-  eurekaURL: "http://192.168.99.101:31436/registry"
+  keycloakURL: "http://aff56c117e58f11e7995c0ab71a820dd-692682459.us-east-1.elb.amazonaws.com/auth/"
+  eurekaURL: "http://aff56c117e58f11e7995c0ab71a820dd-692682459.us-east-1.elb.amazonaws.com/registry"
   rabbitmqReleaseName: "jaunty-walrus-rabbitmq"
 activiti-sso:
-  enabled: true
+  enabled: false
   image:
     tag: 7-201710-EA
 
@@ -38,10 +38,27 @@ alfresco-content-services:
     image:
       repository: quay.io/alfresco/alfresco-dbp-repository
       tag: "0.1-SNAPSHOT"
+    environment:
+      JAVA_OPTS: " -Dsolr.base.url=/solr
+        -Dsolr.secureComms=none
+        -Dindex.subsystem.name=solr6
+        -Ddsync.service.uris=\"http://aff56c117e58f11e7995c0ab71a820dd-692682459.us-east-1.elb.amazonaws.com/syncservice\"
+        -Dmessaging.broker.url=\"failover:(tcp://${RELEASE_NAME}-alfresco-sync-service-activemq:61616)?timeout=3000\""
   share:
     image:
       repository: quay.io/alfresco/alfresco-dbp-share
       tag: "0.1-SNAPSHOT"
+    resources:
+      requests:
+        memory: "1000Mi"
+      limits:
+        memory: "2000Mi"
+  solr:
+    resources:
+      requests:
+        memory: "500Mi"
+      limits:
+        memory: "1500Mi"
 
 alfresco-sync-service:
   enabled: true

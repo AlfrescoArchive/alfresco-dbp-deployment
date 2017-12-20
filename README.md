@@ -49,6 +49,8 @@ export NFSSERVER=fs-d660549f.efs.us-east-1.amazonaws.com
 ```bash
 cd charts/incubator
 
+helm dep update alfresco-dbp-infrastructure
+
 #ON MINIKUBE
 helm install alfresco-dbp-infrastructure --namespace $DESIREDNAMESPACE
 

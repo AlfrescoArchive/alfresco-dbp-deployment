@@ -38,10 +38,11 @@ alfresco-content-services:
       repository: quay.io/alfresco/alfresco-dbp-repository
       tag: "0.1-SNAPSHOT"
     environment:
+      SYNC_SERVICE_URI: "http://aff56c117e58f11e7995c0ab71a820dd-692682459.us-east-1.elb.amazonaws.com/syncservice"
       JAVA_OPTS: " -Dsolr.base.url=/solr
         -Dsolr.secureComms=none
         -Dindex.subsystem.name=solr6
-        -Ddsync.service.uris=\"http://aff56c117e58f11e7995c0ab71a820dd-692682459.us-east-1.elb.amazonaws.com/syncservice\"
+        -Ddsync.service.uris=\"$SYNC_SERVICE_URI\"
         -Dmessaging.broker.url=\"failover:(tcp://${RELEASE_NAME}-alfresco-sync-service-activemq:61616)?timeout=3000\""
   share:
     image:

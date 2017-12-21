@@ -1,19 +1,25 @@
 dependencies:
-  - name: alfresco-aps
+  - name: alfresco-process-services
     version: ^0.1.0
-    condition: alfresco-aps.enabled
-  - name: activiti-sso
+    condition: alfresco-process-services.enabled
+    repository: https://alfresco.github.io/charts-test/incubator
+  - name: alfresco-activiti-cloud-sso-idm
     version: ^0.1.0
-    condition: activiti-sso.enabled
+    condition: alfresco-activiti-cloud-sso-idm.enabled
+    repository: https://alfresco.github.io/charts-test/incubator
   - name: alfresco-activiti-cloud-registry
     version: ^0.1.0
     condition: alfresco-activiti-cloud-registry.enabled
+    repository: https://alfresco.github.io/charts-test/incubator
   - name: alfresco-activiti-cloud-gateway
     version: ^0.1.0
     condition: alfresco-activiti-cloud-gateway.enabled
+    repository: https://alfresco.github.io/charts-test/incubator
   - name: alfresco-content-services
     version: ^0.0.1
     condition: alfresco-content-services.enabled
+    repository: https://alfresco.github.io/charts-test/incubator
   - name: alfresco-sync-service
     version: ^0.1.0
     condition: alfresco-sync-service.enabled
+    repository: https://alfresco.github.io/charts-test/incubator

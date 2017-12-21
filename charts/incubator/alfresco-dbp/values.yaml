@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 replicaCount: 1
 
-alfresco-aps:
+alfresco-process-services:
   enabled: true
   resources:
     requests:
@@ -24,8 +24,8 @@ alfresco-activiti-cloud-gateway:
   keycloakURL: "http://aff56c117e58f11e7995c0ab71a820dd-692682459.us-east-1.elb.amazonaws.com/auth/"
   eurekaURL: "http://aff56c117e58f11e7995c0ab71a820dd-692682459.us-east-1.elb.amazonaws.com/registry"
   rabbitmqReleaseName: "jaunty-walrus-rabbitmq"
-activiti-sso:
-  enabled: false
+alfresco-activiti-cloud-sso-idm:
+  enabled: true
   image:
     tag: 7-201710-EA
 

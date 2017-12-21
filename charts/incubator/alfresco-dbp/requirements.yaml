@@ -2,7 +2,7 @@ dependencies:
   - name: alfresco-aps
     version: ^0.1.0
     condition: alfresco-aps.enabled
-  - name: activiti-sso
+  - name: alfresco-activiti-cloud-sso-idm
     version: ^0.1.0
     condition: activiti-sso.enabled
   - name: alfresco-activiti-cloud-registry

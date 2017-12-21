@@ -49,7 +49,7 @@ export NFSSERVER=fs-d660549f.efs.us-east-1.amazonaws.com
 ```bash
 cd charts/incubator
 
-helm dep update alfresco-dbp-infrastructure
+helm dependency update alfresco-dbp-infrastructure
 
 #ON MINIKUBE
 helm install alfresco-dbp-infrastructure --namespace $DESIREDNAMESPACE
@@ -93,6 +93,9 @@ alfresco-content-services:
 ### 8. Deploy the DBP
 
 ```bash
+
+helm dependency update alfresco-dbp
+
 #On MINIKUBE
 helm install alfresco-dbp \
 --set alfresco-content-services.repository.environment.SYNC_SERVICE_URI="http://$ELBADDRESS:$INFRAPORT/syncservice" \

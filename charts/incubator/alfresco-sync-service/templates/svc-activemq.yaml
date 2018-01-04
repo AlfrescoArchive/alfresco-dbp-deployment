@@ -14,6 +14,10 @@ spec:
     targetPort: listenport
     name: listenport
     protocol: TCP
+  - port: 5672
+    targetPort: amqpport
+    name: amqpport
+    protocol: TCP
   - port: 8161
     targetPort: monitoringport
     name: monitoringport

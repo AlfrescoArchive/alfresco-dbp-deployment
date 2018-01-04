@@ -33,6 +33,9 @@ activemq:
   service:
     name: activemq
     type: ClusterIP
+  serviceadmin:
+    name: activemq-admin
+    type: NodePort
   resources:
     requests:
       memory: "512Mi"

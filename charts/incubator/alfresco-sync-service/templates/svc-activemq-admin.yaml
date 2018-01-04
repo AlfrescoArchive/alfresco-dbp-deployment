@@ -1,22 +1,18 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "syncservice.fullname" . }}-activemq
+  name: {{ template "syncservice.fullname" . }}-activemq-admin
   labels:
     app: {{ template "syncservice.fullname" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  type: {{ .Values.activemq.service.type }}
+  type: {{ .Values.activemq.serviceadmin.type }}
   ports:
-  - port: 61616
-    targetPort: listenport
-    name: listenport
-    protocol: TCP
-  - port: 5672
-    targetPort: amqpport
-    name: amqpport
+  - port: 8161
+    targetPort: monitoringport
+    name: monitoringport
     protocol: TCP
   selector:
     app: {{ template "syncservice.fullname" . }}

@@ -26,8 +26,6 @@ alfresco-activiti-cloud-gateway:
   rabbitmqReleaseName: "jaunty-walrus-rabbitmq"
 alfresco-activiti-cloud-sso-idm:
   enabled: true
-  image:
-    tag: 7-201710-EA
 
 alfresco-content-services:
   enabled: true

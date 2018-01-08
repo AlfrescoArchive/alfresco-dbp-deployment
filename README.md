@@ -61,7 +61,7 @@ cd charts/incubator
 cat ~/.docker/config.json | base64
 ```
 
-Add the base64 string generated in step 2 to .dockerconfigjson in secrets.yaml
+Add the base64 string generated to .dockerconfigjson in secrets.yaml and then run this command:
 
 ```bash
 kubectl create -f secrets.yaml --namespace example

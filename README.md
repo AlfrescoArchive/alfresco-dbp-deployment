@@ -54,6 +54,19 @@ See the Anaxes Shipyard documentation on [secrets](https://github.com/Alfresco/a
 
 Be sure to use the same namespace as above.
 
+*Note*: You can reuse the secrets.yaml file from charts/incubator directory. 
+
+```bash
+cd charts/incubator
+cat ~/.docker/config.json | base64
+```
+
+Add the base64 string generated in step 2 to .dockerconfigjson in secrets.yaml
+
+```bash
+kubectl create -f secrets.yaml --namespace example
+```
+
 ## Deployment
 
 ### 1. EFS Storage (**NOTE! ONLY FOR AWS!**)

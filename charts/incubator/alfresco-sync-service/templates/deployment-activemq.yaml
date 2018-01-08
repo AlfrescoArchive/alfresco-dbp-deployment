@@ -27,6 +27,8 @@ spec:
         ports:
         - name: listenport
           containerPort: 61616
+        - name: amqpport
+          containerPort: 5672
         - name: monitoringport
           containerPort: 8161
         livenessProbe:

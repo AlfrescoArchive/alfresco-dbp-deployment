@@ -2,6 +2,24 @@
 
 ## Prerequisites
 
+The Alfresco Digital Business Platform Deployment requires:
+
+| Component        | Recommended version |
+| ------------- |:-------------:|
+| Docker     | 17.0.9.1 |
+| Kubernetes | 1.8.0    |
+| Helm       | 2.7.0    |
+| Minikube   | 0.24.1   |
+
+Any variation from these technologies and versions may affect the end result. If you do experience any issues please let us know through our [Gitter channel](https://gitter.im/Alfresco/platform-services?utm_source=share-link&utm_medium=link&utm_campaign=share-link).
+
+After you have installed the prerequisites please run the following commands:
+
+```bash
+git clone https://github.com/Alfresco/alfresco-dbp-deployment.git
+cd alfresco-dbp-deployment
+```
+
 ### Kubernetes Cluster
 
 See the Anaxes Shipyard documentation on [running a cluster](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/SECRETS.md).
@@ -63,7 +81,7 @@ helm install alfresco-dbp-infrastructure --namespace $DESIREDNAMESPACE --set per
 export INFRARELEASE=enervated-deer
 ```
 
-### 4. Wait for the infrastructure release to get deployed.  When checking status all your pods should be AVAILABLE 1/1):
+### 4. Wait for the infrastructure release to get deployed.  When checking status all your pods should be READY 1/1):
 ```bash
 helm status $INFRARELEASE
 ```

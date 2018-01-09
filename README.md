@@ -22,7 +22,8 @@ cd alfresco-dbp-deployment
 
 ### Kubernetes Cluster
 
-See the Anaxes Shipyard documentation on [running a cluster](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/SECRETS.md).
+You can choose to deploy the DBP to a local kubernetes cluster (illustrated using minikube) or you can choose to deploy to the cloud (illustrated using AWS).
+Please check the Anaxes Shipyard documentation on [running a cluster](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/SECRETS.md).
 
 Note the DBP resource requirements:
 * Minikube: At least 12 gigs of memory, i.e.:
@@ -40,7 +41,7 @@ helm init
 
 ### K8s Cluster Namespace
 
-As mentioned as part of the Anaxes Shipyard guidelines, you should deploy into a separate namespace in the cluster to avoid conflicts:
+As mentioned as part of the Anaxes Shipyard guidelines, you should deploy into a separate namespace in the cluster to avoid conflicts(create the namespace only if it does not already exists):
 ```bash
 export DESIREDNAMESPACE=example
 kubectl create namespace $DESIREDNAMESPACE

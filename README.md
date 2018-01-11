@@ -41,7 +41,7 @@ helm init
 
 ### K8s Cluster Namespace
 
-As mentioned as part of the Anaxes Shipyard guidelines, you should deploy into a separate namespace in the cluster to avoid conflicts(create the namespace only if it does not already exists):
+As mentioned as part of the Anaxes Shipyard guidelines, you should deploy into a separate namespace in the cluster to avoid conflicts (create the namespace only if it does not already exist):
 ```bash
 export DESIREDNAMESPACE=example
 kubectl create namespace $DESIREDNAMESPACE
@@ -62,10 +62,23 @@ cd charts/incubator
 cat ~/.docker/config.json | base64
 ```
 
-Add the base64 string generated to .dockerconfigjson in secrets.yaml and then run this command:
+Add the base64 string generated to .dockerconfigjson in secrets.yaml. The file should look like this:
 
 ```bash
-kubectl create -f secrets.yaml --namespace example
+apiVersion: v1
+kind: Secret
+metadata:
+  name: quay-registry-secret
+type: kubernetes.io/dockerconfigjson
+data:
+# Docker registries config json in base64 to do this just run - cat ~/.docker/config.json | base64
+  .dockerconfigjson: ew0KCSJhdXRocyI6IHsNCgkJImh0dHBzOi8vcXVheS5pbyI6IHsNCgkJCSJhdXRoIjogImRHVnpkRHAwWlhOMD0iDQoJCX0sDQoJCSJxdWF5LmlvIjogew0KCQkJImF1dGgiOiAiZEdWemREcDBaWE4wIg0KCQl9DQoJfSwNCgkiSHR0cEhlYWRlcnMiOiB7DQoJCSJVc2VyLUFnZW50IjogIkRvY2tlci1DbGllbnQvMTcuMTIuMC1jZS1yYzMgKGRhcndpbikiDQoJfQ0KfQ==
+```
+
+Then run this command:
+
+```bash
+kubectl create -f secrets.yaml --namespace $DESIREDNAMESPACE
 ```
 
 ## Deployment
@@ -79,7 +92,6 @@ export NFSSERVER=fs-d660549f.efs.us-east-1.amazonaws.com
 
 ### 2. Deploy the infrastructure charts:
 ```bash
-cd charts/incubator
 
 helm dependency update alfresco-dbp-infrastructure
 
@@ -125,6 +137,8 @@ alfresco-content-services:
 ### 8. Deploy the DBP
 
 ```bash
+
+helm repo add alfresco-test https://alfresco.github.io/charts-test/incubator
 
 helm dependency update alfresco-dbp
 

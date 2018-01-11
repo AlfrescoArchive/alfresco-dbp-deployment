@@ -27,6 +27,6 @@ spec:
             - name: ACT_EUREKA_URL
               value: "{{required "A valid eurekaURL needs to be set" .Values.eurekaURL }}"
             - name: ACT_RABBITMQ_HOST
-              value: "{{required "RabbitMQ host details needs to be set" .Values.rabbitmqReleaseName }}"
+              value: "{{required "RabbitMQ release name needs to be set" .Values.rabbitmqReleaseName }}"
             - name: ACT_GATEWAY_HOST
               value: {{ template "activiti-cloud-gateway.fullname" . }}

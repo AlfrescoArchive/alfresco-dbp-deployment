@@ -2,6 +2,24 @@
 
 ## Prerequisites
 
+The Alfresco Digital Business Platform Deployment requires:
+
+| Component        | Recommended version |
+| ------------- |:-------------:|
+| Docker     | 17.0.9.1 |
+| Kubernetes | 1.8.0    |
+| Helm       | 2.7.0    |
+| Minikube   | 0.24.1   |
+
+Any variation from these technologies and versions may affect the end result. If you do experience any issues please let us know through our [Gitter channel](https://gitter.im/Alfresco/platform-services?utm_source=share-link&utm_medium=link&utm_campaign=share-link).
+
+After you have installed the prerequisites please run the following commands:
+
+```bash
+git clone https://github.com/Alfresco/alfresco-dbp-deployment.git
+cd alfresco-dbp-deployment
+```
+
 ### Kubernetes Cluster
 
 See the Anaxes Shipyard documentation on [running a cluster](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/SECRETS.md).
@@ -36,11 +54,24 @@ See the Anaxes Shipyard documentation on [secrets](https://github.com/Alfresco/a
 
 Be sure to use the same namespace as above.
 
+*Note*: You can reuse the secrets.yaml file from charts/incubator directory. 
+
+```bash
+cd charts/incubator
+cat ~/.docker/config.json | base64
+```
+
+Add the base64 string generated to .dockerconfigjson in secrets.yaml and then run this command:
+
+```bash
+kubectl create -f secrets.yaml --namespace example
+```
+
 ## Deployment
 
 ### 1. EFS Storage (**NOTE! ONLY FOR AWS!**)
 
-Create a EFS storage on AWS and make sure it is in the same VPC as your cluster. Make sure you open inbound traffic in the security group to allow NFS traffic. Save the name of the server ex: 
+Create a EFS storage on AWS and make sure it is in the same VPC as your cluster. Make sure you open inbound traffic in the security group to allow NFS traffic. Save the name of the server ex:
 ```bash
 export NFSSERVER=fs-d660549f.efs.us-east-1.amazonaws.com
 ```
@@ -63,7 +94,7 @@ helm install alfresco-dbp-infrastructure --namespace $DESIREDNAMESPACE --set per
 export INFRARELEASE=enervated-deer
 ```
 
-### 4. Wait for the infrastructure release to get deployed.  When checking status all your pods should be AVAILABLE 1/1):
+### 4. Wait for the infrastructure release to get deployed.  When checking status all your pods should be READY 1/1):
 ```bash
 helm status $INFRARELEASE
 ```
@@ -98,6 +129,9 @@ helm dependency update alfresco-dbp
 
 #On MINIKUBE
 helm install alfresco-dbp \
+--set alfresco-sync-service.activemq.broker.host="${INFRARELEASE}-alfresco-dbp-infrastructure-activemq" \
+--set alfresco-sync-service.activemq.monitor.host="${INFRARELEASE}-alfresco-dbp-infrastructure-activemq-admin" \
+--set alfresco-content-services.repository.environment.ACTIVEMQ_HOST="${INFRARELEASE}-alfresco-dbp-infrastructure-activemq" \
 --set alfresco-content-services.repository.environment.SYNC_SERVICE_URI="http://$ELBADDRESS:$INFRAPORT/syncservice" \
 --set alfresco-activiti-cloud-gateway.keycloakURL="http://$ELBADDRESS:$INFRAPORT/auth/" \
 --set alfresco-activiti-cloud-gateway.eurekaURL="http://$ELBADDRESS:$INFRAPORT/registry/" \
@@ -106,6 +140,9 @@ helm install alfresco-dbp \
 
 #On AWS
 helm install alfresco-dbp \
+--set alfresco-sync-service.activemq.host="${INFRARELEASE}-alfresco-dbp-infrastructure-activemq" \
+--set alfresco-sync-service.activemq.monitor.host="${INFRARELEASE}-alfresco-dbp-infrastructure-activemq-admin" \
+--set alfresco-content-services.repository.environment.ACTIVEMQ_HOST="${INFRARELEASE}-alfresco-dbp-infrastructure-activemq" \
 --set alfresco-content-services.repository.environment.SYNC_SERVICE_URI="http://$ELBADDRESS/syncservice" \
 --set alfresco-activiti-cloud-gateway.keycloakURL="http://$ELBADDRESS/auth/" \
 --set alfresco-activiti-cloud-gateway.eurekaURL="http://$ELBADDRESS/registry/" \
@@ -131,7 +168,7 @@ open http://$ELBADDRESS:`kubectl get service $DBPRELEASE-alfresco-content-servic
 open http://$ELBADDRESS:`kubectl get service $DBPRELEASE-alfresco-content-services-share --namespace $DESIREDNAMESPACE -o jsonpath={.spec.ports[0].nodePort}`/share
 
 #On MINIKUBE: Open Alfresco Process Services in Browser
-open http://$ELBADDRESS:`kubectl get service $DBPRELEASE-alfresco-aps --namespace $DESIREDNAMESPACE -o jsonpath={.spec.ports[0].nodePort}`/activiti-app
+open http://$ELBADDRESS:`kubectl get service $DBPRELEASE-alfresco-process-services --namespace $DESIREDNAMESPACE -o jsonpath={.spec.ports[0].nodePort}`/activiti-app
 
 ```
 
@@ -143,7 +180,7 @@ helm delete $DBPRELEASE
 kubectl delete namespace $DESIREDNAMESPACE
 ```
 Depending on your cluster type you should be able to also delete it if you want.
-For minikube you can just run 
+For minikube you can just run
 ```bash
 minikube delete
 ```

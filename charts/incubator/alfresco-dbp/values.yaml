@@ -21,9 +21,6 @@ alfresco-activiti-cloud-registry:
     enabled: false
 alfresco-activiti-cloud-gateway:
   enabled: true
-  keycloakURL: "http://aff56c117e58f11e7995c0ab71a820dd-692682459.us-east-1.elb.amazonaws.com/auth/"
-  eurekaURL: "http://aff56c117e58f11e7995c0ab71a820dd-692682459.us-east-1.elb.amazonaws.com/registry"
-  rabbitmqReleaseName: "jaunty-walrus-rabbitmq"
 alfresco-activiti-cloud-sso-idm:
   enabled: true
 
@@ -36,12 +33,17 @@ alfresco-content-services:
       repository: quay.io/alfresco/alfresco-dbp-repository
       tag: "0.1-SNAPSHOT"
     environment:
-      SYNC_SERVICE_URI: "http://aff56c117e58f11e7995c0ab71a820dd-692682459.us-east-1.elb.amazonaws.com/syncservice"
+      # The ACTIVEMQ_HOST is the DNS name of the ACTIVEMQ server. If deployed 
+      # from the Alfresco DBP Infrastructure Chart it will be
+      # <Infrastructure Release Name>-alfresco-dbp-infrastructure-activemq
+      ACTIVEMQ_HOST: "<infrastructure-releasename>-alfresco-dbp-infrastructure-activemq"
+      # The SYNC_SERVICE_URI should contain the details of the ingress host and port.
+      SYNC_SERVICE_URI: "<ingresscontrollerurl>/syncservice"
       JAVA_OPTS: " -Dsolr.base.url=/solr
         -Dsolr.secureComms=none
         -Dindex.subsystem.name=solr6
         -Ddsync.service.uris=\"$SYNC_SERVICE_URI\"
-        -Dmessaging.broker.url=\"failover:(tcp://${RELEASE_NAME}-alfresco-sync-service-activemq:61616)?timeout=3000\""
+        -Dmessaging.broker.url=\"failover:(tcp://${ACTIVEMQ_HOST}:61616)?timeout=3000\""
   share:
     image:
       repository: quay.io/alfresco/alfresco-dbp-share

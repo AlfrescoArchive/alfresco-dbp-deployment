@@ -18,30 +18,22 @@ syncservice:
       memory: "1000Mi"
     limits:
       memory: "2000Mi"
-  #activemq_host:
-  #activemq_port:
-  #repository_host:
-  #repository_port:
 
 activemq:
-  image:
-    repository: webcenter/activemq
-    tag: latest
-    pullPolicy: Always
-    configMinMemory: "512"
-    configMaxMemory: "2048"
-  service:
-    name: activemq
-    type: ClusterIP
-  serviceadmin:
-    name: activemq-admin
-    type: NodePort
-  resources:
-    requests:
-      memory: "512Mi"
-    limits:
-      memory: "2048Mi"
+  broker:
+    host:
+    ports:
+      amqp: 5672
+      openwire: 61616
+  monitor:
+    host:
+    ports:
+      monitor: 8161
 
+repository:
+  host:
+  port:
+  
 postgresql:
   nameOverride: postgresql-syncservice
   postgresUser: alfresco

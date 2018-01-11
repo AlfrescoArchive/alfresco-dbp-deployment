@@ -1,9 +1,9 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "syncservice.fullname" . }}-activemq
+  name: {{ template "dbp-infrastructure.fullname" . }}-activemq
   labels:
-    app: {{ template "syncservice.fullname" . }}-activemq
+    app: {{ template "dbp-infrastructure.fullname" . }}-activemq
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -12,7 +12,7 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "syncservice.fullname" . }}
+        app: {{ template "dbp-infrastructure.fullname" . }}
         release: {{ .Release.Name }}
     spec:
       containers:
@@ -25,16 +25,16 @@ spec:
         - name: ACTIVEMQ_CONFIG_MAXMEMORY
           value: "{{ .Values.activemq.image.configMaxMemory }}"
         ports:
-        - name: listenport
-          containerPort: 61616
-        - name: amqpport
-          containerPort: 5672
-        - name: monitoringport
-          containerPort: 8161
+        - name: broker
+          containerPort: {{ .Values.activemq.broker.ports.openwire | default 61616 }}
+        - name: amqp
+          containerPort: {{ .Values.activemq.broker.ports.amqp | default 5672 }}
+        - name: monitor
+          containerPort: {{ .Values.activemq.monitor.ports.monitor | default 8161 }}
         livenessProbe:
           httpGet:
             path: /
-            port: 8161
+            port: {{ .Values.activemq.monitor.ports.monitor | default 8161 }}
           initialDelaySeconds: 5
           periodSeconds: 25
         resources:

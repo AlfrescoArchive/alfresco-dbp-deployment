@@ -23,10 +23,10 @@ spec:
             - containerPort: {{ .Values.service.internalPort }}
           env:
             - name: ACT_KEYCLOAK_URL
-              value: "{{ .Values.keycloakURL }}"
+              value: "{{required "A valid keycloakURL needs to be set" .Values.keycloakURL }}"
             - name: ACT_EUREKA_URL
-              value: "{{ .Values.eurekaURL }}"
+              value: "{{required "A valid eurekaURL needs to be set" .Values.eurekaURL }}"
             - name: ACT_RABBITMQ_HOST
-              value: "{{ .Values.rabbitmqReleaseName }}"
+              value: "{{required "RabbitMQ release name needs to be set" .Values.rabbitmqReleaseName }}"
             - name: ACT_GATEWAY_HOST
               value: {{ template "activiti-cloud-gateway.fullname" . }}

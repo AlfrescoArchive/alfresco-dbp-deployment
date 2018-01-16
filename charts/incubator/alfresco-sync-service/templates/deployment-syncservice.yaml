@@ -21,11 +21,11 @@ spec:
       - name: init-activemq
         image: busybox
         env:
-        - name: ACTIVEMQ_MONITORING_HOST
+        - name: ACTIVEMQ_MONITOR_HOST
           value: {{ .Values.activemq.monitor.host | quote }}
-        - name: ACTIVEMQ_MONITORING_PORT
+        - name: ACTIVEMQ_MONITOR_PORT
           value: {{ .Values.activemq.monitor.ports.monitor | default 8161 | quote }}
-        command: ['sh', '-c', 'until $(wget -qO- -t 1 --timeout=1 http://$ACTIVEMQ_MONITORING_HOST:$ACTIVEMQ_MONITORING_PORT &> /dev/null); do echo "waiting for activemq to start"; sleep 5; done;']
+        command: ['sh', '-c', 'until $(wget -qO- -t 1 --timeout=1 http://$ACTIVEMQ_MONITOR_HOST:$ACTIVEMQ_MONITOR_PORT &> /dev/null); do echo "waiting for activemq to start"; sleep 5; done;']
       - name: init-repository
         image: busybox
         env:

@@ -6,32 +6,6 @@ rabbitmq-ha:
     enabled: false
     size: 10Gi
 
-activemq:
-  image:
-    repository: webcenter/activemq
-    tag: latest
-    pullPolicy: Always
-    configMinMemory: "512"
-    configMaxMemory: "2048"
-  service:
-    name: activemq
-    type: ClusterIP
-  serviceadmin:
-    name: activemq-admin
-    type: NodePort
-  resources:
-    requests:
-      memory: "512Mi"
-    limits:
-      memory: "2048Mi"
-  broker:
-    ports:
-      amqp: 5672
-      openwire: 61616
-  monitor:
-    ports:
-      monitor: 8161
-
 persistence:
   enabled: false
   size: 3Gi

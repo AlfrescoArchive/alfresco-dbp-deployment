@@ -6,3 +6,6 @@ dependencies:
   - name: nginx-ingress
     version: ^0.8.11
     repository: https://kubernetes-charts.storage.googleapis.com
+  - name: activemq
+    version: ^0.1.0
+    repository: https://alfresco.github.io/charts-test/incubator

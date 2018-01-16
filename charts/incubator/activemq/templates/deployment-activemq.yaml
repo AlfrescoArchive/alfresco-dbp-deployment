@@ -29,12 +29,16 @@ spec:
           containerPort: {{ .Values.activemq.services.broker.ports.internal.openwire | default 61616 }}
         - name: amqp
           containerPort: {{ .Values.activemq.services.broker.ports.internal.amqp | default 5672 }}
-        - name: monitor
-          containerPort: {{ .Values.activemq.services.monitor.ports.internal.monitor | default 8161 }}
+        - name: web-console
+          containerPort: {{ .Values.activemq.services.webConsole.ports.internal.webConsole | default 8161 }}
+        readinessProbe:
+          tcpSocket:
+            port: {{ .Values.activemq.services.broker.ports.internal.openwire | default 61616 }}
+          initialDelaySeconds: 10
+          periodSeconds: 10
         livenessProbe:
-          httpGet:
-            path: /
-            port: {{ .Values.activemq.services.monitor.ports.internal.monitor | default 8161 }}
+          tcpSocket:
+            port: {{ .Values.activemq.services.broker.ports.internal.openwire | default 61616 }}
           initialDelaySeconds: 5
           periodSeconds: 25
         resources:

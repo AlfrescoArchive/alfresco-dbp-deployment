@@ -21,11 +21,11 @@ activemq:
           openwire: 61616        
       name: activemq-broker
       type: ClusterIP
-    monitor:
+    webConsole:
       ports:
         internal:
-          monitor: 8161
+          webConsole: 8161
         external:
-          monitor: 8161
-      name: activemq-monitor
+          webConsole: 8161
+      name: activemq-web-console
       type: NodePort

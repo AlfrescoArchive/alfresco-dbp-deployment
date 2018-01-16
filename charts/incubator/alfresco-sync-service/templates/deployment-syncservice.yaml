@@ -21,11 +21,11 @@ spec:
       - name: init-activemq
         image: busybox
         env:
-        - name: ACTIVEMQ_MONITOR_HOST
-          value: {{ .Values.activemq.monitor.host | quote }}
-        - name: ACTIVEMQ_MONITOR_PORT
-          value: {{ .Values.activemq.monitor.ports.monitor | default 8161 | quote }}
-        command: ['sh', '-c', 'until $(wget -qO- -t 1 --timeout=1 http://$ACTIVEMQ_MONITOR_HOST:$ACTIVEMQ_MONITOR_PORT &> /dev/null); do echo "waiting for activemq to start"; sleep 5; done;']
+        - name: ACTIVEMQ_HOST
+          value: {{ .Values.activemq.broker.host | quote }}
+        - name: ACTIVEMQ_PORT
+          value: {{ .Values.activemq.broker.ports.openwire | default 61616 | quote }}
+        command: ['sh', '-c', 'until nc -w1 $ACTIVEMQ_HOST $ACTIVEMQ_PORT; do echo "waiting for activemq"; sleep 5; done;']
       - name: init-repository
         image: busybox
         env:
@@ -36,7 +36,7 @@ spec:
         command: ['sh', '-c', 'until $(wget -qO- -t 1 --timeout=1 http://$REPOSITORY_HOST:$REPOSITORY_PORT &> /dev/null); do echo "waiting for alfresco repo to start"; sleep 5; done;']
       - name: init-postgres
         image: busybox
-        command: ['sh', '-c', 'until nslookup {{ .Release.Name }}-postgresql-syncservice; do echo "waiting for postgres"; sleep 2; done;']
+        command: ['sh', '-c', 'until nc -w1 {{ .Release.Name }}-postgresql-syncservice 5432; do echo "waiting for postgresql"; sleep 2; done;']
       containers:
       - name: syncservice
         image: "{{ .Values.syncservice.image.repository }}:{{ .Values.syncservice.image.tag }}"

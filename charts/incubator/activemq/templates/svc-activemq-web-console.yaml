@@ -1,18 +1,18 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "activemq.fullname" . }}-monitor
+  name: {{ template "activemq.fullname" . }}-web-console
   labels:
     app: {{ template "activemq.fullname" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  type: {{ .Values.activemq.services.monitor.type }}
+  type: {{ .Values.activemq.services.webConsole.type }}
   ports:
-  - port: {{ .Values.activemq.services.monitor.ports.external.monitor | default 8161 }}
-    targetPort: {{ .Values.activemq.services.monitor.ports.internal.monitor | default 8161 }}
-    name: monitor
+  - port: {{ .Values.activemq.services.webConsole.ports.external.webConsole | default 8161 }}
+    targetPort: {{ .Values.activemq.services.webConsole.ports.internal.webConsole | default 8161 }}
+    name: web-console
     protocol: TCP
   selector:
     app: {{ template "activemq.fullname" . }}

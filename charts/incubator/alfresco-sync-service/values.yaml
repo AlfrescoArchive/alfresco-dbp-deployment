@@ -25,10 +25,6 @@ activemq:
     ports:
       amqp: 5672
       openwire: 61616
-  monitor:
-    host:
-    ports:
-      monitor: 8161
 
 repository:
   host:

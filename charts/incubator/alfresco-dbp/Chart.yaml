@@ -1,6 +1,10 @@
-apiVersion: v1
-description: A Helm chart for Alresco Process Services
 name: alfresco-dbp
-version: 0.1.0
+version: 0.2.0
+description: A Helm chart for the Alfresco Digital Business Platform
+keywords:
+- alfresco
+- dbp
+- platform
+home: https://www.alfresco.com/platform
 maintainers:
-  - name: Alfresco
+- name: Alfresco Platform Services Team 

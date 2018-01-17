@@ -22,21 +22,21 @@ spec:
         image: busybox
         env:
         - name: ACTIVEMQ_HOST
-          value: {{ .Values.syncservice.activemq_host | default (printf "%s-activemq" (include "syncservice.fullname" .)) | quote }}
+          value: {{ .Values.activemq.broker.host | quote }}
         - name: ACTIVEMQ_PORT
-          value: {{ .Values.syncservice.activemq_monitor_port | default 8161  | quote }}
-        command: ['sh', '-c', 'until $(wget -qO- -t 1 --timeout=1 http://$ACTIVEMQ_HOST:$ACTIVEMQ_PORT &> /dev/null); do echo "waiting for activemq to start"; sleep 5; done;']
+          value: {{ .Values.activemq.broker.ports.openwire | default 61616 | quote }}
+        command: ['sh', '-c', 'until nc -w1 $ACTIVEMQ_HOST $ACTIVEMQ_PORT; do echo "waiting for activemq"; sleep 5; done;']
       - name: init-repository
         image: busybox
         env:
         - name: REPOSITORY_HOST
-          value: {{ .Values.syncservice.repository_host | default (printf "%s-alfresco-content-services-repository" .Release.Name) | quote }}
+          value: {{ .Values.repository.host | default (printf "%s-alfresco-content-services-repository" .Release.Name) | quote }}
         - name: REPOSITORY_PORT
-          value: {{ .Values.syncservice.repository_port | default 80 | quote }}
+          value: {{ .Values.repository.port | default 80 | quote }}
         command: ['sh', '-c', 'until $(wget -qO- -t 1 --timeout=1 http://$REPOSITORY_HOST:$REPOSITORY_PORT &> /dev/null); do echo "waiting for alfresco repo to start"; sleep 5; done;']
       - name: init-postgres
         image: busybox
-        command: ['sh', '-c', 'until nslookup {{ .Release.Name }}-postgresql-syncservice; do echo "waiting for postgres"; sleep 2; done;']
+        command: ['sh', '-c', 'until nc -w1 {{ .Release.Name }}-postgresql-syncservice 5432; do echo "waiting for postgresql"; sleep 2; done;']
       containers:
       - name: syncservice
         image: "{{ .Values.syncservice.image.repository }}:{{ .Values.syncservice.image.tag }}"
@@ -45,13 +45,13 @@ spec:
         - name: DB_HOST
           value: {{ .Release.Name }}-postgresql-syncservice
         - name: REPO_HOST
-          value: {{ .Values.syncservice.repository_host | default (printf "%s-alfresco-content-services-repository" .Release.Name) | quote }}
+          value: {{ .Values.repository.host | default (printf "%s-alfresco-content-services-repository" .Release.Name) | quote }}
         - name: REPO_PORT
-          value: {{ .Values.syncservice.repository_port | default 80 | quote }}
+          value: {{ .Values.repository.port | default 80 | quote }}
         - name: ACTIVEMQ_HOST
-          value: {{ .Values.syncservice.activemq_host | default (printf "%s-activemq" (include "syncservice.fullname" .)) | quote }}
+          value: {{ .Values.activemq.broker.host | quote }}
         - name: ACTIVEMQ_PORT
-          value: {{ .Values.syncservice.activemq_port | default 61616  | quote }}
+          value: {{ .Values.activemq.broker.ports.openwire | default 61616 | quote }}
         ports:
         - name: serviceport
           containerPort: 9090

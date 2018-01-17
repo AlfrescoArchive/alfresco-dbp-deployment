@@ -1,0 +1,31 @@
+activemq:
+  image:
+    repository: webcenter/activemq
+    tag: latest
+    pullPolicy: Always
+    configMinMemory: "512"
+    configMaxMemory: "2048"
+  resources:
+    requests:
+      memory: "512Mi"
+    limits:
+      memory: "2048Mi"
+  services:
+    broker:
+      ports:
+        internal:
+          amqp: 5672
+          openwire: 61616
+        external:
+          amqp: 5672
+          openwire: 61616        
+      name: activemq-broker
+      type: ClusterIP
+    webConsole:
+      ports:
+        internal:
+          webConsole: 8161
+        external:
+          webConsole: 8161
+      name: activemq-web-console
+      type: NodePort

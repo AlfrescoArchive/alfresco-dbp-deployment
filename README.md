@@ -144,6 +144,8 @@ helm dependency update alfresco-dbp
 
 #On MINIKUBE
 helm install alfresco-dbp \
+--set alfresco-sync-service.activemq.broker.host="${INFRARELEASE}-activemq-broker" \
+--set alfresco-content-services.repository.environment.ACTIVEMQ_HOST="${INFRARELEASE}-activemq-broker" \
 --set alfresco-content-services.repository.environment.SYNC_SERVICE_URI="http://$ELBADDRESS:$INFRAPORT/syncservice" \
 --set alfresco-activiti-cloud-gateway.keycloakURL="http://$ELBADDRESS:$INFRAPORT/auth/" \
 --set alfresco-activiti-cloud-gateway.eurekaURL="http://$ELBADDRESS:$INFRAPORT/registry/" \
@@ -152,6 +154,8 @@ helm install alfresco-dbp \
 
 #On AWS
 helm install alfresco-dbp \
+--set alfresco-sync-service.activemq.broker.host="${INFRARELEASE}-activemq-broker" \
+--set alfresco-content-services.repository.environment.ACTIVEMQ_HOST="${INFRARELEASE}-activemq-broker" \
 --set alfresco-content-services.repository.environment.SYNC_SERVICE_URI="http://$ELBADDRESS/syncservice" \
 --set alfresco-activiti-cloud-gateway.keycloakURL="http://$ELBADDRESS/auth/" \
 --set alfresco-activiti-cloud-gateway.eurekaURL="http://$ELBADDRESS/registry/" \

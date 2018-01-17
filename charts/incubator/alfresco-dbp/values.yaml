@@ -33,13 +33,18 @@ alfresco-content-services:
       repository: quay.io/alfresco/alfresco-dbp-repository
       tag: "0.1-SNAPSHOT"
     environment:
+      # The ACTIVEMQ_HOST is the DNS name of the ActiveMQ Broker. If deployed 
+      # from the Alfresco ActiveMQ Chart it will be
+      # <Infrastructure Release Name>-activemq-broker
+      ACTIVEMQ_HOST: "<infrastructure-releasename>-activemq-broker"
       # The SYNC_SERVICE_URI should contain the details of the ingress host and port.
       SYNC_SERVICE_URI: "<ingresscontrollerurl>/syncservice"
+      # FIXME: Port 61616 is hard-coded here, but is configurable elsewhere
       JAVA_OPTS: " -Dsolr.base.url=/solr
         -Dsolr.secureComms=none
         -Dindex.subsystem.name=solr6
         -Ddsync.service.uris=\"$SYNC_SERVICE_URI\"
-        -Dmessaging.broker.url=\"failover:(tcp://${RELEASE_NAME}-alfresco-sync-service-activemq:61616)?timeout=3000\""
+        -Dmessaging.broker.url=\"failover:(tcp://${ACTIVEMQ_HOST}:61616)?timeout=3000\""
   share:
     image:
       repository: quay.io/alfresco/alfresco-dbp-share

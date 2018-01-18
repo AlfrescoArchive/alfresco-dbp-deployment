@@ -1,4 +1,5 @@
 rabbitmq-ha:
+  rabbitmqPassword: guest
   enabled: true
   rbac:
     create: false

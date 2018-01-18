@@ -1,5 +1,5 @@
-dependencies:
-  - name: nginx-ingress
-    version: ^0.8.11
-    repository: https://kubernetes-charts.storage.googleapis.com
-    condition: alfresco-activiti-cloud-registry.nginx-ingress.enabled
+#dependencies:
+#  - name: nginx-ingress
+#    version: ^0.8.11
+#    repository: https://kubernetes-charts.storage.googleapis.com
+#    condition: alfresco-activiti-cloud-registry.nginx-ingress.enabled

@@ -9,5 +9,4 @@ service:
   internalPort: 8761
   type: ClusterIP
 ingress:
-  enable: false
   path: /registry/*

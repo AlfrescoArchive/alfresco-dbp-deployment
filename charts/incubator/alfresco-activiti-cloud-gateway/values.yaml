@@ -9,7 +9,8 @@ service:
   internalPort: 8080
   type: LoadBalancer
 ingress:
-  enable: true
   path: /
+  
+eurekaURL:
 keycloakURL:
 rabbitmqReleaseName:

@@ -3,6 +3,10 @@ dependencies:
     version: ^0.1.0
     repository: https://kubernetes-charts.storage.googleapis.com
     condition: rabbitmq-ha.enabled
+  - name: rabbitmq
+    version: ^0.1.0
+    repository: https://kubernetes-charts.storage.googleapis.com
+    condition: rabbitmq.enabled
   - name: nginx-ingress
     version: ^0.8.11
     repository: https://kubernetes-charts.storage.googleapis.com

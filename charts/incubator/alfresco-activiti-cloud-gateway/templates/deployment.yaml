@@ -22,12 +22,10 @@ spec:
           ports:
             - containerPort: {{ .Values.service.internalPort }}
           env:
-            - name: ACT_GATEWAY_HOST
-              value: "{{ .Release.Name }}-alfresco-activiti-cloud-gateway"
             - name: ACT_KEYCLOAK_URL
               value: "{{required "A valid keycloakURL needs to be set" .Values.keycloakURL }}"
             - name: ACT_EUREKA_URL
-              value: "http://{{ .Release.Name }}-alfresco-activiti-cloud-registry:8761/eureka/"
+              value: "{{required "A valid eurekaURL needs to be set" .Values.eurekaURL }}"
             - name: ACT_RABBITMQ_HOST
               value: "{{required "RabbitMQ release name needs to be set" .Values.rabbitmqReleaseName }}"
             - name: ACT_GATEWAY_HOST

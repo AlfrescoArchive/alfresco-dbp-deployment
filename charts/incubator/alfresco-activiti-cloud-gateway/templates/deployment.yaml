@@ -25,10 +25,10 @@ spec:
             - name: ACT_GATEWAY_HOST
               value: "{{ .Release.Name }}-alfresco-activiti-cloud-gateway"
             - name: ACT_KEYCLOAK_URL
-              value: "{{ .Values.keycloakURL }}"
+              value: "{{required "A valid keycloakURL needs to be set" .Values.keycloakURL }}"
             - name: ACT_EUREKA_URL
               value: "http://{{ .Release.Name }}-alfresco-activiti-cloud-registry:8761/eureka/"
             - name: ACT_RABBITMQ_HOST
-              value: "{{ .Values.rabbitmqReleaseName }}"
+              value: "{{required "RabbitMQ release name needs to be set" .Values.rabbitmqReleaseName }}"
             - name: ACT_GATEWAY_HOST
               value: {{ template "activiti-cloud-gateway.fullname" . }}

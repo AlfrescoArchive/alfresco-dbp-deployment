@@ -1,10 +1,10 @@
 replicaCount: 1
 image:
-  repository: quay.io/alfresco/alfresco-idm
-  tag: 0.1-SNAPSHOT
+  repository: quay.io/alfresco/alfresco-identity-service
+  tag: latest
   pullPolicy: Always
 service:
-  name: activiti-sso
+  name: alfresco-identity
   type: NodePort
   externalPort: 8180
   internalPort: 8180

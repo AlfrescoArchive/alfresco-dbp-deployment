@@ -1,10 +1,10 @@
 replicaCount: 1
 image:
-  repository: quay.io/alfresco/alfresco-identity-service
+  repository: quay.io/alfresco/alfresco-keycloak
   tag: latest
   pullPolicy: Always
 service:
-  name: alfresco-identity
+  name: alfresco-keycloak
   type: NodePort
   externalPort: 8180
   internalPort: 8180

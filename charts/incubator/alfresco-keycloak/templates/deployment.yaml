@@ -1,9 +1,9 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "alfresco-identity-service.fullname" . }}
+  name: {{ template "alfresco-keycloak.fullname" . }}
   labels:
-    app: {{ template "alfresco-identity-service.name" . }}
+    app: {{ template "alfresco-keycloak.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -12,7 +12,7 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "alfresco-identity-service.name" . }}
+        app: {{ template "alfresco-keycloak.name" . }}
         release: {{ .Release.Name }}
     spec:
       containers:

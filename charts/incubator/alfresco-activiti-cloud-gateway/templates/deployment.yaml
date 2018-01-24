@@ -25,7 +25,7 @@ spec:
             - name: ACT_KEYCLOAK_URL
               value: "{{required "A valid keycloakURL needs to be set" .Values.keycloakURL }}"
             - name: ACT_EUREKA_URL
-              value: "{{required "A valid eurekaURL needs to be set" .Values.eurekaURL }}"
+              value: "{{ .Values.eurekaURL | default (printf "http://%s-alfresco-activiti-cloud-registry:8761/eureka/" .Release.Name) }}"
             - name: ACT_RABBITMQ_HOST
               value: "{{required "RabbitMQ release name needs to be set" .Values.rabbitmqReleaseName }}"
             - name: ACT_GATEWAY_HOST

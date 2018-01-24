@@ -7,7 +7,7 @@ service:
   name: activiti-cloud-gateway
   externalPort: 8080
   internalPort: 8080
-  type: LoadBalancer
+  type: NodePort
 ingress:
   path: /
   

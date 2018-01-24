@@ -1,12 +1,8 @@
 rabbitmq-ha:
-  enabled: false
+  enabled: true
+  replicaCount: 1
   rbac:
     create: false
-  persistence:
-    enabled: false
-    size: 10Gi
-rabbitmq:
-  enabled: true
   persistence:
     enabled: false
     size: 10Gi

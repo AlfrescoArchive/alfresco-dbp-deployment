@@ -16,10 +16,11 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "77fb3b2c-7586-46e6-926f-5371f5160845",
+								"id": "416c31a8-2409-49bb-8f34-42c16e626d0f",
 								"type": "text/javascript",
 								"exec": [
-									"pm.environment.get(\"url\");",
+									"",
+									"pm.globals.get(\"url\");",
 									"",
 									"",
 									"pm.test(\"validateStatusCodeTest\", function () {",
@@ -68,6 +69,7 @@
 									"        ",
 									"    ",
 									"});",
+									"",
 									"",
 									""
 								]
@@ -124,10 +126,11 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "7e11dc0d-dfdb-421d-9fbf-ee9c9be912e6",
+								"id": "af8bcc1f-35fa-455e-9d48-a3d15fa917ee",
 								"type": "text/javascript",
 								"exec": [
-									"pm.environment.get(\"url\");",
+									"",
+									"pm.globals.get(\"url\");",
 									"",
 									"pm.test(\"share is up and running\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -167,10 +170,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
+						"body": {},
 						"url": {
 							"raw": "http://{{url}}/share/page/modules/deploy",
 							"protocol": "http",
@@ -194,10 +194,10 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "01b08544-06a1-405b-8280-1f881c083275",
+								"id": "42c706d8-c92f-49dd-884d-8eb47f6ac808",
 								"type": "text/javascript",
 								"exec": [
-									"pm.environment.get(\"url\");",
+									"pm.globals.get(\"url\");",
 									"",
 									"pm.test(\"solr status code\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -245,10 +245,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
+						"body": {},
 						"url": {
 							"raw": "http://{{url}}/alfresco/s/api/solrstats",
 							"protocol": "http",
@@ -271,10 +268,10 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "be706276-401a-400a-b6b4-58fee1940e0b",
+								"id": "93bc0117-c1b8-4cbf-98b2-307154bacf24",
 								"type": "text/javascript",
 								"exec": [
-									"pm.environment.get(\"url\");",
+									"pm.globals.get(\"url\");",
 									"",
 									"pm.test(\"validateGoogleDocsImage\", function () ",
 									"{",
@@ -312,10 +309,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
+						"body": {},
 						"url": {
 							"raw": "http://{{url}}/share/res/components/documentlibrary/actions/google-edit-flat-16.png",
 							"protocol": "http",
@@ -346,10 +340,10 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "ff87bcd4-4ce6-436e-a5bf-0a3ab11838bd",
+								"id": "c90fbb35-45a9-4cd4-9189-76750e6570cb",
 								"type": "text/javascript",
 								"exec": [
-									"pm.environment.get(\"url\");",
+									"pm.globals.get(\"url\");",
 									"",
 									"",
 									"pm.test(\"apsstatuscode\", function () {",
@@ -391,10 +385,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
+						"body": {},
 						"url": {
 							"raw": "http://{{url}}/activiti-app/api/enterprise/app-version",
 							"protocol": "http",
@@ -419,10 +410,17 @@
 				{
 					"listen": "test",
 					"script": {
+						"id": "7f98812c-e8cd-4794-8e41-a3b91c959525",
 						"type": "text/javascript",
 						"exec": [
+							"pm.globals.get(\"url\");",
+							"",
 							"var tokens=JSON.parse(responseBody); ",
-							"postman.setGlobalVariable(\"kcAccessToken\", tokens.access_token); "
+							"postman.setGlobalVariable(\"kcAccessToken\", tokens.access_token); ",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
 						]
 					}
 				}
@@ -480,6 +478,25 @@
 		},
 		{
 			"name": "auth gateway",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4c86da4e-1493-44d7-8830-2e79f09530c1",
+						"type": "text/javascript",
+						"exec": [
+							"pm.globals.get(\"url\");",
+							"",
+							"pm.globals.get(\"kcAccessToken\");",
+							"",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [

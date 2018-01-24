@@ -93,6 +93,8 @@ export NFSSERVER=fs-d660549f.efs.us-east-1.amazonaws.com
 ### 2. Deploy the infrastructure charts:
 ```bash
 
+helm repo add alfresco-test https://alfresco.github.io/charts-test/incubator
+
 helm dependency update alfresco-dbp-infrastructure
 
 #ON MINIKUBE
@@ -137,8 +139,6 @@ alfresco-content-services:
 ### 8. Deploy the DBP
 
 ```bash
-
-helm repo add alfresco-test https://alfresco.github.io/charts-test/incubator
 
 helm dependency update alfresco-dbp
 

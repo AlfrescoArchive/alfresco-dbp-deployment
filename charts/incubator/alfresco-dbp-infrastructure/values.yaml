@@ -13,3 +13,6 @@ persistence:
   volumeEnv: minikube #Choose between aws and minikube
   nfs:
     server: fs-6570472c.efs.us-east-1.amazonaws.com #For aws you will need to specify the EFS server
+
+activemq:
+  enabled: true

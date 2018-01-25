@@ -5,11 +5,12 @@ image:
   pullPolicy: Always
 service:
   name: activiti-cloud-gateway
-  type: NodePort
   externalPort: 8080
   internalPort: 8080
+  type: NodePort
 ingress:
-  enable: false
-keycloakURL:
+  path: /
+  
 eurekaURL:
+keycloakURL:
 rabbitmqReleaseName:

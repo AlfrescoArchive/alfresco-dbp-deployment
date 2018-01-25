@@ -9,3 +9,4 @@ dependencies:
   - name: activemq
     version: ^0.1.0
     repository: https://alfresco.github.io/charts-test/incubator
+    condition: activemq.enabled

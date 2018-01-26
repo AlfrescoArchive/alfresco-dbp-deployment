@@ -2,7 +2,7 @@ registryPullSecrets: quay-registry-secret
 
 replicaCount: 1
 image:
-  repository: quay.io/alfresco/alfresco-keycloak
+  repository: alfresco/alfresco-keycloak
   tag: latest
   pullPolicy: Always
 service:

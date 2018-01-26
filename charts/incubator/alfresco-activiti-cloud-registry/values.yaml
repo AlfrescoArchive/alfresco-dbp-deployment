@@ -1,3 +1,6 @@
+
+registryPullSecrets: quay-registry-secret
+
 replicaCount: 1
 image:
   repository: activiti/activiti-cloud-registry

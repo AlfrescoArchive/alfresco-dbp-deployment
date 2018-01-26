@@ -8,9 +8,8 @@ image:
   pullPolicy: Always
 service:
   name: activiti-cloud-registry
-  type: NodePort
   externalPort: 8761
   internalPort: 8761
+  type: ClusterIP
 ingress:
-  enable: true
   path: /registry/*

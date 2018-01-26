@@ -7,8 +7,9 @@ image:
   pullPolicy: Always
 service:
   name: alfresco-keycloak
-  type: NodePort
   externalPort: 8180
   internalPort: 8180
+  type: NodePort
+  
 ingress:
   path: /auth

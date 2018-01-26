@@ -1,3 +1,6 @@
+
+registryPullSecrets: quay-registry-secret
+
 replicaCount: 1
 image:
   repository: activiti/activiti-cloud-registry
@@ -5,9 +8,8 @@ image:
   pullPolicy: Always
 service:
   name: activiti-cloud-registry
-  type: NodePort
   externalPort: 8761
   internalPort: 8761
+  type: ClusterIP
 ingress:
-  enable: true
   path: /registry/*

@@ -15,6 +15,8 @@ spec:
         app: {{ template "activiti-cloud-registry.name" . }}
         release: {{ .Release.Name }}
     spec:
+      imagePullSecrets:
+        - name: {{ .Values.registryPullSecrets }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

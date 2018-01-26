@@ -1,0 +1,15 @@
+registryPullSecrets: quay-registry-secret
+
+replicaCount: 1
+image:
+  repository: quay.io/alfresco/alfresco-keycloak
+  tag: latest
+  pullPolicy: Always
+service:
+  name: alfresco-keycloak
+  externalPort: 8180
+  internalPort: 8180
+  type: NodePort
+  
+ingress:
+  path: /auth

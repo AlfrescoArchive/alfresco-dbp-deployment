@@ -1,9 +1,9 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "activiti-cloud-gateway.fullname" . }}
+  name: {{ template "alfresco-api-gateway.fullname" . }}
   labels:
-    app: {{ template "activiti-cloud-gateway.name" . }}
+    app: {{ template "alfresco-api-gateway.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -12,7 +12,7 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "activiti-cloud-gateway.name" . }}
+        app: {{ template "alfresco-api-gateway.name" . }}
         release: {{ .Release.Name }}
     spec:
       imagePullSecrets:
@@ -31,4 +31,4 @@ spec:
             - name: ACT_RABBITMQ_HOST
               value: "{{required "RabbitMQ release name needs to be set" .Values.rabbitmqReleaseName }}"
             - name: ACT_GATEWAY_HOST
-              value: {{ template "activiti-cloud-gateway.fullname" . }}
+              value: {{ template "alfresco-api-gateway.fullname" . }}

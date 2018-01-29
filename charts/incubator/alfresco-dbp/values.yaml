@@ -19,7 +19,7 @@ alfresco-activiti-cloud-registry:
   enabled: true
   nginx-ingress:
     enabled: false
-alfresco-activiti-cloud-gateway:
+alfresco-api-gateway:
   enabled: true
 alfresco-keycloak:
   enabled: true

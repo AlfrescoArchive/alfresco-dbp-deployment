@@ -11,9 +11,9 @@ dependencies:
     version: ^0.1.0
     condition: alfresco-activiti-cloud-registry.enabled
     repository: https://alfresco.github.io/charts-test/incubator
-  - name: alfresco-activiti-cloud-gateway
+  - name: alfresco-api-gateway
     version: ^0.1.0
-    condition: alfresco-activiti-cloud-gateway.enabled
+    condition: alfresco-api-gateway.enabled
     repository: https://alfresco.github.io/charts-test/incubator
   - name: alfresco-content-services
     version: ^0.0.1

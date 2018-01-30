@@ -1,7 +1,7 @@
 {
 	"info": {
 		"name": "dbp-test",
-		"_postman_id": "6b75ad9b-42e4-d3f5-60b7-d2c66a5976bc",
+		"_postman_id": "122b34e0-3e9e-933d-90e6-a68791819ddc",
 		"description": "This is to test all the rest api request for validating the dbp services are up and running correctly",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -103,7 +103,10 @@
 						},
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://{{url}}/alfresco/api/discovery",
 							"protocol": "http",
@@ -170,7 +173,10 @@
 						},
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://{{url}}/share/page/modules/deploy",
 							"protocol": "http",
@@ -245,7 +251,10 @@
 						},
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://{{url}}/alfresco/s/api/solrstats",
 							"protocol": "http",
@@ -309,7 +318,10 @@
 						},
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://{{url}}/share/res/components/documentlibrary/actions/google-edit-flat-16.png",
 							"protocol": "http",
@@ -385,7 +397,10 @@
 						},
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://{{url}}/activiti-app/api/enterprise/app-version",
 							"protocol": "http",
@@ -399,6 +414,76 @@
 								"app-version"
 							]
 						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Sync Service",
+			"description": "",
+			"item": [
+				{
+					"name": "sync service",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b79d3e82-4a7b-4497-9541-6617e3ba165d",
+								"type": "text/javascript",
+								"exec": [
+									"pm.globals.get(\"url\");",
+									"",
+									"",
+									"",
+									"pm.test(\"validateStatusCode\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"validateJsonBodyForActiveMQ\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var modulesMessage= jsonData.activeMQConnection.message;",
+									"    pm.expect(modulesMessage).to.eql(\"ActiveMQ connection Ok\");",
+									"});",
+									"",
+									"pm.test(\"validateJsonBodyForDB\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var modulesMessage= jsonData.databaseConnection.message;",
+									"    pm.expect(modulesMessage).to.eql(\"Database connection Ok\");",
+									"});",
+									"",
+									"pm.test(\"validateJsonBodyForEventHealth\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var modulesMessage= jsonData.eventsHealthCheck.message;",
+									"    pm.expect(modulesMessage).to.eql(\"Ok\");",
+									"});",
+									"",
+									"pm.test(\"validateJsonBodyForrepositoryConnection\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var modulesMessage= jsonData.repositoryConnection.message;",
+									"    pm.expect(modulesMessage).to.eql(\"Repository connection Ok\");",
+									"});",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://{{url}}/syncservice/healthcheck",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"syncservice",
+								"healthcheck"
+							]
+						},
+						"description": ""
 					},
 					"response": []
 				}

@@ -9,7 +9,6 @@ spec:
   rules:
   - http:
       paths:
-      - path: {{ .Values.ingress.path }}
-        backend:
+      - backend:
           serviceName: {{ template "alfresco-api-gateway.fullname" . }}
           servicePort: {{ .Values.service.externalPort }}

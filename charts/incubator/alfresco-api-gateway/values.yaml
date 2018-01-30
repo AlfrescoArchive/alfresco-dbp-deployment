@@ -12,9 +12,6 @@ service:
   internalPort: 8080
   type: NodePort
   
-ingress:
-  path: /
-  
 eurekaURL:
 keycloakURL:
 rabbitmqReleaseName:

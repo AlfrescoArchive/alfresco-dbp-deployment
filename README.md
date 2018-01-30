@@ -148,7 +148,7 @@ helm install alfresco-dbp \
 --set alfresco-content-services.repository.environment.ACTIVEMQ_HOST="${INFRARELEASE}-activemq-broker" \
 --set alfresco-content-services.repository.environment.SYNC_SERVICE_URI="http://$ELBADDRESS:$INFRAPORT/syncservice" \
 --set alfresco-api-gateway.keycloakURL="http://$ELBADDRESS:$INFRAPORT/auth/" \
---set alfresco-api-gateway.rabbitmqReleaseName="$INFRARELEASE-rabbitmq" \
+--set alfresco-api-gateway.rabbitmqReleaseName="$INFRARELEASE-rabbitmq-ha" \
 --namespace=$DESIREDNAMESPACE
 
 #On AWS
@@ -157,7 +157,7 @@ helm install alfresco-dbp \
 --set alfresco-content-services.repository.environment.ACTIVEMQ_HOST="${INFRARELEASE}-activemq-broker" \
 --set alfresco-content-services.repository.environment.SYNC_SERVICE_URI="http://$ELBADDRESS/syncservice" \
 --set alfresco-api-gateway.keycloakURL="http://$ELBADDRESS/auth/" \
---set alfresco-api-gateway.rabbitmqReleaseName="$INFRARELEASE-rabbitmq" \
+--set alfresco-api-gateway.rabbitmqReleaseName="$INFRARELEASE-rabbitmq-ha" \
 --namespace=$DESIREDNAMESPACE
 ```
 

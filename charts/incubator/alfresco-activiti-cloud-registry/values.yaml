@@ -11,5 +11,3 @@ service:
   externalPort: 8761
   internalPort: 8761
   type: ClusterIP
-ingress:
-  path: /registry/*

@@ -1,7 +1,7 @@
 {
 	"info": {
 		"name": "dbp-test",
-		"_postman_id": "6b75ad9b-42e4-d3f5-60b7-d2c66a5976bc",
+		"_postman_id": "ed7e21a0-f32e-8cab-34fd-9ded42443253",
 		"description": "This is to test all the rest api request for validating the dbp services are up and running correctly",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -103,7 +103,10 @@
 						},
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://{{url}}/alfresco/api/discovery",
 							"protocol": "http",
@@ -170,7 +173,10 @@
 						},
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://{{url}}/share/page/modules/deploy",
 							"protocol": "http",
@@ -245,7 +251,10 @@
 						},
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://{{url}}/alfresco/s/api/solrstats",
 							"protocol": "http",
@@ -309,7 +318,10 @@
 						},
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://{{url}}/share/res/components/documentlibrary/actions/google-edit-flat-16.png",
 							"protocol": "http",
@@ -385,7 +397,10 @@
 						},
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://{{url}}/activiti-app/api/enterprise/app-version",
 							"protocol": "http",
@@ -471,53 +486,6 @@
 						"protocol",
 						"openid-connect",
 						"token"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "auth gateway",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "4c86da4e-1493-44d7-8830-2e79f09530c1",
-						"type": "text/javascript",
-						"exec": [
-							"pm.globals.get(\"url\");",
-							"",
-							"pm.globals.get(\"kcAccessToken\");",
-							"",
-							"",
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});"
-						]
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Bearer {{kcAccessToken}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": "http://{{url}}/actuator/routes",
-					"protocol": "http",
-					"host": [
-						"{{url}}"
-					],
-					"path": [
-						"actuator",
-						"routes"
 					]
 				}
 			},

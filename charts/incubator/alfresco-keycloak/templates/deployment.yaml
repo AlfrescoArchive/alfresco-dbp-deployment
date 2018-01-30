@@ -1,9 +1,9 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "activiti-sso.fullname" . }}
+  name: {{ template "alfresco-keycloak.fullname" . }}
   labels:
-    app: {{ template "activiti-sso.name" . }}
+    app: {{ template "alfresco-keycloak.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -12,9 +12,11 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "activiti-sso.name" . }}
+        app: {{ template "alfresco-keycloak.name" . }}
         release: {{ .Release.Name }}
     spec:
+      imagePullSecrets:
+        - name: {{ .Values.registryPullSecrets }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

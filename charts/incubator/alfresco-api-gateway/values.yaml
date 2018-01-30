@@ -1,0 +1,20 @@
+
+registryPullSecrets: quay-registry-secret
+
+replicaCount: 1
+image:
+  repository: alfresco/alfresco-api-gateway
+  tag: latest
+  pullPolicy: Always
+service:
+  name: alresco-api-gateway
+  externalPort: 8080
+  internalPort: 8080
+  type: NodePort
+  
+ingress:
+  path: /
+  
+eurekaURL:
+keycloakURL:
+rabbitmqReleaseName:

@@ -93,6 +93,8 @@ export NFSSERVER=fs-d660549f.efs.us-east-1.amazonaws.com
 ### 2. Deploy the infrastructure charts:
 ```bash
 
+helm repo add alfresco-test https://alfresco.github.io/charts-test/incubator
+
 helm dependency update alfresco-dbp-infrastructure
 
 #ON MINIKUBE
@@ -138,8 +140,6 @@ alfresco-content-services:
 
 ```bash
 
-helm repo add alfresco-test https://alfresco.github.io/charts-test/incubator
-
 helm dependency update alfresco-dbp
 
 #On MINIKUBE
@@ -147,9 +147,8 @@ helm install alfresco-dbp \
 --set alfresco-sync-service.activemq.broker.host="${INFRARELEASE}-activemq-broker" \
 --set alfresco-content-services.repository.environment.ACTIVEMQ_HOST="${INFRARELEASE}-activemq-broker" \
 --set alfresco-content-services.repository.environment.SYNC_SERVICE_URI="http://$ELBADDRESS:$INFRAPORT/syncservice" \
---set alfresco-activiti-cloud-gateway.keycloakURL="http://$ELBADDRESS:$INFRAPORT/auth/" \
---set alfresco-activiti-cloud-gateway.eurekaURL="http://$ELBADDRESS:$INFRAPORT/registry/" \
---set alfresco-activiti-cloud-gateway.rabbitmqReleaseName="$INFRARELEASE-rabbitmq" \
+--set alfresco-api-gateway.keycloakURL="http://$ELBADDRESS:$INFRAPORT/auth/" \
+--set alfresco-api-gateway.rabbitmqReleaseName="$INFRARELEASE-rabbitmq" \
 --namespace=$DESIREDNAMESPACE
 
 #On AWS
@@ -157,9 +156,8 @@ helm install alfresco-dbp \
 --set alfresco-sync-service.activemq.broker.host="${INFRARELEASE}-activemq-broker" \
 --set alfresco-content-services.repository.environment.ACTIVEMQ_HOST="${INFRARELEASE}-activemq-broker" \
 --set alfresco-content-services.repository.environment.SYNC_SERVICE_URI="http://$ELBADDRESS/syncservice" \
---set alfresco-activiti-cloud-gateway.keycloakURL="http://$ELBADDRESS/auth/" \
---set alfresco-activiti-cloud-gateway.eurekaURL="http://$ELBADDRESS/registry/" \
---set alfresco-activiti-cloud-gateway.rabbitmqReleaseName="$INFRARELEASE-rabbitmq" \
+--set alfresco-api-gateway.keycloakURL="http://$ELBADDRESS/auth/" \
+--set alfresco-api-gateway.rabbitmqReleaseName="$INFRARELEASE-rabbitmq" \
 --namespace=$DESIREDNAMESPACE
 ```
 

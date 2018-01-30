@@ -1,0 +1,612 @@
+{
+	"info": {
+		"name": "dbp-test",
+		"_postman_id": "122b34e0-3e9e-933d-90e6-a68791819ddc",
+		"description": "This is to test all the rest api request for validating the dbp services are up and running correctly",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "ACS CASE",
+			"description": "This collection will contain all the necessary test to validate ACS",
+			"item": [
+				{
+					"name": "repo-descovery with amps",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "416c31a8-2409-49bb-8f34-42c16e626d0f",
+								"type": "text/javascript",
+								"exec": [
+									"",
+									"pm.globals.get(\"url\");",
+									"",
+									"",
+									"pm.test(\"validateStatusCodeTest\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"validateLicenseTest\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"ENTERPRISE\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"validateModuleTestTest\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var modulesArray= jsonData.entry.repository.modules;",
+									"    for(var key in modulesArray)",
+									"    {",
+									"        var obj = modulesArray[key];",
+									"        var id = obj.id;",
+									"        if (\"org_alfresco_module_rm\" === id)",
+									"        {",
+									"            pm.expect(obj.version).to.eql(\"2.6.0\");",
+									"        }",
+									"        if(\"alfresco-aos-module\" === id)",
+									"        {",
+									"            pm.expect(obj.version).to.eql(\"1.1.7\");",
+									"        }",
+									"        if(\"org.alfresco.integrations.google.docs\" === id)",
+									"        {",
+									"             pm.expect(obj.version).to.eql(\"3.0.4.2\");",
+									"        }",
+									"        if(\"org_alfresco_device_sync_repo\" === id)",
+									"        {",
+									"            pm.expect(obj.version).to.eql(\"2.2\");",
+									"        }",
+									"        if(\"alfresco-share-services\" === id)",
+									"        {",
+									"            pm.expect(obj.version).to.eql(\"5.2.0\");",
+									"        }",
+									"        if(\"alfresco-rm-enterprise-repo\" === id)",
+									"        {",
+									"            pm.expect(obj.title).to.eql(\"Alfresco Records Management Enterprise Repo\");",
+									"            pm.expect(obj.version).to.eql(\"2.6.0\");",
+									"        }    ",
+									"    }",
+									"        ",
+									"    ",
+									"});",
+									"",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "string"
+								},
+								{
+									"key": "saveHelperData",
+									"type": "any"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{url}}/alfresco/api/discovery",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"alfresco",
+								"api",
+								"discovery"
+							]
+						},
+						"description": "This request will validate whether the repo is set up correctly "
+					},
+					"response": []
+				},
+				{
+					"name": "Validate-share and rm module",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "af8bcc1f-35fa-455e-9d48-a3d15fa917ee",
+								"type": "text/javascript",
+								"exec": [
+									"",
+									"pm.globals.get(\"url\");",
+									"",
+									"pm.test(\"share is up and running\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"rm is installed part of share\", function () {",
+									"pm.expect(pm.response.text()).to.include(\"Alfresco :: Records Management Global Customization - Enterprise\");",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "string"
+								},
+								{
+									"key": "saveHelperData",
+									"type": "any"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{url}}/share/page/modules/deploy",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"share",
+								"page",
+								"modules",
+								"deploy"
+							]
+						},
+						"description": "Validate Share is deployed correctly"
+					},
+					"response": []
+				},
+				{
+					"name": "solr-validation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "42c706d8-c92f-49dd-884d-8eb47f6ac808",
+								"type": "text/javascript",
+								"exec": [
+									"pm.globals.get(\"url\");",
+									"",
+									"pm.test(\"solr status code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"solr response test\", function() {",
+									"   var jsonData = pm.response.json();",
+									"    var modulesArray= jsonData.resultset.queryInfo;",
+									"    for(var key in modulesArray)",
+									"    {",
+									"        var obj = modulesArray[key];",
+									"        var id = obj.numberFound;",
+									"        console.log(id);",
+									"        pm.expect(id).to.be.eql(\"199\");",
+									"    }    ",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "string"
+								},
+								{
+									"key": "saveHelperData",
+									"type": "any"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{url}}/alfresco/s/api/solrstats",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"alfresco",
+								"s",
+								"api",
+								"solrstats"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "google-docs",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "93bc0117-c1b8-4cbf-98b2-307154bacf24",
+								"type": "text/javascript",
+								"exec": [
+									"pm.globals.get(\"url\");",
+									"",
+									"pm.test(\"validateGoogleDocsImage\", function () ",
+									"{",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "string"
+								},
+								{
+									"key": "saveHelperData",
+									"type": "any"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{url}}/share/res/components/documentlibrary/actions/google-edit-flat-16.png",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"share",
+								"res",
+								"components",
+								"documentlibrary",
+								"actions",
+								"google-edit-flat-16.png"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "APS CASE",
+			"description": "This folder will contain all the cases related to APS",
+			"item": [
+				{
+					"name": "aps",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c90fbb35-45a9-4cd4-9189-76750e6570cb",
+								"type": "text/javascript",
+								"exec": [
+									"pm.globals.get(\"url\");",
+									"",
+									"",
+									"pm.test(\"apsstatuscode\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"validateAPSEditionTest\", function () {",
+									"    var jsonData = pm.response.json().edition;",
+									"    pm.expect(jsonData).to.eql(\"Alfresco Process Services (powered by Activiti)\");",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "admin@app.activiti.com",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "string"
+								},
+								{
+									"key": "saveHelperData",
+									"type": "any"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{url}}/activiti-app/api/enterprise/app-version",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"activiti-app",
+								"api",
+								"enterprise",
+								"app-version"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Sync Service",
+			"description": "",
+			"item": [
+				{
+					"name": "sync service",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b79d3e82-4a7b-4497-9541-6617e3ba165d",
+								"type": "text/javascript",
+								"exec": [
+									"pm.globals.get(\"url\");",
+									"",
+									"",
+									"",
+									"pm.test(\"validateStatusCode\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"validateJsonBodyForActiveMQ\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var modulesMessage= jsonData.activeMQConnection.message;",
+									"    pm.expect(modulesMessage).to.eql(\"ActiveMQ connection Ok\");",
+									"});",
+									"",
+									"pm.test(\"validateJsonBodyForDB\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var modulesMessage= jsonData.databaseConnection.message;",
+									"    pm.expect(modulesMessage).to.eql(\"Database connection Ok\");",
+									"});",
+									"",
+									"pm.test(\"validateJsonBodyForEventHealth\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var modulesMessage= jsonData.eventsHealthCheck.message;",
+									"    pm.expect(modulesMessage).to.eql(\"Ok\");",
+									"});",
+									"",
+									"pm.test(\"validateJsonBodyForrepositoryConnection\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var modulesMessage= jsonData.repositoryConnection.message;",
+									"    pm.expect(modulesMessage).to.eql(\"Repository connection Ok\");",
+									"});",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://{{url}}/syncservice/healthcheck",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"syncservice",
+								"healthcheck"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "key cloak",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7f98812c-e8cd-4794-8e41-a3b91c959525",
+						"type": "text/javascript",
+						"exec": [
+							"pm.globals.get(\"url\");",
+							"",
+							"var tokens=JSON.parse(responseBody); ",
+							"postman.setGlobalVariable(\"kcAccessToken\", tokens.access_token); ",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "client_id",
+							"value": "activiti",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "hruser",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "password",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://{{url}}/auth/realms/springboot/protocol/openid-connect/token",
+					"protocol": "http",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"auth",
+						"realms",
+						"springboot",
+						"protocol",
+						"openid-connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "auth gateway",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4c86da4e-1493-44d7-8830-2e79f09530c1",
+						"type": "text/javascript",
+						"exec": [
+							"pm.globals.get(\"url\");",
+							"",
+							"pm.globals.get(\"kcAccessToken\");",
+							"",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{kcAccessToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{url}}/actuator/routes",
+					"protocol": "http",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"actuator",
+						"routes"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

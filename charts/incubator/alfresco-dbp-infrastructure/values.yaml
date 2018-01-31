@@ -16,3 +16,8 @@ persistence:
 
 activemq:
   enabled: true
+  
+nginx-ingress:
+  controller:
+    scope:
+      enabled: true

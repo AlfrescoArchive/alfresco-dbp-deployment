@@ -1,7 +1,7 @@
 {
 	"info": {
 		"name": "dbp-test",
-		"_postman_id": "122b34e0-3e9e-933d-90e6-a68791819ddc",
+		"_postman_id": "2279900f-6eb4-e587-51ee-cfeadb7509c1",
 		"description": "This is to test all the rest api request for validating the dbp services are up and running correctly",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -16,8 +16,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "416c31a8-2409-49bb-8f34-42c16e626d0f",
-								"type": "text/javascript",
 								"exec": [
 									"",
 									"pm.globals.get(\"url\");",
@@ -72,7 +70,9 @@
 									"",
 									"",
 									""
-								]
+								],
+								"id": "416c31a8-2409-49bb-8f34-42c16e626d0f",
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -129,8 +129,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "af8bcc1f-35fa-455e-9d48-a3d15fa917ee",
-								"type": "text/javascript",
 								"exec": [
 									"",
 									"pm.globals.get(\"url\");",
@@ -142,7 +140,9 @@
 									"pm.test(\"rm is installed part of share\", function () {",
 									"pm.expect(pm.response.text()).to.include(\"Alfresco :: Records Management Global Customization - Enterprise\");",
 									"});"
-								]
+								],
+								"id": "af8bcc1f-35fa-455e-9d48-a3d15fa917ee",
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -200,8 +200,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "42c706d8-c92f-49dd-884d-8eb47f6ac808",
-								"type": "text/javascript",
 								"exec": [
 									"pm.globals.get(\"url\");",
 									"",
@@ -220,7 +218,9 @@
 									"        pm.expect(id).to.be.eql(\"199\");",
 									"    }    ",
 									"});"
-								]
+								],
+								"id": "42c706d8-c92f-49dd-884d-8eb47f6ac808",
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -277,8 +277,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "93bc0117-c1b8-4cbf-98b2-307154bacf24",
-								"type": "text/javascript",
 								"exec": [
 									"pm.globals.get(\"url\");",
 									"",
@@ -287,7 +285,9 @@
 									"    pm.response.to.have.status(200);",
 									"});",
 									""
-								]
+								],
+								"id": "93bc0117-c1b8-4cbf-98b2-307154bacf24",
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -352,8 +352,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "c90fbb35-45a9-4cd4-9189-76750e6570cb",
-								"type": "text/javascript",
 								"exec": [
 									"pm.globals.get(\"url\");",
 									"",
@@ -366,7 +364,9 @@
 									"    var jsonData = pm.response.json().edition;",
 									"    pm.expect(jsonData).to.eql(\"Alfresco Process Services (powered by Activiti)\");",
 									"});"
-								]
+								],
+								"id": "c90fbb35-45a9-4cd4-9189-76750e6570cb",
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -421,7 +421,6 @@
 		},
 		{
 			"name": "Sync Service",
-			"description": "",
 			"item": [
 				{
 					"name": "sync service",
@@ -429,8 +428,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "b79d3e82-4a7b-4497-9541-6617e3ba165d",
-								"type": "text/javascript",
 								"exec": [
 									"pm.globals.get(\"url\");",
 									"",
@@ -464,14 +461,19 @@
 									"    pm.expect(modulesMessage).to.eql(\"Repository connection Ok\");",
 									"});",
 									""
-								]
+								],
+								"id": "b79d3e82-4a7b-4497-9541-6617e3ba165d",
+								"type": "text/javascript"
 							}
 						}
 					],
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://{{url}}/syncservice/healthcheck",
 							"protocol": "http",
@@ -482,8 +484,7 @@
 								"syncservice",
 								"healthcheck"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				}
@@ -567,8 +568,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "4c86da4e-1493-44d7-8830-2e79f09530c1",
-						"type": "text/javascript",
 						"exec": [
 							"pm.globals.get(\"url\");",
 							"",
@@ -578,7 +577,9 @@
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
 							"});"
-						]
+						],
+						"id": "4c86da4e-1493-44d7-8830-2e79f09530c1",
+						"type": "text/javascript"
 					}
 				}
 			],

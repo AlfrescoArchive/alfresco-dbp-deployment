@@ -1,3 +1,24 @@
-Get the APS url by running "scripts/get-app-url.sh aps {{ .Release.Name }} {{ .Release.Namespace }}".
-Get the Keycloak url by running "scripts/get-aps-url.sh auth {{ .Release.Name }} {{ .Release.Namespace }}".
-Get the Registry gateway url by running "scripts/get-aps-url.sh {{ .Release.Name }} {{ .Release.Namespace }}".
+
+{{ if contains "http" (index .Values "alfresco-api-gateway" "keycloakURL") }}
+
+If you are using the default dbp setup you can access all components of the dbp using the same root address, but different paths as follows:
+
+  Content: {{ index .Values "alfresco-api-gateway" "keycloakURL" | trimSuffix "/" | trimSuffix "/auth"}}/alfresco
+  Share: {{ index .Values "alfresco-api-gateway" "keycloakURL" | trimSuffix "/" | trimSuffix "/auth"}}/share
+  Solr: {{ index .Values "alfresco-api-gateway" "keycloakURL" | trimSuffix "/" | trimSuffix "/auth"}}/solr
+  Process: {{ index .Values "alfresco-api-gateway" "keycloakURL" | trimSuffix "/" | trimSuffix "/auth"}}/activiti-app
+  API Gateway: {{ index .Values "alfresco-api-gateway" "keycloakURL" | trimSuffix "/" | trimSuffix "/auth"}}/
+  Keycloak: {{ index .Values "alfresco-api-gateway" "keycloakURL" | trimSuffix "/" | trimSuffix "/auth"}}/auth/
+
+{{ else if contains "http" (index .Values "alfresco-content-services" "repository" "environment" "SYNC_SERVICE_URI" ) }}
+
+If you are using the default dbp setup you can access all components of the dbp using the same root address, but different paths as follows:
+
+  Content: {{ index .Values "alfresco-content-services" "repository" "environment" "SYNC_SERVICE_URI" | trimSuffix "/" | trimSuffix "/syncservice" }}/alfresco
+  Share: {{ index .Values "alfresco-content-services" "repository" "environment" "SYNC_SERVICE_URI" | trimSuffix "/" | trimSuffix "/syncservice" }}/share
+  Solr: {{ index .Values "alfresco-content-services" "repository" "environment" "SYNC_SERVICE_URI" | trimSuffix "/" | trimSuffix "/syncservice" }}/solr
+  Process: {{ index .Values "alfresco-content-services" "repository" "environment" "SYNC_SERVICE_URI" | trimSuffix "/" | trimSuffix "/syncservice" }}/activiti-app
+  API Gateway: {{ index .Values "alfresco-content-services" "repository" "environment" "SYNC_SERVICE_URI" | trimSuffix "/" | trimSuffix "/syncservice" }}/
+  Keycloak: {{ index .Values "alfresco-content-services" "repository" "environment" "SYNC_SERVICE_URI" | trimSuffix "/" | trimSuffix "/syncservice" }}/auth/
+
+{{ end }}

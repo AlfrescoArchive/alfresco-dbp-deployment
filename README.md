@@ -132,13 +132,11 @@ helm dependency update alfresco-dbp-infrastructure
 #ON MINIKUBE
 helm install alfresco-dbp-infrastructure \
 --set alfresco-api-gateway.keycloakURL="http://$ELBADDRESS:$INFRAPORT/auth/" \
---set alfresco-api-gateway.rabbitmqReleaseName="$INFRARELEASE-rabbitmq-ha" \
 --namespace $DESIREDNAMESPACE
 
 #ON AWS
 helm install alfresco-dbp-infrastructure \
 --set alfresco-api-gateway.keycloakURL="http://$ELBADDRESS/auth/" \
---set alfresco-api-gateway.rabbitmqReleaseName="$INFRARELEASE-rabbitmq-ha" \
 --namespace $DESIREDNAMESPACE \
 --set persistence.volumeEnv=aws \
 --set persistence.nfs.server="$NFSSERVER" 

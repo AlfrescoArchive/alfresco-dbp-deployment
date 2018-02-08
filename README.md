@@ -19,6 +19,7 @@ After you have installed the prerequisites please run the following commands:
 git clone https://github.com/Alfresco/alfresco-dbp-deployment.git
 cd alfresco-dbp-deployment
 ```
+If you have already installed [alfresco-infrastructure-deployment](https://github.com/alfresco/alfresco-infrastructure-deployment), skip to [step 10](#10-enable-or-disable-the-components-you-want-up-from-the-dbp-deployment).
 
 ### Kubernetes Cluster
 
@@ -83,92 +84,114 @@ kubectl create -f secrets.yaml --namespace $DESIREDNAMESPACE
 
 ## Deployment
 
-### 1. EFS Storage (**NOTE! ONLY FOR AWS!**)
+### 1. Install the nginx-ingress-controller
 
-Create a EFS storage on AWS and make sure it is in the same VPC as your cluster. Make sure you open inbound traffic in the security group to allow NFS traffic. Save the name of the server ex:
+Install the nginx-ingress-controller into your cluster
 ```bash
-export NFSSERVER=fs-d660549f.efs.us-east-1.amazonaws.com
+helm install stable/nginx-ingress --version 0.8.11 --namespace $DESIREDNAMESPACE
+```
+### 2. Get the nginx-ingress-controller release name from the previous command and set it as a varible:
+```bash
+export INGRESSRELEASE=knobby-wolf
 ```
 
-### 2. Deploy the infrastructure charts:
+### 3. Wait for the nginx-ingress-controller release to get deployed.  When checking status your pod should be READY 1/1):
 ```bash
-
-helm repo add alfresco-test https://alfresco.github.io/charts-test/incubator
-
-helm dependency update alfresco-dbp-infrastructure
-
-#ON MINIKUBE
-helm install alfresco-dbp-infrastructure --namespace $DESIREDNAMESPACE
-
-#ON AWS
-helm install alfresco-dbp-infrastructure --namespace $DESIREDNAMESPACE --set persistence.volumeEnv=aws --set persistence.nfs.server="$NFSSERVER"
+helm status $INGRESSRELEASE
 ```
 
-### 3. Get the infrastructure release name from the previous command and set it as a variable:
+### 4. Get the nginx-ingress-controller port for the infrastructure (**NOTE! ONLY FOR MINIKUBE**):
 ```bash
-export INFRARELEASE=enervated-deer
+export INFRAPORT=$(kubectl get service $INGRESSRELEASE-nginx-ingress-controller --namespace $DESIREDNAMESPACE -o jsonpath={.spec.ports[0].nodePort})
 ```
 
-### 4. Wait for the infrastructure release to get deployed.  When checking status all your pods should be READY 1/1):
-```bash
-helm status $INFRARELEASE
-```
-
-### 5. Get the nginx-ingress-controller port for the infrastructure (**NOTE! ONLY FOR MINIKUBE**):
-```bash
-export INFRAPORT=$(kubectl get service $INFRARELEASE-nginx-ingress-controller --namespace $DESIREDNAMESPACE -o jsonpath={.spec.ports[0].nodePort})
-```
-
-### 6. Get Minikube or ELB IP and set it as a variable for future use:
+### 5. Get Minikube or ELB IP and set it as a variable for future use:
 
 ```bash
 #ON MINIKUBE
 export ELBADDRESS=$(minikube ip)
 
 #ON AWS
-export ELBADDRESS=$(kubectl get services $INFRARELEASE-nginx-ingress-controller --namespace=$DESIREDNAMESPACE -o jsonpath={.status.loadBalancer.ingress[0].hostname})
+export ELBADDRESS=$(kubectl get services $INGRESSRELEASE-nginx-ingress-controller --namespace=$DESIREDNAMESPACE -o jsonpath={.status.loadBalancer.ingress[0].hostname})
 ```
 
-### 7. Enable or disable the components you want up from the dbp deployment.
+### 6. EFS Storage (**NOTE! ONLY FOR AWS!**)
+
+Create a EFS storage on AWS and make sure it is in the same VPC as your cluster. Make sure you open inbound traffic in the security group to allow NFS traffic. Save the name of the server ex:
+```bash
+export NFSSERVER=fs-d660549f.efs.us-east-1.amazonaws.com
+```
+
+### 7. Deploy the infrastructure charts:
+```bash
+
+helm repo add alfresco-infrastructure-test https://alfresco.github.io/charts/incubator
+
+helm dependency update alfresco-dbp-infrastructure
+
+#ON MINIKUBE
+helm install alfresco-dbp-infrastructure \
+--set alfresco-api-gateway.keycloakURL="http://$ELBADDRESS:$INFRAPORT/auth/" \
+--set alfresco-api-gateway.rabbitmqReleaseName="$INFRARELEASE-rabbitmq-ha" \
+--namespace $DESIREDNAMESPACE
+
+#ON AWS
+helm install alfresco-dbp-infrastructure \
+--set alfresco-api-gateway.keycloakURL="http://$ELBADDRESS/auth/" \
+--set alfresco-api-gateway.rabbitmqReleaseName="$INFRARELEASE-rabbitmq-ha" \
+--namespace $DESIREDNAMESPACE \
+--set persistence.volumeEnv=aws \
+--set persistence.nfs.server="$NFSSERVER" 
+```
+
+### 8. Get the infrastructure release name from the previous command and set it as a variable:
+```bash
+export INFRARELEASE=enervated-deer
+```
+
+### 9. Wait for the infrastructure release to get deployed.  When checking status all your pods should be READY 1/1):
+```bash
+helm status $INFRARELEASE
+```
+
+### 10. Enable or disable the components you want up from the dbp deployment.
 To do this open the alfresco-dbp/values.yaml file and set to true/false the components you want enabled.
 
 Example:
 alfresco-content-services:
   enabled: true
 
-### 8. Deploy the DBP
+### 11. Deploy the DBP
 
 ```bash
+helm repo add alfresco-test https://alfresco.github.io/charts-test/incubator
 
 helm dependency update alfresco-dbp
 
 #On MINIKUBE
 helm install alfresco-dbp \
---set alfresco-sync-service.activemq.broker.host="${INFRARELEASE}-activemq-broker" \
---set alfresco-content-services.repository.environment.ACTIVEMQ_HOST="${INFRARELEASE}-activemq-broker" \
+--set alfresco-sync-service.activemq.broker.host="${INGRESSRELEASE}-activemq-broker" \
+--set alfresco-content-services.repository.environment.ACTIVEMQ_HOST="${INGRESSRELEASE}-activemq-broker" \
 --set alfresco-content-services.repository.environment.SYNC_SERVICE_URI="http://$ELBADDRESS:$INFRAPORT/syncservice" \
---set alfresco-api-gateway.keycloakURL="http://$ELBADDRESS:$INFRAPORT/auth/" \
---set alfresco-api-gateway.rabbitmqReleaseName="$INFRARELEASE-rabbitmq-ha" \
 --namespace=$DESIREDNAMESPACE
 
 #On AWS
 helm install alfresco-dbp \
---set alfresco-sync-service.activemq.broker.host="${INFRARELEASE}-activemq-broker" \
---set alfresco-content-services.repository.environment.ACTIVEMQ_HOST="${INFRARELEASE}-activemq-broker" \
+--set alfresco-sync-service.activemq.broker.host="${INGRESSRELEASE}-activemq-broker" \
+--set alfresco-content-services.repository.environment.ACTIVEMQ_HOST="${INGRESSRELEASE}-activemq-broker" \
 --set alfresco-content-services.repository.environment.SYNC_SERVICE_URI="http://$ELBADDRESS/syncservice" \
---set alfresco-api-gateway.keycloakURL="http://$ELBADDRESS/auth/" \
---set alfresco-api-gateway.rabbitmqReleaseName="$INFRARELEASE-rabbitmq-ha" \
 --namespace=$DESIREDNAMESPACE
 ```
 
-### 9. Get the DBP release name from the previous command and set it as a variable:
+### 12. Get the DBP release name from the previous command and set it as a variable:
 ```bash
 export DBPRELEASE=littering-lizzard
 ```
 
-### 10. Checkout the status of your DBP deployment:
+### 13. Checkout the status of your DBP deployment:
 
 ```bash
+helm status $INGRESSRELEASE
 helm status $INFRARELEASE
 helm status $DBPRELEASE
 
@@ -183,9 +206,10 @@ open http://$ELBADDRESS:`kubectl get service $DBPRELEASE-alfresco-process-servic
 
 ```
 
-### 11. Teardown:
+### 14. Teardown:
 
 ```bash
+helm delete $INGRESSRELEASE
 helm delete $INFRARELEASE
 helm delete $DBPRELEASE
 kubectl delete namespace $DESIREDNAMESPACE

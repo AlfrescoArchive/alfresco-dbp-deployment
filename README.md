@@ -13,12 +13,7 @@ The Alfresco Digital Business Platform Deployment requires:
 
 Any variation from these technologies and versions may affect the end result. If you do experience any issues please let us know through our [Gitter channel](https://gitter.im/Alfresco/platform-services?utm_source=share-link&utm_medium=link&utm_campaign=share-link).
 
-After you have installed the prerequisites please run the following commands:
-
-```bash
-git clone https://github.com/Alfresco/alfresco-dbp-deployment.git
-cd alfresco-dbp-deployment
-```
+!Note: You dont need to clone this repo to deploy the dbp.
 
 ### Kubernetes Cluster
 
@@ -42,6 +37,7 @@ helm init
 ### K8s Cluster Namespace
 
 As mentioned as part of the Anaxes Shipyard guidelines, you should deploy into a separate namespace in the cluster to avoid conflicts (create the namespace only if it does not already exist):
+
 ```bash
 export DESIREDNAMESPACE=example
 kubectl create namespace $DESIREDNAMESPACE
@@ -86,6 +82,7 @@ kubectl create -f secrets.yaml --namespace $DESIREDNAMESPACE
 ### 1. EFS Storage (**NOTE! ONLY FOR AWS!**)
 
 Create a EFS storage on AWS and make sure it is in the same VPC as your cluster. Make sure you open inbound traffic in the security group to allow NFS traffic. Save the name of the server ex:
+
 ```bash
 export NFSSERVER=fs-d660549f.efs.us-east-1.amazonaws.com
 ```
@@ -95,13 +92,14 @@ export NFSSERVER=fs-d660549f.efs.us-east-1.amazonaws.com
 
 helm repo add alfresco-test https://alfresco.github.io/charts-test/incubator
 
-helm dependency update alfresco-dbp-infrastructure
-
 #ON MINIKUBE
-helm install alfresco-dbp-infrastructure --namespace $DESIREDNAMESPACE
+helm install alfresco-test/alfresco-dbp-infrastructure --namespace $DESIREDNAMESPACE
 
 #ON AWS
-helm install alfresco-dbp-infrastructure --namespace $DESIREDNAMESPACE --set persistence.volumeEnv=aws --set persistence.nfs.server="$NFSSERVER"
+helm install alfresco-test/alfresco-dbp-infrastructure \
+--namespace $DESIREDNAMESPACE \
+--set persistence.volumeEnv=aws \
+--set persistence.nfs.server="$NFSSERVER"
 ```
 
 ### 3. Get the infrastructure release name from the previous command and set it as a variable:
@@ -129,21 +127,37 @@ export ELBADDRESS=$(minikube ip)
 export ELBADDRESS=$(kubectl get services $INFRARELEASE-nginx-ingress-controller --namespace=$DESIREDNAMESPACE -o jsonpath={.status.loadBalancer.ingress[0].hostname})
 ```
 
-### 7. Enable or disable the components you want up from the dbp deployment.
-To do this open the alfresco-dbp/values.yaml file and set to true/false the components you want enabled.
+### 7. Install the helm registry plugin to be able to install the dbp chart from quay.io
 
-Example:
-alfresco-content-services:
-  enabled: true
+```bash
+helm plugin install https://github.com/app-registry/appr-helm-plugin.git
+```
 
-### 8. Deploy the DBP
+### 8. Login to the quay.io helm registry
+
+```bash
+helm registry login quay.io
+```
+
+You will be prompted to enter your quay.io username and password.
+
+The end result should look similar to the following:
+
+```bash
+helm registry login quay.io
+Registry plugin assets do not exist, download them now !
+downloading https://github.com/app-registry/appr/releases/download/v0.7.4/appr-osx-x64 ...
+Username: sergiuv
+Password:
+ >>> Login succeeded
+```
+
+### 9. Deploy the DBP
 
 ```bash
 
-helm dependency update alfresco-dbp
-
 #On MINIKUBE
-helm install alfresco-dbp \
+helm registry install quay.io/alfresco/alfresco-dbp:incubator \
 --set alfresco-sync-service.activemq.broker.host="${INFRARELEASE}-activemq-broker" \
 --set alfresco-content-services.repository.environment.ACTIVEMQ_HOST="${INFRARELEASE}-activemq-broker" \
 --set alfresco-content-services.repository.environment.SYNC_SERVICE_URI="http://$ELBADDRESS:$INFRAPORT/syncservice" \
@@ -152,7 +166,7 @@ helm install alfresco-dbp \
 --namespace=$DESIREDNAMESPACE
 
 #On AWS
-helm install alfresco-dbp \
+helm registry install quay.io/alfresco/alfresco-dbp:incubator \
 --set alfresco-sync-service.activemq.broker.host="${INFRARELEASE}-activemq-broker" \
 --set alfresco-content-services.repository.environment.ACTIVEMQ_HOST="${INFRARELEASE}-activemq-broker" \
 --set alfresco-content-services.repository.environment.SYNC_SERVICE_URI="http://$ELBADDRESS/syncservice" \
@@ -161,12 +175,30 @@ helm install alfresco-dbp \
 --namespace=$DESIREDNAMESPACE
 ```
 
-### 9. Get the DBP release name from the previous command and set it as a variable:
+You can either deploy the dbp fully or choose the components you need for your specific case. 
+By default the dbp chart will deploy fully.
+
+To disable specific components you can set the following values to false when deploying:
+
+alfresco-activiti-cloud-registry.enabled
+alfresco-api-gateway.enabled
+alfresco-content-services.enabled
+alfresco-keycloak.enabled
+alfresco-process-services.enabled
+alfresco-sync-service.enabled
+
+```bash
+#example: For disabling sync-service you will need to append the following subcommand to the helm install command:
+ --set alfresco-sync-service.enabled=false 
+```
+
+### 10. Get the DBP release name from the previous command and set it as a variable:
+
 ```bash
 export DBPRELEASE=littering-lizzard
 ```
 
-### 10. Checkout the status of your DBP deployment:
+### 11. Checkout the status of your DBP deployment:
 
 ```bash
 helm status $INFRARELEASE
@@ -181,6 +213,12 @@ open http://$ELBADDRESS:`kubectl get service $DBPRELEASE-alfresco-content-servic
 #On MINIKUBE: Open Alfresco Process Services in Browser
 open http://$ELBADDRESS:`kubectl get service $DBPRELEASE-alfresco-process-services --namespace $DESIREDNAMESPACE -o jsonpath={.spec.ports[0].nodePort}`/activiti-app
 
+```
+
+If you want to see the full list of values that have been applied to the deployment you can run:
+
+```bash
+helm get values -a $DBPRELEASE
 ```
 
 ### 11. Teardown:

@@ -90,7 +90,8 @@ export NFSSERVER=fs-d660549f.efs.us-east-1.amazonaws.com
 ### 2. Deploy the infrastructure charts:
 ```bash
 
-helm repo add alfresco-test https://alfresco.github.io/charts-test/incubator
+helm repo add alfresco-incubator https://alfresco.github.io/charts/incubator
+helm repo add alfresco-stable https://alfresco.github.io/charts/stable
 
 #ON MINIKUBE
 helm install alfresco-test/alfresco-dbp-infrastructure --namespace $DESIREDNAMESPACE

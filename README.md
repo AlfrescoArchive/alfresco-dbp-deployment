@@ -67,7 +67,7 @@ alfresco-content-services:
 ### 2. Deploy the DBP
 
 ```bash
-helm repo add alfresco-test https://alfresco.github.io/charts-test/incubator
+helm repo add alfresco-dbp https://alfresco.github.io/charts/incubator
 
 helm dependency update alfresco-dbp
 

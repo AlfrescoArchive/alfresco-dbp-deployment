@@ -34,6 +34,34 @@ Initialize the Helm Tiller:
 helm init
 ```
 
+### Helm Registry Plugin
+
+
+#### Install the helm registry plugin to be able to install the dbp chart from quay.io registry
+
+```bash
+helm plugin install https://github.com/app-registry/appr-helm-plugin.git
+```
+
+#### Login to the quay.io helm registry
+
+```bash
+helm registry login quay.io
+```
+
+You will be prompted to enter your quay.io username and password.
+
+The end result should look similar to the following:
+
+```bash
+helm registry login quay.io
+Registry plugin assets do not exist, download them now !
+downloading https://github.com/app-registry/appr/releases/download/v0.7.4/appr-osx-x64 ...
+Username: sergiuv
+Password:
+ >>> Login succeeded
+```
+
 ### K8s Cluster Namespace
 
 As mentioned as part of the Anaxes Shipyard guidelines, you should deploy into a separate namespace in the cluster to avoid conflicts (create the namespace only if it does not already exist):
@@ -98,9 +126,9 @@ helm install alfresco-test/alfresco-dbp-infrastructure --namespace $DESIREDNAMES
 
 #ON AWS
 helm install alfresco-test/alfresco-dbp-infrastructure \
---namespace $DESIREDNAMESPACE \
 --set persistence.volumeEnv=aws \
---set persistence.nfs.server="$NFSSERVER"
+--set persistence.nfs.server="$NFSSERVER" \
+--namespace $DESIREDNAMESPACE
 ```
 
 ### 3. Get the infrastructure release name from the previous command and set it as a variable:
@@ -115,7 +143,7 @@ helm status $INFRARELEASE
 
 ### 5. Get the nginx-ingress-controller port for the infrastructure (**NOTE! ONLY FOR MINIKUBE**):
 ```bash
-export INFRAPORT=$(kubectl get service $INFRARELEASE-nginx-ingress-controller --namespace $DESIREDNAMESPACE -o jsonpath={.spec.ports[0].nodePort})
+export INFRAPORT=$(kubectl get service $INFRARELEASE-nginx-ingress-controller -o jsonpath={.spec.ports[0].nodePort} --namespace $DESIREDNAMESPACE )
 ```
 
 ### 6. Get Minikube or ELB IP and set it as a variable for future use:
@@ -125,35 +153,10 @@ export INFRAPORT=$(kubectl get service $INFRARELEASE-nginx-ingress-controller --
 export ELBADDRESS=$(minikube ip)
 
 #ON AWS
-export ELBADDRESS=$(kubectl get services $INFRARELEASE-nginx-ingress-controller --namespace=$DESIREDNAMESPACE -o jsonpath={.status.loadBalancer.ingress[0].hostname})
+export ELBADDRESS=$(kubectl get services $INFRARELEASE-nginx-ingress-controller -o jsonpath={.status.loadBalancer.ingress[0].hostname} --namespace=$DESIREDNAMESPACE )
 ```
 
-### 7. Install the helm registry plugin to be able to install the dbp chart from quay.io
-
-```bash
-helm plugin install https://github.com/app-registry/appr-helm-plugin.git
-```
-
-### 8. Login to the quay.io helm registry
-
-```bash
-helm registry login quay.io
-```
-
-You will be prompted to enter your quay.io username and password.
-
-The end result should look similar to the following:
-
-```bash
-helm registry login quay.io
-Registry plugin assets do not exist, download them now !
-downloading https://github.com/app-registry/appr/releases/download/v0.7.4/appr-osx-x64 ...
-Username: sergiuv
-Password:
- >>> Login succeeded
-```
-
-### 9. Deploy the DBP
+### 7. Deploy the DBP
 
 ```bash
 
@@ -193,26 +196,26 @@ alfresco-sync-service.enabled
  --set alfresco-sync-service.enabled=false 
 ```
 
-### 10. Get the DBP release name from the previous command and set it as a variable:
+### 8. Get the DBP release name from the previous command and set it as a variable:
 
 ```bash
 export DBPRELEASE=littering-lizzard
 ```
 
-### 11. Checkout the status of your DBP deployment:
+### 9. Checkout the status of your DBP deployment:
 
 ```bash
 helm status $INFRARELEASE
 helm status $DBPRELEASE
 
 #On MINIKUBE: Open Alfresco Repository in Browser
-open http://$ELBADDRESS:`kubectl get service $DBPRELEASE-alfresco-content-services-repository --namespace $DESIREDNAMESPACE -o jsonpath={.spec.ports[0].nodePort}`/alfresco
+open http://$ELBADDRESS:`kubectl get service $DBPRELEASE-alfresco-content-services-repository -o jsonpath={.spec.ports[0].nodePort} --namespace $DESIREDNAMESPACE `/alfresco
 
 #On MINIKUBE: Open Alfresco Share in Browser
-open http://$ELBADDRESS:`kubectl get service $DBPRELEASE-alfresco-content-services-share --namespace $DESIREDNAMESPACE -o jsonpath={.spec.ports[0].nodePort}`/share
+open http://$ELBADDRESS:`kubectl get service $DBPRELEASE-alfresco-content-services-share -o jsonpath={.spec.ports[0].nodePort} --namespace $DESIREDNAMESPACE `/share
 
 #On MINIKUBE: Open Alfresco Process Services in Browser
-open http://$ELBADDRESS:`kubectl get service $DBPRELEASE-alfresco-process-services --namespace $DESIREDNAMESPACE -o jsonpath={.spec.ports[0].nodePort}`/activiti-app
+open http://$ELBADDRESS:`kubectl get service $DBPRELEASE-alfresco-process-services -o jsonpath={.spec.ports[0].nodePort} --namespace $DESIREDNAMESPACE `/activiti-app
 
 ```
 
@@ -222,7 +225,7 @@ If you want to see the full list of values that have been applied to the deploym
 helm get values -a $DBPRELEASE
 ```
 
-### 11. Teardown:
+### 10. Teardown:
 
 ```bash
 helm delete $INFRARELEASE

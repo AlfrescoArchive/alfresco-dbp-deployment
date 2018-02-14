@@ -9,21 +9,6 @@ You can access all components of the dbp using the same root address, but differ
   API Gateway: {{ .Values.dnsaddress }}/
   Keycloak: {{ .Values.dnsaddress }}/auth/
   {{ end }}
-{{ else if contains "http" (index .Values "alfresco-api-gateway" "keycloakURL") }}
-If you have a specific DNS address for the cluster please run the following commands to get the application paths:
-
-  helm upgrade --reuse-values {{ .Release.Name }} --set dnsaddress="Your DNS address ex: http://myenv.com" yourChartPath
-
-  The chart path can either be local "." on in the helm repo "alfresco/alfresco-dbp".
-
-If you are using the default dbp setup you can access all components as follows:
-
-  Content: {{ index .Values "alfresco-api-gateway" "keycloakURL" | trimSuffix "/" | trimSuffix "/auth"}}/alfresco
-  Share: {{ index .Values "alfresco-api-gateway" "keycloakURL" | trimSuffix "/" | trimSuffix "/auth"}}/share
-  Solr: {{ index .Values "alfresco-api-gateway" "keycloakURL" | trimSuffix "/" | trimSuffix "/auth"}}/solr
-  Process: {{ index .Values "alfresco-api-gateway" "keycloakURL" | trimSuffix "/" | trimSuffix "/auth"}}/activiti-app
-  API Gateway: {{ index .Values "alfresco-api-gateway" "keycloakURL" | trimSuffix "/" | trimSuffix "/auth"}}/
-  Keycloak: {{ index .Values "alfresco-api-gateway" "keycloakURL" | trimSuffix "/" | trimSuffix "/auth"}}/auth/
 
 {{ else if contains "http" (index .Values "alfresco-content-services" "repository" "environment" "SYNC_SERVICE_URI" ) }}
 

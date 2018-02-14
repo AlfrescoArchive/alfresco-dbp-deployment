@@ -15,14 +15,6 @@ alfresco-process-services:
   postgresql:
     persistence:
       enabled: false
-alfresco-activiti-cloud-registry:
-  enabled: true
-  nginx-ingress:
-    enabled: false
-alfresco-api-gateway:
-  enabled: true
-alfresco-keycloak:
-  enabled: true
 
 alfresco-content-services:
   enabled: true

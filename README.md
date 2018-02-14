@@ -85,7 +85,7 @@ kubectl create -f secrets.yaml --namespace $DESIREDNAMESPACE
 ### 1. Deploy the DBP
 
 ```bash
-helm dependency update alfresco-dbp
+
 #On MINIKUBE
 helm registry install quay.io/alfresco/alfresco-dbp:incubator \
 --set alfresco-sync-service.activemq.broker.host="${INGRESSRELEASE}-activemq-broker" \

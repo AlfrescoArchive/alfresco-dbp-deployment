@@ -13,21 +13,44 @@ The Alfresco Digital Business Platform Deployment requires:
 
 Any variation from these technologies and versions may affect the end result. If you do experience any issues please let us know through our [Gitter channel](https://gitter.im/Alfresco/platform-services?utm_source=share-link&utm_medium=link&utm_campaign=share-link).
 
-After you have installed the prerequisites, please install the infrastructure required.  The steps to install the infrastructure can be found in the [alfresco-infrastructure-deployment](https://github.com/Alfresco/alfresco-infrastructure-deployment/blob/master/README.md) project.
+### Helm Registry Plugin
 
-After installing the infrastructure, please run the following commands:
+#### Install the helm registry plugin to be able to install the dbp chart from quay.io registry
 
 ```bash
-git clone https://github.com/Alfresco/alfresco-dbp-deployment.git
-cd alfresco-dbp-deployment
+helm plugin install https://github.com/app-registry/appr-helm-plugin.git
 ```
+
+#### Login to the quay.io helm registry
+
+```bash
+helm registry login quay.io
+```
+
+You will be prompted to enter your quay.io username and password.
+
+The end result should look similar to the following:
+
+```bash
+helm registry login quay.io
+Registry plugin assets do not exist, download them now !
+downloading https://github.com/app-registry/appr/releases/download/v0.7.4/appr-osx-x64 ...
+Username: sergiuv
+Password:
+ >>> Login succeeded
+```
+
+*Note*: You do not need to clone this repo to deploy the dbp.
+
+### Deploy the infrastructure components
+
+After you have installed the prerequisites, please install the infrastructure required.  The steps to install the infrastructure can be found in the [alfresco-infrastructure-deployment](https://github.com/Alfresco/alfresco-infrastructure-deployment/blob/master/README.md) project.
+
 Environment variables from the infrastructure project will be used in the deployment steps below.
 
 ### Docker Registry Pull Secrets
 
 See the Anaxes Shipyard documentation on [secrets](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/SECRETS.md).
-
-Be sure to use the same namespace as above.
 
 *Note*: You can reuse the secrets.yaml file from charts/incubator directory. 
 
@@ -55,41 +78,53 @@ Then run this command:
 kubectl create -f secrets.yaml --namespace $DESIREDNAMESPACE
 ```
 
+*Note*: Make sure the $DESIREDNAMESPACE variable has been set when the infrastructure chart was deployed so that the secret gets created in the same namespace.
+
 ## Deployment
 
-### 1. Enable or disable the components you want up from the dbp deployment.
-To do this open the alfresco-dbp/values.yaml file and set to true/false the components you want enabled.
-
-Example:
-alfresco-content-services:
-  enabled: true
-
-### 2. Deploy the DBP
+### 1. Deploy the DBP
 
 ```bash
-helm dependency update alfresco-dbp
 
 #On MINIKUBE
-helm install alfresco-dbp \
+helm registry install quay.io/alfresco/alfresco-dbp:incubator \
 --set alfresco-sync-service.activemq.broker.host="${INGRESSRELEASE}-activemq-broker" \
 --set alfresco-content-services.repository.environment.ACTIVEMQ_HOST="${INGRESSRELEASE}-activemq-broker" \
 --set alfresco-content-services.repository.environment.SYNC_SERVICE_URI="http://$ELBADDRESS:$INFRAPORT/syncservice" \
 --namespace=$DESIREDNAMESPACE
 
 #On AWS
-helm install alfresco-dbp \
+helm registry install quay.io/alfresco/alfresco-dbp:incubator \
 --set alfresco-sync-service.activemq.broker.host="${INGRESSRELEASE}-activemq-broker" \
 --set alfresco-content-services.repository.environment.ACTIVEMQ_HOST="${INGRESSRELEASE}-activemq-broker" \
 --set alfresco-content-services.repository.environment.SYNC_SERVICE_URI="http://$ELBADDRESS/syncservice" \
 --namespace=$DESIREDNAMESPACE
 ```
 
-### 3. Get the DBP release name from the previous command and set it as a variable:
+You can either deploy the dbp fully or choose the components you need for your specific case. 
+By default the dbp chart will deploy fully.
+
+To disable specific components you can set the following values to false when deploying:
+
+alfresco-activiti-cloud-registry.enabled
+alfresco-api-gateway.enabled
+alfresco-content-services.enabled
+alfresco-keycloak.enabled
+alfresco-process-services.enabled
+alfresco-sync-service.enabled
+
+```bash
+#example: For disabling sync-service you will need to append the following subcommand to the helm install command:
+ --set alfresco-sync-service.enabled=false 
+```
+
+### 2. Get the DBP release name from the previous command and set it as a variable:
+
 ```bash
 export DBPRELEASE=littering-lizzard
 ```
 
-### 4. Checkout the status of your DBP deployment:
+### 3. Checkout the status of your DBP deployment:
 
 ```bash
 helm status $INGRESSRELEASE
@@ -97,17 +132,23 @@ helm status $INFRARELEASE
 helm status $DBPRELEASE
 
 #On MINIKUBE: Open Alfresco Repository in Browser
-open http://$ELBADDRESS:`kubectl get service $DBPRELEASE-alfresco-content-services-repository --namespace $DESIREDNAMESPACE -o jsonpath={.spec.ports[0].nodePort}`/alfresco
+open http://$ELBADDRESS:`kubectl get service $DBPRELEASE-alfresco-content-services-repository -o jsonpath={.spec.ports[0].nodePort} --namespace $DESIREDNAMESPACE `/alfresco
 
 #On MINIKUBE: Open Alfresco Share in Browser
-open http://$ELBADDRESS:`kubectl get service $DBPRELEASE-alfresco-content-services-share --namespace $DESIREDNAMESPACE -o jsonpath={.spec.ports[0].nodePort}`/share
+open http://$ELBADDRESS:`kubectl get service $DBPRELEASE-alfresco-content-services-share -o jsonpath={.spec.ports[0].nodePort} --namespace $DESIREDNAMESPACE `/share
 
 #On MINIKUBE: Open Alfresco Process Services in Browser
-open http://$ELBADDRESS:`kubectl get service $DBPRELEASE-alfresco-process-services --namespace $DESIREDNAMESPACE -o jsonpath={.spec.ports[0].nodePort}`/activiti-app
+open http://$ELBADDRESS:`kubectl get service $DBPRELEASE-alfresco-process-services -o jsonpath={.spec.ports[0].nodePort} --namespace $DESIREDNAMESPACE `/activiti-app
 
 ```
 
-### 5. Teardown:
+If you want to see the full list of values that have been applied to the deployment you can run:
+
+```bash
+helm get values -a $DBPRELEASE
+```
+
+### 4. Teardown:
 
 ```bash
 helm delete $INGRESSRELEASE

@@ -88,15 +88,15 @@ kubectl create -f secrets.yaml --namespace $DESIREDNAMESPACE
 
 #On MINIKUBE
 helm registry install quay.io/alfresco/alfresco-dbp:incubator \
---set alfresco-sync-service.activemq.broker.host="${INGRESSRELEASE}-activemq-broker" \
---set alfresco-content-services.repository.environment.ACTIVEMQ_HOST="${INGRESSRELEASE}-activemq-broker" \
+--set alfresco-sync-service.activemq.broker.host="${INFRARELEASE}-activemq-broker" \
+--set alfresco-content-services.repository.environment.ACTIVEMQ_HOST="${INFRARELEASE}-activemq-broker" \
 --set alfresco-content-services.repository.environment.SYNC_SERVICE_URI="http://$ELBADDRESS:$INFRAPORT/syncservice" \
 --namespace=$DESIREDNAMESPACE
 
 #On AWS
 helm registry install quay.io/alfresco/alfresco-dbp:incubator \
---set alfresco-sync-service.activemq.broker.host="${INGRESSRELEASE}-activemq-broker" \
---set alfresco-content-services.repository.environment.ACTIVEMQ_HOST="${INGRESSRELEASE}-activemq-broker" \
+--set alfresco-sync-service.activemq.broker.host="${INFRARELEASE}-activemq-broker" \
+--set alfresco-content-services.repository.environment.ACTIVEMQ_HOST="${INFRARELEASE}-activemq-broker" \
 --set alfresco-content-services.repository.environment.SYNC_SERVICE_URI="http://$ELBADDRESS/syncservice" \
 --namespace=$DESIREDNAMESPACE
 ```
@@ -106,10 +106,7 @@ By default the dbp chart will deploy fully.
 
 To disable specific components you can set the following values to false when deploying:
 
-alfresco-activiti-cloud-registry.enabled
-alfresco-api-gateway.enabled
 alfresco-content-services.enabled
-alfresco-keycloak.enabled
 alfresco-process-services.enabled
 alfresco-sync-service.enabled
 

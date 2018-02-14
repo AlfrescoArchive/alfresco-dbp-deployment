@@ -52,8 +52,6 @@ Environment variables from the infrastructure project will be used in the deploy
 
 See the Anaxes Shipyard documentation on [secrets](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/SECRETS.md).
 
-Be sure to use the same namespace as above.
-
 *Note*: You can reuse the secrets.yaml file from charts/incubator directory. 
 
 ```bash
@@ -79,6 +77,8 @@ Then run this command:
 ```bash
 kubectl create -f secrets.yaml --namespace $DESIREDNAMESPACE
 ```
+
+*Note*: Make sure the $DESIREDNAMESPACE variable has been set when the infrastructure chart was deployed so that the secret gets created in the same namespace.
 
 ## Deployment
 

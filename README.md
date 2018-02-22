@@ -98,6 +98,12 @@ helm registry install quay.io/alfresco/alfresco-dbp:incubator \
 --set alfresco-sync-service.activemq.broker.host="${INFRARELEASE}-activemq-broker" \
 --set alfresco-content-services.repository.environment.ACTIVEMQ_HOST="${INFRARELEASE}-activemq-broker" \
 --set alfresco-content-services.repository.environment.SYNC_SERVICE_URI="http://$ELBADDRESS/syncservice" \
+--set alfresco-content-services.persistence.efs.enabled="true" \
+--set alfresco-content-services.persistence.efs.dns="$NFSSERVER" \
+--set alfresco-process-services.persistence.efs.enabled="true" \
+--set alfresco-process-services.persistence.efs.dns="$NFSSERVER" \
+--set alfresco-sync-service.persistence.efs.enabled="true" \
+--set alfresco-sync-service.persistence.efs.dns="$NFSSERVER" \
 --namespace=$DESIREDNAMESPACE
 ```
 

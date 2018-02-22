@@ -12,10 +12,11 @@ alfresco-process-services:
       memory: "3000Mi"
   nginx-ingress:
     enabled: false  
-  efs:
-    enabled: false
-    dns: fs-example.efs.us-east-1.amazonaws.com
-    path: "/"
+  persistence:
+    efs:
+      enabled: false
+      dns: fs-example.efs.us-east-1.amazonaws.com
+      path: "/"
   postgresql:
     persistence:
       subPath: "dbp/alfresco-process-services/database-data"
@@ -24,10 +25,11 @@ alfresco-content-services:
   enabled: true
   nginx-ingress:
     enabled: false
-  efs:
-    enabled: false
-    dns: fs-example.efs.us-east-1.amazonaws.com
-    path: "/"
+  persistence:
+    efs:
+      enabled: false
+      dns: fs-example.efs.us-east-1.amazonaws.com
+      path: "/"
   postgresql:
     persistence:
       subPath: "dbp/alfresco-content-services/database-data"
@@ -66,6 +68,11 @@ alfresco-content-services:
 
 alfresco-sync-service:
   enabled: true
+  persistence:
+    efs:
+      enabled: false
+      dns: fs-example.efs.us-east-1.amazonaws.com
+      path: "/"
   postgresql:
     persistence:
-      enabled: false
+      subPath: "dbp/alfresco-sync-services/database-data"

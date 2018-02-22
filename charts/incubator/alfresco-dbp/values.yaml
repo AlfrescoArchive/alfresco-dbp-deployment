@@ -20,6 +20,13 @@ alfresco-content-services:
   enabled: true
   nginx-ingress:
     enabled: false
+  efs:
+    enabled: false
+    dns: fs-example.efs.us-east-1.amazonaws.com
+    path: "/"
+  postgresql:
+    persistence:
+      subPath: "dbp/alfresco-content-services/database-data"
   repository:
     image:
       repository: quay.io/alfresco/alfresco-dbp-repository

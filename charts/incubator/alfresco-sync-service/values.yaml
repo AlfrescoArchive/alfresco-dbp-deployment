@@ -32,6 +32,9 @@ repository:
   
 postgresql:
   nameOverride: postgresql-syncservice
+  persistence:
+    existingClaim: "sync-services-database-pvc"
+    subPath: "alfresco-sync-services/database-data"
   postgresUser: alfresco
   postgresPassword: admin
   postgresDatabase: syncservice-postgresql

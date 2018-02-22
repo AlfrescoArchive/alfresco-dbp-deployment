@@ -1,0 +1,742 @@
+REVISION: 2
+RELEASED: Wed Feb 14 16:38:35 2018
+CHART: alfresco-infrastructure-0.1.0
+USER-SUPPLIED VALUES:
+CHART: alfresco-infrastructure-0.1.0
+COMPUTED VALUES: null
+HOOKS: null
+MANIFEST: null
+RELEASED: Wed Feb 14 15:21:49 2018
+REVISION: 1
+USER-SUPPLIED VALUES: null
+activemq:
+  activemq:
+    image:
+      configMaxMemory: "2048"
+      configMinMemory: "512"
+      pullPolicy: Always
+      repository: webcenter/activemq
+      tag: latest
+    resources:
+      limits:
+        memory: 2048Mi
+      requests:
+        memory: 512Mi
+    services:
+      broker:
+        name: activemq-broker
+        ports:
+          external:
+            amqp: 5672
+            openwire: 61616
+          internal:
+            amqp: 5672
+            openwire: 61616
+        type: ClusterIP
+      webConsole:
+        name: activemq-web-console
+        ports:
+          external:
+            webConsole: 8161
+          internal:
+            webConsole: 8161
+        type: NodePort
+  enabled: true
+  global: {}
+alfresco-activiti-cloud-registry:
+  enabled: true
+  global: {}
+  image:
+    pullPolicy: Always
+    repository: activiti/activiti-cloud-registry
+    tag: latest
+  nginx-ingress:
+    enabled: false
+  registryPullSecrets: quay-registry-secret
+  replicaCount: 1
+  service:
+    externalPort: 8761
+    internalPort: 8761
+    name: activiti-cloud-registry
+    type: ClusterIP
+alfresco-api-gateway:
+  enabled: true
+  global: {}
+  image:
+    pullPolicy: Always
+    repository: alfresco/alfresco-api-gateway
+    tag: latest
+  keycloakURL: http://a8d5f008b118911e8995c0ab71a820dd-455434550.us-east-1.elb.amazonaws.com:/auth/
+  replicaCount: 1
+  service:
+    externalPort: 8080
+    internalPort: 8080
+    name: alresco-api-gateway
+    type: NodePort
+alfresco-keycloak:
+  enabled: true
+  global: {}
+  image:
+    pullPolicy: Always
+    repository: alfresco/alfresco-keycloak
+    tag: latest
+  ingress:
+    path: /auth
+  replicaCount: 1
+  service:
+    externalPort: 8180
+    internalPort: 8180
+    name: alfresco-keycloak
+    type: NodePort
+nginx-ingress:
+  controller:
+    scope:
+      enabled: true
+persistence:
+  enabled: false
+  nfs:
+    server: fs-d660549f.efs.us-east-1.amazonaws.com
+  size: 3Gi
+  volumeEnv: aws
+rabbitmq-ha:
+  customConfigMap: false
+  enabled: true
+  global: {}
+  image:
+    pullPolicy: IfNotPresent
+    repository: rabbitmq
+    tag: 3.7-alpine
+  nodeSelector: {}
+  persistence:
+    enabled: false
+    size: 10Gi
+  persistentVolume:
+    accessModes:
+    - ReadWriteOnce
+    annotations: {}
+    enabled: false
+    size: 8Gi
+  podAntiAffinity: soft
+  rabbitmqEpmdPort: 4369
+  rabbitmqHipeCompile: false
+  rabbitmqManagerPort: 15672
+  rabbitmqMemoryHighWatermark: 256MB
+  rabbitmqNodePort: 5672
+  rabbitmqUsername: guest
+  rabbitmqVhost: /
+  rbac:
+    create: false
+    serviceAccountName: default
+  replicaCount: 1
+  resources: {}
+  service:
+    annotations: {}
+    clusterIP: ""
+    externalIPs: []
+    loadBalancerIP: ""
+    loadBalancerSourceRanges: []
+    type: ClusterIP
+  tolerations: []
+  updateStrategy: OnDelete
+
+COMPUTED VALUES:
+CHART: alfresco-infrastructure-0.1.0
+COMPUTED VALUES: null
+HOOKS: null
+MANIFEST: null
+RELEASED: Wed Feb 14 15:21:49 2018
+REVISION: 1
+USER-SUPPLIED VALUES: null
+activemq:
+  activemq:
+    image:
+      configMaxMemory: "2048"
+      configMinMemory: "512"
+      pullPolicy: Always
+      repository: webcenter/activemq
+      tag: latest
+    resources:
+      limits:
+        memory: 2048Mi
+      requests:
+        memory: 512Mi
+    services:
+      broker:
+        name: activemq-broker
+        ports:
+          external:
+            amqp: 5672
+            openwire: 61616
+          internal:
+            amqp: 5672
+            openwire: 61616
+        type: ClusterIP
+      webConsole:
+        name: activemq-web-console
+        ports:
+          external:
+            webConsole: 8161
+          internal:
+            webConsole: 8161
+        type: NodePort
+  enabled: true
+  global: {}
+alfresco-activiti-cloud-registry:
+  enabled: true
+  global: {}
+  image:
+    pullPolicy: Always
+    repository: activiti/activiti-cloud-registry
+    tag: latest
+  nginx-ingress:
+    enabled: false
+  registryPullSecrets: quay-registry-secret
+  replicaCount: 1
+  service:
+    externalPort: 8761
+    internalPort: 8761
+    name: activiti-cloud-registry
+    type: ClusterIP
+alfresco-api-gateway:
+  enabled: true
+  global: {}
+  image:
+    pullPolicy: Always
+    repository: alfresco/alfresco-api-gateway
+    tag: latest
+  keycloakURL: http://a8d5f008b118911e8995c0ab71a820dd-455434550.us-east-1.elb.amazonaws.com:/auth/
+  replicaCount: 1
+  service:
+    externalPort: 8080
+    internalPort: 8080
+    name: alresco-api-gateway
+    type: NodePort
+alfresco-keycloak:
+  enabled: true
+  global: {}
+  image:
+    pullPolicy: Always
+    repository: alfresco/alfresco-keycloak
+    tag: latest
+  ingress:
+    path: /auth
+  replicaCount: 1
+  service:
+    externalPort: 8180
+    internalPort: 8180
+    name: alfresco-keycloak
+    type: NodePort
+nginx-ingress:
+  controller:
+    scope:
+      enabled: true
+persistence:
+  enabled: false
+  nfs:
+    server: fs-d660549f.efs.us-east-1.amazonaws.com
+  size: 3Gi
+  volumeEnv: aws
+rabbitmq-ha:
+  customConfigMap: false
+  enabled: true
+  global: {}
+  image:
+    pullPolicy: IfNotPresent
+    repository: rabbitmq
+    tag: 3.7-alpine
+  nodeSelector: {}
+  persistence:
+    enabled: false
+    size: 10Gi
+  persistentVolume:
+    accessModes:
+    - ReadWriteOnce
+    annotations: {}
+    enabled: false
+    size: 8Gi
+  podAntiAffinity: soft
+  rabbitmqEpmdPort: 4369
+  rabbitmqHipeCompile: false
+  rabbitmqManagerPort: 15672
+  rabbitmqMemoryHighWatermark: 256MB
+  rabbitmqNodePort: 5672
+  rabbitmqUsername: guest
+  rabbitmqVhost: /
+  rbac:
+    create: false
+    serviceAccountName: default
+  replicaCount: 1
+  resources: {}
+  service:
+    annotations: {}
+    clusterIP: ""
+    externalIPs: []
+    loadBalancerIP: ""
+    loadBalancerSourceRanges: []
+    type: ClusterIP
+  tolerations: []
+  updateStrategy: OnDelete
+
+HOOKS:
+MANIFEST:
+
+---
+# Source: alfresco-infrastructure/charts/rabbitmq-ha/templates/secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: anxious-buffoon-rabbitmq-ha
+  labels:
+    app: rabbitmq-ha
+    chart: "rabbitmq-ha-0.1.1"
+    release: "anxious-buffoon"
+    heritage: "Tiller"
+type: Opaque
+data:
+  
+  rabbitmq-password: "bXZxZ3V6dUtPUg=="
+  
+  
+  rabbitmq-erlang-cookie: "MlJXU2oxSGpQWVp3VE9udHNaUzM5MzlGeFhxTmVKSzc="
+---
+# Source: alfresco-infrastructure/charts/rabbitmq-ha/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: anxious-buffoon-rabbitmq-ha
+  labels:
+    app: rabbitmq-ha
+    chart: rabbitmq-ha-0.1.1
+    release: anxious-buffoon
+    heritage: Tiller
+data:
+  enabled_plugins: |
+    [rabbitmq_consistent_hash_exchange,rabbitmq_federation,rabbitmq_federation_management,rabbitmq_management,rabbitmq_mqtt,rabbitmq_peer_discovery_k8s,rabbitmq_shovel,rabbitmq_shovel_management,rabbitmq_stomp,rabbitmq_web_stomp].
+
+  rabbitmq.conf: |
+    ## RabbitMQ configuration
+    ## Ref: https://github.com/rabbitmq/rabbitmq-server/blob/master/docs/rabbitmq.conf.example
+
+    ## Clustering
+    cluster_formation.peer_discovery_backend  = rabbit_peer_discovery_k8s
+    cluster_formation.k8s.host = kubernetes.default.svc.cluster.local
+    cluster_formation.k8s.address_type = ip
+    cluster_formation.node_cleanup.interval = 10
+    cluster_formation.node_cleanup.only_log_warning = false
+    cluster_partition_handling = autoheal
+
+    ## The default "guest" user is only permitted to access the server
+    ## via a loopback interface (e.g. localhost)
+    loopback_users.guest = false
+
+    ## Memory-based Flow Control threshold
+    vm_memory_high_watermark.absolute = 256MB
+---
+# Source: alfresco-infrastructure/charts/activemq/templates/svc-activemq-broker.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: anxious-buffoon-activemq-broker
+  labels:
+    app: anxious-buffoon-activemq
+    chart: activemq-0.1.0
+    release: anxious-buffoon
+    heritage: Tiller
+spec:
+  type: ClusterIP
+  ports:
+  - port: 61616
+    targetPort: 61616
+    name: openwire
+    protocol: TCP
+  - port: 5672
+    targetPort: 5672
+    name: amqp
+    protocol: TCP
+  selector:
+    app: anxious-buffoon-activemq
+    release: anxious-buffoon
+---
+# Source: alfresco-infrastructure/charts/activemq/templates/svc-activemq-web-console.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: anxious-buffoon-activemq-web-console
+  labels:
+    app: anxious-buffoon-activemq
+    chart: activemq-0.1.0
+    release: anxious-buffoon
+    heritage: Tiller
+spec:
+  type: NodePort
+  ports:
+  - port: 8161
+    targetPort: 8161
+    name: web-console
+    protocol: TCP
+  selector:
+    app: anxious-buffoon-activemq
+    release: anxious-buffoon
+---
+# Source: alfresco-infrastructure/charts/alfresco-activiti-cloud-registry/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: anxious-buffoon-alfresco-activiti-cloud-registry
+  labels:
+    app: alfresco-activiti-cloud-registry
+    chart: alfresco-activiti-cloud-registry-0.1.0
+    release: anxious-buffoon
+    heritage: Tiller
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8761
+      targetPort: 8761
+      protocol: TCP
+      name: activiti-cloud-registry
+  selector:
+    app: alfresco-activiti-cloud-registry
+    release: anxious-buffoon
+---
+# Source: alfresco-infrastructure/charts/alfresco-api-gateway/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: anxious-buffoon-alfresco-api-gateway
+  labels:
+    app: alfresco-api-gateway
+    chart: alfresco-api-gateway-0.1.0
+    release: anxious-buffoon
+    heritage: Tiller
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+      name: alresco-api-gateway
+  selector:
+    app: alfresco-api-gateway
+    release: anxious-buffoon
+---
+# Source: alfresco-infrastructure/charts/alfresco-keycloak/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: anxious-buffoon-alfresco-keycloak
+  labels:
+    app: alfresco-keycloak
+    chart: alfresco-keycloak-0.1.0
+    release: anxious-buffoon
+    heritage: Tiller
+spec:
+  type: NodePort
+  ports:
+    - port: 8180
+      targetPort: 8180
+      protocol: TCP
+      name: alfresco-keycloak
+  selector:
+    app: alfresco-keycloak
+    release: anxious-buffoon
+---
+# Source: alfresco-infrastructure/charts/rabbitmq-ha/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: anxious-buffoon-rabbitmq-ha
+  labels:
+    app: rabbitmq-ha
+    chart: rabbitmq-ha-0.1.1
+    release: anxious-buffoon
+    heritage: Tiller
+spec:
+  clusterIP: ""
+  ports:
+    - name: http
+      protocol: TCP
+      port: 15672
+      targetPort: http
+    - name: amqp
+      protocol: TCP
+      port: 5672
+      targetPort: amqp
+    - name: epmd
+      protocol: TCP
+      port: 4369
+      targetPort: epmd
+  selector:
+    app: rabbitmq-ha
+    release: anxious-buffoon
+  type: ClusterIP
+---
+# Source: alfresco-infrastructure/charts/activemq/templates/deployment-activemq.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: anxious-buffoon-activemq
+  labels:
+    app: anxious-buffoon-activemq
+    chart: activemq-0.1.0
+    release: anxious-buffoon
+    heritage: Tiller
+spec:
+  replicas: 
+  template:
+    metadata:
+      labels:
+        app: anxious-buffoon-activemq
+        release: anxious-buffoon
+    spec:
+      containers:
+      - name: activemq
+        image: "webcenter/activemq:latest"
+        imagePullPolicy: Always
+        env:
+        - name: ACTIVEMQ_CONFIG_MINMEMORY
+          value: "512"
+        - name: ACTIVEMQ_CONFIG_MAXMEMORY
+          value: "2048"
+        ports:
+        - name: openwire
+          containerPort: 61616
+        - name: amqp
+          containerPort: 5672
+        - name: web-console
+          containerPort: 8161
+        readinessProbe:
+          tcpSocket:
+            port: 61616
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 61616
+          initialDelaySeconds: 5
+          periodSeconds: 25
+        resources:
+            limits:
+              memory: 2048Mi
+            requests:
+              memory: 512Mi
+---
+# Source: alfresco-infrastructure/charts/alfresco-activiti-cloud-registry/templates/deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: anxious-buffoon-alfresco-activiti-cloud-registry
+  labels:
+    app: alfresco-activiti-cloud-registry
+    chart: alfresco-activiti-cloud-registry-0.1.0
+    release: anxious-buffoon
+    heritage: Tiller
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: alfresco-activiti-cloud-registry
+        release: anxious-buffoon
+    spec:
+      imagePullSecrets:
+        - name: quay-registry-secret
+      containers:
+        - name: alfresco-activiti-cloud-registry
+          image: "activiti/activiti-cloud-registry:latest"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8761
+---
+# Source: alfresco-infrastructure/charts/alfresco-api-gateway/templates/deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: anxious-buffoon-alfresco-api-gateway
+  labels:
+    app: alfresco-api-gateway
+    chart: alfresco-api-gateway-0.1.0
+    release: anxious-buffoon
+    heritage: Tiller
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: alfresco-api-gateway
+        release: anxious-buffoon
+    spec:
+      containers:
+        - name: alfresco-api-gateway
+          image: "alfresco/alfresco-api-gateway:latest"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ACT_KEYCLOAK_URL
+              value: "http://a8d5f008b118911e8995c0ab71a820dd-455434550.us-east-1.elb.amazonaws.com:/auth/"
+            - name: ACT_EUREKA_URL
+              value: "http://anxious-buffoon-alfresco-activiti-cloud-registry:8761/eureka/"
+            - name: ACT_RABBITMQ_HOST
+              value: "anxious-buffoon"
+            - name: ACT_GATEWAY_HOST
+              value: anxious-buffoon-alfresco-api-gateway
+---
+# Source: alfresco-infrastructure/charts/alfresco-keycloak/templates/deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: anxious-buffoon-alfresco-keycloak
+  labels:
+    app: alfresco-keycloak
+    chart: alfresco-keycloak-0.1.0
+    release: anxious-buffoon
+    heritage: Tiller
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: alfresco-keycloak
+        release: anxious-buffoon
+    spec:
+      containers:
+        - name: alfresco-keycloak
+          image: "alfresco/alfresco-keycloak:latest"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8180
+---
+# Source: alfresco-infrastructure/charts/rabbitmq-ha/templates/statefulset.yaml
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: anxious-buffoon-rabbitmq-ha
+  labels:
+    app: rabbitmq-ha
+    chart: rabbitmq-ha-0.1.1
+    release: anxious-buffoon
+    heritage: Tiller
+spec:
+  serviceName: anxious-buffoon-rabbitmq-ha
+  replicas: 1
+  updateStrategy:
+    type: OnDelete
+  template:
+    metadata:
+      labels:
+        app: rabbitmq-ha
+        release: anxious-buffoon
+    spec:
+      terminationGracePeriodSeconds: 10
+      serviceAccountName: "default"
+      containers:
+        - name: rabbitmq-ha
+          image: rabbitmq:3.7-alpine
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: epmd
+              protocol: TCP
+              containerPort: 4369
+            - name: amqp
+              protocol: TCP
+              containerPort: 5672
+            - name: http
+              protocol: TCP
+              containerPort: 15672
+          livenessProbe:
+            exec:
+              command:
+                - rabbitmqctl
+                - status
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
+          readinessProbe:
+            exec:
+              command:
+                - rabbitmqctl
+                - status
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+          env:
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: RABBITMQ_USE_LONGNAME
+              value: "true"
+            - name: RABBITMQ_NODENAME
+              value: "rabbit@$(MY_POD_IP)"
+            - name: K8S_SERVICE_NAME
+              value: anxious-buffoon-rabbitmq-ha
+            - name: RABBITMQ_ERLANG_COOKIE
+              valueFrom:
+                secretKeyRef:
+                  name: anxious-buffoon-rabbitmq-ha
+                  key: rabbitmq-erlang-cookie
+            - name: RABBITMQ_DEFAULT_USER
+              value: "guest"
+            - name: RABBITMQ_DEFAULT_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: anxious-buffoon-rabbitmq-ha
+                  key: rabbitmq-password
+            - name: RABBITMQ_DEFAULT_VHOST
+              value: "/"
+          resources:
+            {}
+            
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/rabbitmq
+            - name: config
+              mountPath: /etc/rabbitmq
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 1
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app: rabbitmq-ha
+                    release: anxious-buffoon
+      volumes:
+        - name: config
+          configMap:
+            name: anxious-buffoon-rabbitmq-ha
+        - name: data
+          emptyDir: {}
+---
+# Source: alfresco-infrastructure/charts/alfresco-api-gateway/templates/ingress.yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: anxious-buffoon-alfresco-api-gateway-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    ingress.kubernetes.io/ssl-redirect: "false"  
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          serviceName: anxious-buffoon-alfresco-api-gateway
+          servicePort: 8080
+---
+# Source: alfresco-infrastructure/charts/alfresco-keycloak/templates/ingress.yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: anxious-buffoon-alfresco-keycloak-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    ingress.kubernetes.io/ssl-redirect: "false"  
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /auth
+        backend:
+          serviceName: anxious-buffoon-alfresco-keycloak
+          servicePort: 8180

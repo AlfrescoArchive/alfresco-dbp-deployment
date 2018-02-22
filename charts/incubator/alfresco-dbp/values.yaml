@@ -11,10 +11,14 @@ alfresco-process-services:
     limits:
       memory: "3000Mi"
   nginx-ingress:
+    enabled: false  
+  efs:
     enabled: false
+    dns: fs-example.efs.us-east-1.amazonaws.com
+    path: "/"
   postgresql:
     persistence:
-      enabled: false
+      subPath: "dbp/alfresco-process-services/database-data"
 
 alfresco-content-services:
   enabled: true

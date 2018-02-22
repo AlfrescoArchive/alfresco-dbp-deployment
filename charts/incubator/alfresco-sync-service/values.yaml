@@ -29,9 +29,25 @@ activemq:
 repository:
   host:
   port:
-  
+
+
+persistence: 
+  enabled: true
+  baseSize: 10Gi
+  efs:
+    enabled: false
+    dns: fs-example.efs.us-east-1.amazonaws.com
+    path: "/"
+
+database:
+  persistence:
+    size: 2Gi
+
 postgresql:
   nameOverride: postgresql-syncservice
+  persistence:
+    existingClaim: "sync-services-database-pvc"
+    subPath: "alfresco-sync-services/database-data"
   postgresUser: alfresco
   postgresPassword: admin
   postgresDatabase: syncservice-postgresql

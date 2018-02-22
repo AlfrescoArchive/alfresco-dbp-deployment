@@ -28,7 +28,7 @@ cloud-formation-deploy.yaml
 
 # Kubernetes Helm
 requirements.lock
-#**/charts/*.tgz
+**/charts/*.tgz
 
 # Alfresco
 *.log

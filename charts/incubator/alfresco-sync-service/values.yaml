@@ -29,7 +29,20 @@ activemq:
 repository:
   host:
   port:
-  
+
+
+persistence: 
+  enabled: true
+  baseSize: 10Gi
+  efs:
+    enabled: false
+    dns: fs-example.efs.us-east-1.amazonaws.com
+    path: "/"
+
+database:
+  persistence:
+    size: 2Gi
+
 postgresql:
   nameOverride: postgresql-syncservice
   persistence:

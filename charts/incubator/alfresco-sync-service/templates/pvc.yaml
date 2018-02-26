@@ -1,5 +1,5 @@
 {{- if and .Values.persistence.enabled (not .Values.persistence.existingClaim) }}
-{{- if .Values.persistence.efs.enabled -}}
+{{- if and .Values.persistence.efs.enabled (not .Values.persistence.existingVolume.name) -}}
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -9,6 +9,7 @@ spec:
     storage: {{ .Values.persistence.baseSize | quote }}
   accessModes:
     - ReadWriteMany
+    - ReadWriteOnce
   nfs:
     server: "{{ .Values.persistence.efs.dns }}"
     path: "{{ .Values.persistence.efs.path }}"
@@ -20,14 +21,15 @@ apiVersion: v1
 metadata:
   name: sync-services-database-pvc
 spec:
-  accessModes:
   {{ if .Values.persistence.efs.enabled }}
-    - ReadWriteMany
   volumeName: sync-services-pv
   storageClassName: efs
-  {{ else }}
-    - ReadWriteOnce
+  {{ else if .Values.persistence.existingVolume.name }}
+  volumeName: "{{ .Values.persistence.existingVolume.name }}"
+  storageClassName: "{{ .Values.persistence.existingVolume.storageClassName | default "efs" }}"
   {{ end }}
+  accessModes: 
+    {{ toYaml .Values.persistence.existingVolume.accessModes }}
   resources:
     requests:
       storage: {{ .Values.database.persistence.size | quote }}

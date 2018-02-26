@@ -34,6 +34,9 @@ repository:
 persistence: 
   enabled: true
   baseSize: 10Gi
+  existingVolume:
+    accessModes:
+      - ReadWriteOnce
   efs:
     enabled: false
     dns: fs-example.efs.us-east-1.amazonaws.com

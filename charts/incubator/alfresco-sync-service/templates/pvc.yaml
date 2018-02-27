@@ -1,5 +1,5 @@
 {{- if and .Values.persistence.enabled (not .Values.persistence.existingClaim) }}
-{{- if and .Values.persistence.efs.enabled (not .Values.persistence.existingVolume.name) -}}
+{{- if and .Values.persistence.efs.enabled -}}
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -9,7 +9,7 @@ spec:
     storage: {{ .Values.persistence.baseSize | quote }}
   accessModes:
     - ReadWriteMany
-    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: {{ .Values.persistence.reclaimPolicy | default "Delete" }}
   nfs:
     server: "{{ .Values.persistence.efs.dns }}"
     path: "{{ .Values.persistence.efs.path }}"
@@ -19,17 +19,15 @@ spec:
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: sync-services-database-pvc
+  name: sync-services-pvc
 spec:
-  {{ if .Values.persistence.efs.enabled }}
-  volumeName: sync-services-pv
-  storageClassName: efs
-  {{ else if .Values.persistence.existingVolume.name }}
-  volumeName: "{{ .Values.persistence.existingVolume.name }}"
-  storageClassName: "{{ .Values.persistence.existingVolume.storageClassName | default "efs" }}"
-  {{ end }}
   accessModes: 
-    {{ toYaml .Values.persistence.existingVolume.accessModes }}
+  {{ if .Values.persistence.efs.enabled }}
+    - ReadWriteMany
+  storageClassName: efs
+  {{ else }}
+    - ReadWriteOnce
+  {{ end }}
   resources:
     requests:
       storage: {{ .Values.database.persistence.size | quote }}

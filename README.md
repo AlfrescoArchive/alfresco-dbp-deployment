@@ -98,9 +98,12 @@ helm registry install quay.io/alfresco/alfresco-dbp:incubator \
 --set alfresco-sync-service.activemq.broker.host="${INFRARELEASE}-activemq-broker" \
 --set alfresco-content-services.repository.environment.ACTIVEMQ_HOST="${INFRARELEASE}-activemq-broker" \
 --set alfresco-content-services.repository.environment.SYNC_SERVICE_URI="http://$ELBADDRESS/syncservice" \
---set alfresco-content-services.persistence.existingVolume.name="alfresco-volume" \
---set alfresco-process-services.persistence.existingVolume.name="alfresco-volume" \
---set alfresco-sync-service.persistence.existingVolume.name="alfresco-volume" \
+--set alfresco-content-services.persistence.enabled="false" \
+--set alfresco-content-services.postgresql.persistence.existingClaim="alfresco-volume-claim" \
+--set alfresco-process-services.persistence.enabled="false" \
+--set alfresco-process-services.postgresql.persistence.existingClaim="alfresco-volume-claim" \
+--set alfresco-sync-service.persistence.enabled="false" \
+--set alfresco-sync-service.postgresql.persistence.existingClaim="alfresco-volume-claim" \
 --namespace=$DESIREDNAMESPACE
 ```
 

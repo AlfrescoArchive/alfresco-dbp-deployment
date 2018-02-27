@@ -34,9 +34,6 @@ repository:
 persistence: 
   enabled: true
   baseSize: 10Gi
-  existingVolume:
-    accessModes:
-      - ReadWriteOnce
   efs:
     enabled: false
     dns: fs-example.efs.us-east-1.amazonaws.com
@@ -49,7 +46,7 @@ database:
 postgresql:
   nameOverride: postgresql-syncservice
   persistence:
-    existingClaim: "sync-services-database-pvc"
+    existingClaim: "sync-services-pvc"
     subPath: "alfresco-sync-services/database-data"
   postgresUser: alfresco
   postgresPassword: admin

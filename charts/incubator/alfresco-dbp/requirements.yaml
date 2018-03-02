@@ -2,12 +2,12 @@ dependencies:
   - name: alfresco-process-services
     version: ^0.1.0
     condition: alfresco-process-services.enabled
-    repository: https://alfresco.github.io/charts/incubator
+    repository: http://kubernetes-charts.alfresco.com/incubator
   - name: alfresco-content-services
     version: ^0.0.1
     condition: alfresco-content-services.enabled
-    repository: https://alfresco.github.io/charts/incubator
+    repository: http://kubernetes-charts.alfresco.com/incubator
   - name: alfresco-sync-service
     version: ^0.1.0
     condition: alfresco-sync-service.enabled
-    repository: https://alfresco.github.io/charts/incubator
+    repository: http://kubernetes-charts.alfresco.com/incubator

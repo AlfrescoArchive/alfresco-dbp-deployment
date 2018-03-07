@@ -48,20 +48,8 @@ After you have installed the prerequisites, please install the infrastructure re
 
 Environment variables from the infrastructure project will be used in the deployment steps below.
 
-**Note!** 
-We dont advise you to use the same EFS instance for persisting the data from the dbp deploy.
-
-However, if you want to have multiple deployments of the dbp using the same EFS instance you will have to make sure to change the storage path for each deployment.
-This can be done in two ways:
- - setting the value persistence.efs.path to an existent EFS folder when deploying the *infrastructure chart*
- - setting the following extra values when deploying the dbp:
-
-```bash
-# change NewDeploymentName to whatever you desire here.
---set alfresco-content-services.postgresql.persistence.subPath="NewDeploymentName/alfresco-content-services/database-data" \
---set alfresco-process-services.postgresql.persistence.subPath="NewDeploymentName/alfresco-process-services/database-data" \
---set alfresco-sync-services.postgresql.persistence.subPath="NewDeploymentName/alfresco-sync-services/database-data" \
-```
+**Note! AWS ONLY ** 
+We dont advise you to use the same EFS instance for persisting the data from multiple dbp deployments.
 
 ### Docker Registry Pull Secrets
 

@@ -48,6 +48,9 @@ After you have installed the prerequisites, please install the infrastructure re
 
 Environment variables from the infrastructure project will be used in the deployment steps below.
 
+**Note! AWS ONLY ** 
+We dont advise you to use the same EFS instance for persisting the data from multiple dbp deployments.
+
 ### Docker Registry Pull Secrets
 
 See the Anaxes Shipyard documentation on [secrets](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/SECRETS.md).
@@ -158,4 +161,5 @@ For minikube you can just run
 ```bash
 minikube delete
 ```
+
 For more information on running and tearing down k8s environments, follow this [guide](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/docs/running-a-cluster.md).

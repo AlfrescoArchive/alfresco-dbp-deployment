@@ -12,9 +12,6 @@ alfresco-process-services:
       memory: "3000Mi"
   nginx-ingress:
     enabled: false
-  postgresql:
-    persistence:
-      enabled: false
 
 alfresco-content-services:
   enabled: true
@@ -55,6 +52,3 @@ alfresco-content-services:
 
 alfresco-sync-service:
   enabled: true
-  postgresql:
-    persistence:
-      enabled: false

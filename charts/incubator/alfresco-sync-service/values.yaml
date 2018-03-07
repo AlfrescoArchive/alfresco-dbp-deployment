@@ -29,9 +29,12 @@ activemq:
 repository:
   host:
   port:
-  
+
 postgresql:
   nameOverride: postgresql-syncservice
+  persistence:
+    existingClaim: "alfresco-volume-claim"
+    subPath: "alfresco-sync-services/database-data"
   postgresUser: alfresco
   postgresPassword: admin
   postgresDatabase: syncservice-postgresql

@@ -9,7 +9,7 @@ The Alfresco Digital Business Platform Deployment requires:
 | Docker     | 17.0.9.1 |
 | Kubernetes | 1.8.0    |
 | Helm       | 2.7.0    |
-| Minikube   | 0.24.1   |
+| Minikube   | 0.25.0   |
 
 Any variation from these technologies and versions may affect the end result. If you do experience any issues please let us know through our [Gitter channel](https://gitter.im/Alfresco/platform-services?utm_source=share-link&utm_medium=link&utm_campaign=share-link).
 
@@ -35,7 +35,7 @@ cd charts/incubator
 cat ~/.docker/config.json | base64
 ```
 
-Add the base64 string generated to .dockerconfigjson in secrets.yaml. The file should look like this:
+Add the base64 string generated to .dockerconfigjson in secrets.yaml. The file should look similar to this:
 
 ```bash
 apiVersion: v1
@@ -45,7 +45,7 @@ metadata:
 type: kubernetes.io/dockerconfigjson
 data:
 # Docker registries config json in base64 to do this just run - cat ~/.docker/config.json | base64
-  .dockerconfigjson: ew0KCSJhdXRocyI6IHsNCgkJImh0dHBzOi8vcXVheS5pbyI6IHsNCgkJCSJhdXRoIjogImRHVnpkRHAwWlhOMD0iDQoJCX0sDQoJCSJxdWF5LmlvIjogew0KCQkJImF1dGgiOiAiZEdWemREcDBaWE4wIg0KCQl9DQoJfSwNCgkiSHR0cEhlYWRlcnMiOiB7DQoJCSJVc2VyLUFnZW50IjogIkRvY2tlci1DbGllbnQvMTcuMTIuMC1jZS1yYzMgKGRhcndpbikiDQoJfQ0KfQ==
+  .dockerconfigjson: ew0KCSJhdXRocyI6IHsNCgkJImh0dHBzOi8vcXVheS5pbyI6IHsNCgkJCSJhdXRoIjogImRHVnpkRHAwWlhOMD0iDQoJCX0sDQoJCSJxdWF5LmlvIjogew0KCQkJImF1dGgiOiAiZEdWemREcDBaWE4w550KCQl9DQoJfSwNCgkiSHR0cEhlYWRlcnMiOiB7DQoJCSJVc2VyLUFnZW50IjogIkRvY2tlci1DbGllbnQvMTcuMTIuMC1jZS1yYzMgKGRhcndpbikiDQoJfQ0KfQ==
 ```
 
 Then run this command:

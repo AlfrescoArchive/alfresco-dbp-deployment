@@ -13,33 +13,6 @@ The Alfresco Digital Business Platform Deployment requires:
 
 Any variation from these technologies and versions may affect the end result. If you do experience any issues please let us know through our [Gitter channel](https://gitter.im/Alfresco/platform-services?utm_source=share-link&utm_medium=link&utm_campaign=share-link).
 
-### Helm Registry Plugin
-
-#### Install the helm registry plugin to be able to install the dbp chart from quay.io registry
-
-```bash
-helm plugin install https://github.com/app-registry/appr-helm-plugin.git
-```
-
-#### Login to the quay.io helm registry
-
-```bash
-helm registry login quay.io
-```
-
-You will be prompted to enter your quay.io username and password.
-
-The end result should look similar to the following:
-
-```bash
-helm registry login quay.io
-Registry plugin assets do not exist, download them now !
-downloading https://github.com/app-registry/appr/releases/download/v0.7.4/appr-osx-x64 ...
-Username: sergiuv
-Password:
- >>> Login succeeded
-```
-
 *Note*: You do not need to clone this repo to deploy the dbp.
 
 ### Deploy the infrastructure components
@@ -90,14 +63,14 @@ kubectl create -f secrets.yaml --namespace $DESIREDNAMESPACE
 ```bash
 
 #On MINIKUBE
-helm registry install quay.io/alfresco/alfresco-dbp:incubator \
+helm install alfresco-incubator/alfresco-dbp \
 --set alfresco-sync-service.activemq.broker.host="${INFRARELEASE}-activemq-broker" \
 --set alfresco-content-services.repository.environment.ACTIVEMQ_HOST="${INFRARELEASE}-activemq-broker" \
 --set alfresco-content-services.repository.environment.SYNC_SERVICE_URI="http://$ELBADDRESS:$INFRAPORT/syncservice" \
 --namespace=$DESIREDNAMESPACE
 
 #On AWS
-helm registry install quay.io/alfresco/alfresco-dbp:incubator \
+helm install alfresco-incubator/alfresco-dbp \
 --set alfresco-sync-service.activemq.broker.host="${INFRARELEASE}-activemq-broker" \
 --set alfresco-content-services.repository.environment.ACTIVEMQ_HOST="${INFRARELEASE}-activemq-broker" \
 --set alfresco-content-services.repository.environment.SYNC_SERVICE_URI="http://$ELBADDRESS/syncservice" \

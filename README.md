@@ -49,7 +49,7 @@ After you have installed the prerequisites, please install the infrastructure re
 Environment variables from the infrastructure project will be used in the deployment steps below.
 
 **Note! AWS ONLY ** 
-We dont advise you to use the same EFS instance for persisting the data from multiple dbp deployments.
+We don't advise you to use the same EFS instance for persisting the data from multiple dbp deployments.
 
 ### Docker Registry Pull Secrets
 

@@ -64,16 +64,12 @@ kubectl create -f secrets.yaml --namespace $DESIREDNAMESPACE
 
 #On MINIKUBE
 helm install alfresco-incubator/alfresco-dbp \
---set alfresco-sync-service.activemq.broker.host="${INFRARELEASE}-activemq-broker" \
---set alfresco-content-services.repository.environment.ACTIVEMQ_HOST="${INFRARELEASE}-activemq-broker" \
---set alfresco-content-services.repository.environment.SYNC_SERVICE_URI="http://$ELBADDRESS:$INFRAPORT/syncservice" \
+--set alfresco-content-services.repository.environment.IDENTITY_SERVICE_URI="http://$ELBADDRESS:$INFRAPORT/auth" \
 --namespace=$DESIREDNAMESPACE
 
 #On AWS
 helm install alfresco-incubator/alfresco-dbp \
---set alfresco-sync-service.activemq.broker.host="${INFRARELEASE}-activemq-broker" \
---set alfresco-content-services.repository.environment.ACTIVEMQ_HOST="${INFRARELEASE}-activemq-broker" \
---set alfresco-content-services.repository.environment.SYNC_SERVICE_URI="http://$ELBADDRESS/syncservice" \
+--set alfresco-content-services.repository.environment.IDENTITY_SERVICE_URI="http://$ELBADDRESS:$INFRAPORT/auth" \
 --namespace=$DESIREDNAMESPACE
 ```
 

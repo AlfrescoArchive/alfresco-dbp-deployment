@@ -1,7 +1,7 @@
 FROM quay.io/alfresco/alfresco-content-services:feature-AUTH-85-token-auth-6.0.0-IDENTITY-SERVICE-SNAPSHOT
 
-# Remove Share installed by the ACS image	
-# TODO: Remove this once the Repo team update their image	
+# Remove Share installed by the ACS image
+# TODO: Remove this once the Repo team update their image
 RUN rm -r /usr/local/tomcat/webapps/share
 
 # Add DBP AMPs

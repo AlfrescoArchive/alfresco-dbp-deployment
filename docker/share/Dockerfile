@@ -1,4 +1,4 @@
-FROM quay.io/alfresco/alfresco-full-share:5.2.X
+FROM quay.io/alfresco/alfresco-share:6.0
 
 # Add DBP AMPs
 COPY target/amps /usr/local/tomcat/amps_share

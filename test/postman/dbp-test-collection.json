@@ -11,226 +11,7 @@
 			"description": null,
 			"item": [
 				{
-					"name": "google-docs",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.globals.get(\"url\");",
-									"",
-									"pm.test(\"validateGoogleDocsImage\", function () ",
-									"{",
-									"    pm.response.to.have.status(200);",
-									"});",
-									""
-								],
-								"id": "93bc0117-c1b8-4cbf-98b2-307154bacf24",
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "basic",
-							"basic": [
-								{
-									"key": "username",
-									"value": "admin",
-									"type": "string"
-								},
-								{
-									"key": "password",
-									"value": "admin",
-									"type": "string"
-								},
-								{
-									"key": "saveHelperData",
-									"type": "any"
-								},
-								{
-									"key": "showPassword",
-									"value": false,
-									"type": "boolean"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "http://{{url}}/share/res/components/documentlibrary/actions/google-edit-flat-16.png",
-							"protocol": "http",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"share",
-								"res",
-								"components",
-								"documentlibrary",
-								"actions",
-								"google-edit-flat-16.png"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Validate-share and rm module",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "8dcec1dc-4dbb-492f-a0bf-3c30274cc650",
-								"type": "text/javascript",
-								"exec": [
-									"",
-									"pm.globals.get(\"url\");",
-									"",
-									"pm.test(\"share is up and running\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"/* Disabled for DEPLOY-401",
-									"pm.test(\"rm is installed part of share\", function () {",
-									"pm.expect(pm.response.text()).to.include(\"Alfresco :: Records Management Global Customization - Enterprise\");",
-									"});",
-									"*/"
-								]
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "basic",
-							"basic": [
-								{
-									"key": "username",
-									"value": "admin",
-									"type": "string"
-								},
-								{
-									"key": "password",
-									"value": "admin",
-									"type": "string"
-								},
-								{
-									"key": "saveHelperData",
-									"type": "any"
-								},
-								{
-									"key": "showPassword",
-									"value": false,
-									"type": "boolean"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "http://{{url}}/share/page/modules/deploy",
-							"protocol": "http",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"share",
-								"page",
-								"modules",
-								"deploy"
-							]
-						},
-						"description": "Validate Share is deployed correctly"
-					},
-					"response": []
-				},
-				{
-					"name": "solr-validation",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.globals.get(\"url\");",
-									"",
-									"pm.test(\"solr status code\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"pm.test(\"solr response test\", function() {",
-									"   var jsonData = pm.response.json();",
-									"    var modulesArray= jsonData.resultset.queryInfo;",
-									"    for(var key in modulesArray)",
-									"    {",
-									"        var obj = modulesArray[key];",
-									"        var id = obj.numberFound;",
-									"        console.log(id);",
-									"        pm.expect(id).to.be.eql(\"199\");",
-									"    }    ",
-									"});"
-								],
-								"id": "42c706d8-c92f-49dd-884d-8eb47f6ac808",
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "basic",
-							"basic": [
-								{
-									"key": "username",
-									"value": "admin",
-									"type": "string"
-								},
-								{
-									"key": "password",
-									"value": "admin",
-									"type": "string"
-								},
-								{
-									"key": "saveHelperData",
-									"type": "any"
-								},
-								{
-									"key": "showPassword",
-									"value": false,
-									"type": "boolean"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "http://{{url}}/alfresco/s/api/solrstats",
-							"protocol": "http",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"alfresco",
-								"s",
-								"api",
-								"solrstats"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "repo-descovery with amps",
+					"name": "repo-discovery with amps",
 					"event": [
 						{
 							"listen": "test",
@@ -339,28 +120,28 @@
 						"description": "This request will validate whether the repo is set up correctly "
 					},
 					"response": []
-				}
-			]
-		},
-		{
-			"name": "04 APS-case",
-			"description": "This folder will contain all the cases related to APS",
-			"item": [
+				},
 				{
-					"name": "Create APS test Users",
+					"name": "Validate-share and rm module",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "d4276abf-44f2-4129-bd22-f7bbdbb9846f",
+								"id": "8dcec1dc-4dbb-492f-a0bf-3c30274cc650",
 								"type": "text/javascript",
 								"exec": [
+									"",
 									"pm.globals.get(\"url\");",
 									"",
-									"var jsonData = pm.response.json().id;",
-									"pm.environment.set(\"userId\", jsonData);",
+									"pm.test(\"share is up and running\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
 									"",
-									"  "
+									"/* Disabled for DEPLOY-401",
+									"pm.test(\"rm is installed part of share\", function () {",
+									"pm.expect(pm.response.text()).to.include(\"Alfresco :: Records Management Global Customization - Enterprise\");",
+									"});",
+									"*/"
 								]
 							}
 						}
@@ -370,13 +151,13 @@
 							"type": "basic",
 							"basic": [
 								{
-									"key": "password",
+									"key": "username",
 									"value": "admin",
 									"type": "string"
 								},
 								{
-									"key": "username",
-									"value": "admin@app.activiti.com",
+									"key": "password",
+									"value": "admin",
 									"type": "string"
 								},
 								{
@@ -390,36 +171,31 @@
 								}
 							]
 						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
+						"method": "GET",
+						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"hruser@activiti.com\",\n    \"firstName\": \"h\",\n    \"lastName\": \"r\",\n    \"password\": \"Password2\",\n    \"type\": \"enterprise\",\n    \"tenantId\": 1\n    }"
+							"raw": ""
 						},
 						"url": {
-							"raw": "http://{{url}}/activiti-app/api/enterprise/admin/users",
+							"raw": "http://{{url}}/share/page/modules/deploy",
 							"protocol": "http",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"activiti-app",
-								"api",
-								"enterprise",
-								"admin",
-								"users"
+								"share",
+								"page",
+								"modules",
+								"deploy"
 							]
-						}
+						},
+						"description": "Validate Share is deployed correctly"
 					},
 					"response": []
 				},
 				{
-					"name": "aps version",
+					"name": "google-docs",
 					"event": [
 						{
 							"listen": "test",
@@ -427,17 +203,13 @@
 								"exec": [
 									"pm.globals.get(\"url\");",
 									"",
-									"",
-									"pm.test(\"apsstatuscode\", function () {",
+									"pm.test(\"validateGoogleDocsImage\", function () ",
+									"{",
 									"    pm.response.to.have.status(200);",
 									"});",
-									"",
-									"pm.test(\"validateAPSEditionTest\", function () {",
-									"    var jsonData = pm.response.json().edition;",
-									"    pm.expect(jsonData).to.eql(\"Alfresco Process Services (powered by Activiti)\");",
-									"});"
+									""
 								],
-								"id": "c90fbb35-45a9-4cd4-9189-76750e6570cb",
+								"id": "93bc0117-c1b8-4cbf-98b2-307154bacf24",
 								"type": "text/javascript"
 							}
 						}
@@ -448,7 +220,7 @@
 							"basic": [
 								{
 									"key": "username",
-									"value": "admin@app.activiti.com",
+									"value": "admin",
 									"type": "string"
 								},
 								{
@@ -474,124 +246,78 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://{{url}}/activiti-app/api/enterprise/app-version",
+							"raw": "http://{{url}}/share/res/components/documentlibrary/actions/google-edit-flat-16.png",
 							"protocol": "http",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"activiti-app",
-								"api",
-								"enterprise",
-								"app-version"
+								"share",
+								"res",
+								"components",
+								"documentlibrary",
+								"actions",
+								"google-edit-flat-16.png"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Retrieve HR User profile using token",
+					"name": "solr-validation",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "ababde1b-5970-43ab-9994-31348d21a19e",
-								"type": "text/javascript",
-								"exec": [
-									"pm.environment.get(\"url\")",
-									"",
-									"pm.environment.get(\"userId\");",
-									"",
-									"",
-									"",
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});"
-								]
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{kcAccessToken}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "http://{{url}}/activiti-app/api/enterprise/users/{{userId}}",
-							"protocol": "http",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"activiti-app",
-								"api",
-								"enterprise",
-								"users",
-								"{{userId}}"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "05 Sync-Service-case",
-			"description": null,
-			"item": [
-				{
-					"name": "sync service",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "8a96b8b5-4dc5-48a5-b67b-abd90c1273f0",
-								"type": "text/javascript",
 								"exec": [
 									"pm.globals.get(\"url\");",
 									"",
-									"/* Disabled for DEPLOY-401",
-									"",
-									"pm.test(\"validateStatusCode\", function () {",
+									"pm.test(\"solr status code\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"pm.test(\"validateJsonBodyForActiveMQ\", function () {",
-									"    var jsonData = pm.response.json();",
-									"    var modulesMessage= jsonData.activeMQConnection.message;",
-									"    pm.expect(modulesMessage).to.eql(\"ActiveMQ connection Ok\");",
-									"});",
-									"",
-									"pm.test(\"validateJsonBodyForDB\", function () {",
-									"    var jsonData = pm.response.json();",
-									"    var modulesMessage= jsonData.databaseConnection.message;",
-									"    pm.expect(modulesMessage).to.eql(\"Database connection Ok\");",
-									"});",
-									"",
-									"pm.test(\"validateJsonBodyForEventHealth\", function () {",
-									"    var jsonData = pm.response.json();",
-									"    var modulesMessage= jsonData.eventsHealthCheck.message;",
-									"    pm.expect(modulesMessage).to.eql(\"Ok\");",
-									"});",
-									"",
-									"pm.test(\"validateJsonBodyForrepositoryConnection\", function () {",
-									"    var jsonData = pm.response.json();",
-									"    var modulesMessage= jsonData.repositoryConnection.message;",
-									"    pm.expect(modulesMessage).to.eql(\"Repository connection Ok\");",
-									"});",
-									"*/"
-								]
+									"pm.test(\"solr response test\", function() {",
+									"   var jsonData = pm.response.json();",
+									"    var modulesArray= jsonData.resultset.queryInfo;",
+									"    for(var key in modulesArray)",
+									"    {",
+									"        var obj = modulesArray[key];",
+									"        var id = obj.numberFound;",
+									"        console.log(id);",
+									"        pm.expect(id).to.be.eql(\"199\");",
+									"    }    ",
+									"});"
+								],
+								"id": "42c706d8-c92f-49dd-884d-8eb47f6ac808",
+								"type": "text/javascript"
 							}
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "string"
+								},
+								{
+									"key": "saveHelperData",
+									"type": "any"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"body": {
@@ -599,14 +325,16 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://{{url}}/syncservice/healthcheck",
+							"raw": "http://{{url}}/alfresco/s/api/solrstats",
 							"protocol": "http",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"syncservice",
-								"healthcheck"
+								"alfresco",
+								"s",
+								"api",
+								"solrstats"
 							]
 						}
 					},
@@ -696,55 +424,6 @@
 			"name": "03 ACS-token-auth",
 			"description": null,
 			"item": [
-				{
-					"name": "v0 API",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "c501b26d-d6a9-47b0-b82d-dbb33bc610e0",
-								"type": "text/javascript",
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"",
-									" pm.test(\"validateSiteTitle\", function () {",
-									"      pm.expect(pm.response.text()).to.include(\"Sample: Web Site Design Project\");",
-									"});"
-								]
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{kcAccessToken}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "http://{{url}}/alfresco/service/api/sites",
-							"protocol": "http",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"alfresco",
-								"service",
-								"api",
-								"sites"
-							]
-						}
-					},
-					"response": []
-				},
 				{
 					"name": "Retrieve HR User Profile using token",
 					"event": [
@@ -999,6 +678,55 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "v0 API",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c501b26d-d6a9-47b0-b82d-dbb33bc610e0",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									" pm.test(\"validateSiteTitle\", function () {",
+									"      pm.expect(pm.response.text()).to.include(\"Sample: Web Site Design Project\");",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{kcAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{url}}/alfresco/service/api/sites",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"alfresco",
+								"service",
+								"api",
+								"sites"
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"event": [
@@ -1021,6 +749,223 @@
 							""
 						]
 					}
+				}
+			]
+		},
+		{
+			"name": "04 APS-case",
+			"description": "This folder will contain all the cases related to APS",
+			"item": [
+				{
+					"name": "aps version",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.get(\"url\");",
+									"",
+									"",
+									"pm.test(\"apsstatuscode\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"validateAPSEditionTest\", function () {",
+									"    var jsonData = pm.response.json().edition;",
+									"    pm.expect(jsonData).to.eql(\"Alfresco Process Services (powered by Activiti)\");",
+									"});"
+								],
+								"id": "c90fbb35-45a9-4cd4-9189-76750e6570cb",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "admin@app.activiti.com",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "string"
+								},
+								{
+									"key": "saveHelperData",
+									"type": "any"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{url}}/activiti-app/api/enterprise/app-version",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"activiti-app",
+								"api",
+								"enterprise",
+								"app-version"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create APS test Users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d4276abf-44f2-4129-bd22-f7bbdbb9846f",
+								"type": "text/javascript",
+								"exec": [
+									"pm.globals.get(\"url\");",
+									"",
+									"var jsonData = pm.response.json().id;",
+									"pm.environment.set(\"userId\", jsonData);",
+									"",
+									"  "
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin@app.activiti.com",
+									"type": "string"
+								},
+								{
+									"key": "saveHelperData",
+									"type": "any"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"hruser@activiti.com\",\n    \"firstName\": \"h\",\n    \"lastName\": \"r\",\n    \"password\": \"Password2\",\n    \"type\": \"enterprise\",\n    \"tenantId\": 1\n    }"
+						},
+						"url": {
+							"raw": "http://{{url}}/activiti-app/api/enterprise/admin/users",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"activiti-app",
+								"api",
+								"enterprise",
+								"admin",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve HR User profile using token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "052a4ecc-a153-47de-92d0-4252a3cdfb7f",
+								"type": "text/javascript",
+								"exec": [
+									"pm.environment.get(\"url\")",
+									"",
+									"pm.environment.get(\"userId\");",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "admin@app.activiti.com",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "string"
+								},
+								{
+									"key": "saveHelperData",
+									"type": "any"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{url}}/activiti-app/api/enterprise/users/{{userId}}",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"activiti-app",
+								"api",
+								"enterprise",
+								"users",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},

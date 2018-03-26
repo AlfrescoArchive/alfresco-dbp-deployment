@@ -49,6 +49,8 @@ alfresco-content-services:
         memory: "500Mi"
       limits:
         memory: "1500Mi"
+  postgresql:
+    imageTag: "10.1"
 
 alfresco-sync-service:
   enabled: true

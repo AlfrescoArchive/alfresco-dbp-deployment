@@ -69,7 +69,7 @@ helm install alfresco-incubator/alfresco-dbp \
 
 #On AWS
 helm install alfresco-incubator/alfresco-dbp \
---set alfresco-content-services.repository.environment.IDENTITY_SERVICE_URI="http://$ELBADDRESS:$INFRAPORT/auth" \
+--set alfresco-content-services.repository.environment.IDENTITY_SERVICE_URI="http://$ELBADDRESS/auth" \
 --namespace=$DESIREDNAMESPACE
 ```
 

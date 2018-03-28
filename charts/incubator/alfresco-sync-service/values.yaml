@@ -32,6 +32,7 @@ repository:
 
 postgresql:
   nameOverride: postgresql-syncservice
+  imageTag: "10.1"
   persistence:
     existingClaim: "alfresco-volume-claim"
     subPath: "alfresco-sync-services/database-data"

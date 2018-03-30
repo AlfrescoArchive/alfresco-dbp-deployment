@@ -60,3 +60,6 @@ alfresco-content-services:
 
 alfresco-sync-service:
   enabled: false
+
+alfresco-infrastructure:
+  enabled: true

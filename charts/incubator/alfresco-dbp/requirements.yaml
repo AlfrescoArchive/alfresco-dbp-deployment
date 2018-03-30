@@ -11,3 +11,7 @@ dependencies:
     version: ^0.1.0
     condition: alfresco-sync-service.enabled
     repository: http://kubernetes-charts.alfresco.com/incubator
+  - name: alfresco-infrastructure
+    version: 0.1.0-DEPLOY-426
+    condition: alfresco-infrastructure.enabled
+    repository: http://kubernetes-charts.alfresco.com/incubator

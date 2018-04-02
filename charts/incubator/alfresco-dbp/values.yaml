@@ -12,8 +12,6 @@ alfresco-process-services:
       memory: "2000Mi"
     limits:
       memory: "3000Mi"
-  nginx-ingress:
-    enabled: false
 
 alfresco-content-services:
   enabled: true
@@ -61,9 +59,11 @@ alfresco-content-services:
     imageTag: "10.1"
 
 alfresco-sync-service:
+  enabled: false
   alfresco-infrastructure:
     enabled: false
-  enabled: false
 
 alfresco-infrastructure:
   enabled: true
+
+    

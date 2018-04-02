@@ -5,8 +5,9 @@ replicaCount: 1
 
 alfresco-process-services:
   enabled: true
-  alfresco-infrastructure:
-    enabled: false
+  alfresco-process-services:
+    alfresco-infrastructure:
+      enabled: false
   resources:
     requests:
       memory: "2000Mi"

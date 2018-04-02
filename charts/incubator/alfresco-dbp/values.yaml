@@ -5,6 +5,8 @@ replicaCount: 1
 
 alfresco-process-services:
   enabled: true
+  alfresco-infrastructure:
+    enabled: false
   resources:
     requests:
       memory: "2000Mi"
@@ -15,7 +17,7 @@ alfresco-process-services:
 
 alfresco-content-services:
   enabled: true
-  nginx-ingress:
+  alfresco-infrastructure:
     enabled: false
   repository:
     image:
@@ -59,6 +61,8 @@ alfresco-content-services:
     imageTag: "10.1"
 
 alfresco-sync-service:
+  alfresco-infrastructure:
+    enabled: false
   enabled: false
 
 alfresco-infrastructure:

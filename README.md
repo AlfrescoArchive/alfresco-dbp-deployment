@@ -128,7 +128,9 @@ For more Information on Reclaim Policies checkout the official K8S documentation
 
 We don't advise you to use the same EFS instance for persisting the data from multiple dbp deployments.
 
-### 7. Deploy the DBP
+### 7. Run ```helm repo add alfresco-incubator http://kubernetes-charts.alfresco.com/incubator``` to add the Alfresco Kubernetes repository to helm.
+
+### 8. Deploy the DBP
 
 ```bash
 
@@ -161,17 +163,16 @@ alfresco-sync-service.enabled
  --set alfresco-sync-service.enabled=false 
 ```
 
-### 8. Get the DBP release name from the previous command and set it as a variable:
+### 9. Get the DBP release name from the previous command and set it as a variable:
 
 ```bash
 export DBPRELEASE=littering-lizzard
 ```
 
-### 9. Checkout the status of your DBP deployment:
+### 10. Checkout the status of your DBP deployment:
 
 ```bash
 helm status $INGRESSRELEASE
-helm status $INFRARELEASE
 helm status $DBPRELEASE
 
 #On MINIKUBE: Open Alfresco Repository in Browser
@@ -191,16 +192,15 @@ If you want to see the full list of values that have been applied to the deploym
 helm get values -a $DBPRELEASE
 ```
 
-### 10. Teardown:
+### 11. Teardown:
 
 ```bash
 helm delete $INGRESSRELEASE
-helm delete $INFRARELEASE
 helm delete $DBPRELEASE
 kubectl delete namespace $DESIREDNAMESPACE
 ```
 Depending on your cluster type you should be able to also delete it if you want.
-For minikube you can just run
+For minikube you can just run to delete the whole minikube vm.
 ```bash
 minikube delete
 ```

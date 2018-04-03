@@ -85,8 +85,11 @@ Install the nginx-ingress-controller into your cluster
 helm repo update
 helm install stable/nginx-ingress \
 --version 0.8.11 \
+--set controller.scope.enabled=true \
+--set controller.scope.namespace=$DESIREDNAMESPACE \
 --namespace $DESIREDNAMESPACE
 ```
+
 ### 2. Get the nginx-ingress-controller release name from the previous command and set it as a varible:
 ```bash
 export INGRESSRELEASE=knobby-wolf

@@ -10,7 +10,7 @@ You can access all components of the dbp using the same root address, but differ
   Keycloak: {{ .Values.dnsaddress }}/auth/
   {{ end }}
 
-{{ else if contains "http" (index .Values "alfresco-content-services" "repository" "environment" "SYNC_SERVICE_URI" ) }}
+{{ else if contains "http" (index .Values "alfresco-content-services" "repository" "environment" "IDENTITY_SERVICE_URI" ) }}
 
 If you have a specific DNS address for the cluster please run the following commands to get the application paths:
 
@@ -20,11 +20,11 @@ The chart path can either be local "." on in the helm repo "alfresco/alfresco-db
 
 If you are using the default dbp setup you can access all components as follows:
 
-  Content: {{ index .Values "alfresco-content-services" "repository" "environment" "SYNC_SERVICE_URI" | trimSuffix "/" | trimSuffix "/syncservice" }}/alfresco
-  Share: {{ index .Values "alfresco-content-services" "repository" "environment" "SYNC_SERVICE_URI" | trimSuffix "/" | trimSuffix "/syncservice" }}/share
-  Solr: {{ index .Values "alfresco-content-services" "repository" "environment" "SYNC_SERVICE_URI" | trimSuffix "/" | trimSuffix "/syncservice" }}/solr
-  Process: {{ index .Values "alfresco-content-services" "repository" "environment" "SYNC_SERVICE_URI" | trimSuffix "/" | trimSuffix "/syncservice" }}/activiti-app
-  API Gateway: {{ index .Values "alfresco-content-services" "repository" "environment" "SYNC_SERVICE_URI" | trimSuffix "/" | trimSuffix "/syncservice" }}/
-  Keycloak: {{ index .Values "alfresco-content-services" "repository" "environment" "SYNC_SERVICE_URI" | trimSuffix "/" | trimSuffix "/syncservice" }}/auth/
+  Content: {{ index .Values "alfresco-content-services" "repository" "environment" "IDENTITY_SERVICE_URI" | trimSuffix "/" | trimSuffix "/auth" }}/alfresco
+  Share: {{ index .Values "alfresco-content-services" "repository" "environment" "IDENTITY_SERVICE_URI" | trimSuffix "/" | trimSuffix "/auth" }}/share
+  Solr: {{ index .Values "alfresco-content-services" "repository" "environment" "IDENTITY_SERVICE_URI" | trimSuffix "/" | trimSuffix "/auth" }}/solr
+  Process: {{ index .Values "alfresco-content-services" "repository" "environment" "IDENTITY_SERVICE_URI" | trimSuffix "/" | trimSuffix "/auth" }}/activiti-app
+  API Gateway: {{ index .Values "alfresco-content-services" "repository" "environment" "IDENTITY_SERVICE_URI" | trimSuffix "/" | trimSuffix "/auth" }}/
+  Keycloak: {{ index .Values "alfresco-content-services" "repository" "environment" "IDENTITY_SERVICE_URI" | trimSuffix "/" | trimSuffix "/auth" }}/auth/
 
 {{ end }}

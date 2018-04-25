@@ -215,4 +215,4 @@ For more information on running and tearing down k8s environments, follow this [
 ***Notes***
 
 Because some of our modules pass headers bigger than 4k we had to increase the default value of the proxy buffer size for nginx.
-We also enable the CORS header for the applications that need it trough the Ingress Rule.
+We also enable the CORS header for the applications that need it through the Ingress Rule.

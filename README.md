@@ -214,5 +214,5 @@ For more information on running and tearing down k8s environments, follow this [
 
 ***Notes***
 
-Because some of our modules pass headers bigger the 4k we had to increase the default value of the proxy buffer size for nginx.
+Because some of our modules pass headers bigger than 4k we had to increase the default value of the proxy buffer size for nginx.
 We also enable CORS header at ingress level.

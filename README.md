@@ -211,3 +211,8 @@ minikube delete
 ```
 
 For more information on running and tearing down k8s environments, follow this [guide](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/docs/running-a-cluster.md).
+
+***Notes***
+
+Because some of our modules pass headers bigger the 4k we had to increase the default value of the proxy buffer size for nginx.
+We also enable CORS header at ingress level.

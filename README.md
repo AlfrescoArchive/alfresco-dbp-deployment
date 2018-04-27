@@ -18,7 +18,7 @@ Any variation from these technologies and versions may affect the end result. If
 ### Kubernetes Cluster
 
 You can choose to deploy the infrastructure to a local kubernetes cluster (illustrated using minikube) or you can choose to deploy to the cloud (illustrated using AWS).
-Please check the Anaxes Shipyard documentation on [running a cluster](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/SECRETS.md).
+Please check the Anaxes Shipyard documentation on [running a cluster](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/docs/running-a-cluster.md).
 
 Note the resource requirements:
 * Minikube: At least 12 gigs of memory, i.e.:

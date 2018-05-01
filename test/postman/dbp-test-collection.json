@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "d92e4da9-0cea-4482-bdf5-1a6501e50c7d",
+		"_postman_id": "ee985f11-f8f5-4a0d-a0c7-28f3eff9fe43",
 		"name": "DBP Deployment Test",
 		"description": "The Suite of cases are divided into 6\ndifferent categories\n1) Acs-basic-auth\n* Request to validate the discovery api\n* Request to validate modules are applied correctly\n2) Generate the token \n3) ACS-token-auth \n* Post to generate the token\n* Request to validate ACS request using token\n* Request to validate CMIS request using token\n* Request to validate vo request using token\n4) APS\n* Request to validate using token\n5) Sync service\n6) get way validation",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -753,7 +753,7 @@
 			]
 		},
 		{
-			"name": "04 APS-case",
+			"name": "04 APS-basic-auth",
 			"description": "This folder will contain all the cases related to APS",
 			"item": [
 				{
@@ -786,7 +786,7 @@
 							"basic": [
 								{
 									"key": "username",
-									"value": "admin@app.activiti.com",
+									"value": "admin",
 									"type": "string"
 								},
 								{
@@ -826,6 +826,115 @@
 						}
 					},
 					"response": []
+				}
+			]
+		},
+		{
+			"name": "05 APS-token-auth",
+			"description": "",
+			"item": [
+				{
+					"name": "aps version (token)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.get(\"url\");",
+									"",
+									"",
+									"pm.test(\"apsstatuscode\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"validateAPSEditionTest\", function () {",
+									"    var jsonData = pm.response.json().edition;",
+									"    pm.expect(jsonData).to.eql(\"Alfresco Process Services (powered by Activiti)\");",
+									"});"
+								],
+								"id": "c90fbb35-45a9-4cd4-9189-76750e6570cb",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "string"
+								},
+								{
+									"key": "saveHelperData",
+									"type": "any"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{url}}/activiti-app/api/enterprise/app-version",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"activiti-app",
+								"api",
+								"enterprise",
+								"app-version"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{kcAccessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "77beb5f0-bcc0-4cd1-abbe-06b51a16a847",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "ec22fea0-9e29-4139-91f2-9a14f94f3d8a",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
 				}
 			]
 		},

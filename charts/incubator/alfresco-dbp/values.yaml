@@ -15,6 +15,7 @@ alfresco-process-services:
 
 alfresco-content-services:
   enabled: true
+  registryPullSecrets: quay-registry-secret
   alfresco-infrastructure:
     enabled: false
   repository:

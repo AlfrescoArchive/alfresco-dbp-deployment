@@ -7,8 +7,8 @@ The Alfresco Digital Business Platform Deployment requires:
 | Component        | Recommended version |
 | ------------- |:-------------:|
 | Docker     | 17.0.9.1 |
-| Kubernetes | 1.8.0    |
-| Helm       | 2.7.0    |
+| Kubernetes | 1.8.4    |
+| Helm       | 2.9.0    |
 | Minikube   | 0.25.0   |
 
 Any variation from these technologies and versions may affect the end result. If you do experience any issues please let us know through our [Gitter channel](https://gitter.im/Alfresco/platform-services?utm_source=share-link&utm_medium=link&utm_campaign=share-link).
@@ -83,11 +83,73 @@ kubectl create -f secrets.yaml --namespace $DESIREDNAMESPACE
 Install the nginx-ingress-controller into your cluster
 ```bash
 helm repo update
-helm install stable/nginx-ingress \
---version 0.8.11 \
---set controller.scope.enabled=true \
---set controller.scope.namespace=$DESIREDNAMESPACE \
+
+cat <<EOF > ingressvalues.yaml
+controller:
+  config:
+    ssl-redirect: "false"
+  scope:
+    enabled: true
+    namespace: $DESIREDNAMESPACE
+EOF
+
+helm install stable/nginx-ingress --version=0.12.3 -f ingressvalues.yaml \
 --namespace $DESIREDNAMESPACE
+```
+
+
+** !Optional **
+
+If you want your own certificate set here you should create a secret from your cert files:
+
+```bash
+kubectl create secret tls certsecret --key /tmp/tls.key --cert /tmp/tls.crt --namespace $DESIREDNAMESPACE
+```
+
+Then deploy the ingress with following settings
+```bash
+cat <<EOF > ingressvalues.yaml
+controller:
+  config:
+    ssl-redirect: "false"
+  scope:
+    enabled: true
+    namespace: $DESIREDNAMESPACE
+  publishService:
+    enabled: true
+  extraArgs:
+    default-ssl-certificate: $DESIREDNAMESPACE/certsecret
+EOF
+
+helm install stable/nginx-ingress --version=0.12.3 -f ingressvalues.yaml \
+--namespace $DESIREDNAMESPACE
+```
+
+Or you can add an AWS generated certificate if you want and autogenerate a route53 entry
+
+```bash
+cat <<EOF > ingressvalues.yaml
+controller:
+  config:
+    ssl-redirect: "false"
+  scope:
+    enabled: true
+    namespace: $DESIREDNAMESPACE
+  publishService:
+    enabled: true
+  service:
+    targetPorts:
+      https: 80
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-ssl-cert: #sslcert ARN -> https://github.com/kubernetes/kubernetes/blob/master/pkg/cloudprovider/providers/aws/aws.go
+      service.beta.kubernetes.io/aws-load-balancer-ssl-ports: https
+      # External dns will help you autogenerate an entry in route53 for your cluster. More info here -> https://github.com/kubernetes-incubator/external-dns
+      external-dns.alpha.kubernetes.io/hostname: $DESIREDNAMESPACE.YourDNSZone
+EOF
+
+helm install stable/nginx-ingress --version=0.12.3 -f ingressvalues.yaml \
+--namespace $DESIREDNAMESPACE
+
 ```
 
 ### 2. Get the nginx-ingress-controller release name from the previous command and set it as a varible:
@@ -100,7 +162,7 @@ export INGRESSRELEASE=knobby-wolf
 helm status $INGRESSRELEASE
 ```
 
-### 4. Get the nginx-ingress-controller port for the infrastructure (**NOTE! ONLY FOR MINIKUBE**):
+### 4. (**NOTE! ONLY FOR MINIKUBE**) Get the nginx-ingress-controller port for the infrastructure :
 ```bash
 export INFRAPORT=$(kubectl get service $INGRESSRELEASE-nginx-ingress-controller --namespace $DESIREDNAMESPACE -o jsonpath={.spec.ports[0].nodePort})
 ```

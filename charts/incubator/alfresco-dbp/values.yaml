@@ -12,6 +12,19 @@ alfresco-process-services:
       memory: "2000Mi"
     limits:
       memory: "3000Mi"
+  envVar:
+    IdentityServiceEnabled: false
+    KeycloakEnabled: false
+    IdentityServiceURL: "<ingresscontrollerurl>/auth/"
+    IdentityServiceRealm: "alfresco"
+    IdentityServiceSSLRequired: none
+    IdentityServiceResource: "alfresco"
+    IdentityServicePrincipalAttribute: "email"
+    IdentityServiceCredentialsSecret: 287c9941-3b79-4f69-9896-35ec3d1d9e6f
+    IdentityServiceRefreshToken: true
+    IdentityServiceAutodetectBearerOnly: true
+    IdentityServiceTokenStore: "cookie"
+    IdentityServiceEnableBasicAuth: true
 
 alfresco-content-services:
   enabled: true

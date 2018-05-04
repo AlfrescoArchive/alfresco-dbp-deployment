@@ -106,8 +106,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://{{acsUrl}}/api/discovery",
-							"protocol": "http",
+							"raw": "{{acsUrl}}/api/discovery",
 							"host": [
 								"{{acsUrl}}"
 							],
@@ -177,8 +176,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://{{shareUrl}}/page/modules/deploy",
-							"protocol": "http",
+							"raw": "{{shareUrl}}/page/modules/deploy",
 							"host": [
 								"{{shareUrl}}"
 							],
@@ -244,8 +242,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://{{shareUrl}}/res/components/documentlibrary/actions/google-edit-flat-16.png",
-							"protocol": "http",
+							"raw": "{{shareUrl}}/res/components/documentlibrary/actions/google-edit-flat-16.png",
 							"host": [
 								"{{shareUrl}}"
 							],
@@ -322,8 +319,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://{{acsUrl}}/s/api/solrstats",
-							"protocol": "http",
+							"raw": "{{acsUrl}}/s/api/solrstats",
 							"host": [
 								"{{acsUrl}}"
 							],
@@ -397,8 +393,7 @@
 							]
 						},
 						"url": {
-							"raw": "https://{{identityServiceUrl}}/realms/{{identityServiceRealm}}/protocol/openid-connect/token",
-							"protocol": "https",
+							"raw": "{{identityServiceUrl}}/realms/{{identityServiceRealm}}/protocol/openid-connect/token",
 							"host": [
 								"{{identityServiceUrl}}"
 							],
@@ -466,8 +461,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://{{acsUrl}}/api/-default-/public/alfresco/versions/1/people/-me-",
-							"protocol": "http",
+							"raw": "{{acsUrl}}/api/-default-/public/alfresco/versions/1/people/-me-",
 							"host": [
 								"{{acsUrl}}"
 							],
@@ -521,8 +515,7 @@
 							"raw": "{\n  \"name\":\"hrusertestfile.txt\",\n  \"nodeType\":\"cm:content\"\n}"
 						},
 						"url": {
-							"raw": "http://{{acsUrl}}/api/-default-/public/alfresco/versions/1/nodes/-my-/children",
-							"protocol": "http",
+							"raw": "{{acsUrl}}/api/-default-/public/alfresco/versions/1/nodes/-my-/children",
 							"host": [
 								"{{acsUrl}}"
 							],
@@ -591,8 +584,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://{{acsUrl}}/api/-default-/public/alfresco/versions/1/nodes/-my-/children?includeSource=true",
-							"protocol": "http",
+							"raw": "{{acsUrl}}/api/-default-/public/alfresco/versions/1/nodes/-my-/children?includeSource=true",
 							"host": [
 								"{{acsUrl}}"
 							],
@@ -652,8 +644,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://{{acsUrl}}/api/-default-/public/cmis/versions/1.1/browser",
-							"protocol": "http",
+							"raw": "{{acsUrl}}/api/-default-/public/cmis/versions/1.1/browser",
 							"host": [
 								"{{acsUrl}}"
 							],
@@ -704,8 +695,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://{{acsUrl}}/service/api/sites",
-							"protocol": "http",
+							"raw": "{{acsUrl}}/service/api/sites",
 							"host": [
 								"{{acsUrl}}"
 							],
@@ -778,8 +768,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://{{apsUrl}}/api/enterprise/app-version",
-							"protocol": "http",
+							"raw": "{{apsUrl}}/api/enterprise/app-version",
 							"host": [
 								"{{apsUrl}}"
 							],
@@ -825,8 +814,7 @@
 							"raw": "{ \n\t\"firstName\": \"Test\", \n\t\"lastName\": \"User\", \n\t\"fullname\": \"Test User\", \n\t\"email\": \"{{testUserEmail}}\", \n\t\"password\": \"Fifi4567\"\n}"
 						},
 						"url": {
-							"raw": "http://{{apsUrl}}/api/enterprise/admin/users",
-							"protocol": "http",
+							"raw": "{{apsUrl}}/api/enterprise/admin/users",
 							"host": [
 								"{{apsUrl}}"
 							],
@@ -935,8 +923,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://{{apsUrl}}/api/enterprise/profile",
-							"protocol": "http",
+							"raw": "{{apsUrl}}/api/enterprise/profile",
 							"host": [
 								"{{apsUrl}}"
 							],
@@ -1010,8 +997,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://{{url}}/actuator/routes",
-					"protocol": "http",
+					"raw": "{{url}}/actuator/routes",
 					"host": [
 						"{{url}}"
 					],
@@ -1048,77 +1034,77 @@
 	],
 	"variable": [
 		{
-			"id": "2de5d3b2-7981-40bc-b56e-a5531d20c606",
+			"id": "3711508d-aeec-4070-9957-f39859592f1f",
 			"key": "acsUrl",
 			"value": "{{url}}/alfresco",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "6c778ec2-fc07-459e-86f3-cc88d7325650",
+			"id": "88f8f24b-ed19-4c9f-8714-5cc5e057640d",
 			"key": "shareUrl",
 			"value": "{{url}}/share",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "5f0f2cd8-00fa-4b7e-b921-6431924d16e1",
+			"id": "f931cf66-9d64-420d-bdd9-b5028f980c88",
 			"key": "apsUrl",
 			"value": "{{url}}/activiti-app",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "b6d26f9b-fdb0-4b0d-a5ca-e68fbd057bac",
+			"id": "de2ce724-f95a-475a-a454-89027a987dce",
 			"key": "identityServiceUrl",
 			"value": "{{url}}/auth",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "34982007-eac0-460e-8056-f7866ca9e7d4",
+			"id": "b2f847c1-035e-4adf-975b-fa9f87b35926",
 			"key": "identityServiceRealm",
 			"value": "springboot",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "242ed70f-02f8-4d3e-974b-718676f8a463",
+			"id": "16de79d7-6268-40e7-a6d2-cae228e8e7a9",
 			"key": "identityServiceClientId",
 			"value": "activiti",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "6f22eccf-1bc7-43f5-adff-6ed0e1c54b51",
+			"id": "627315ca-c685-4c3c-a81a-dbca65610176",
 			"key": "testUserUsername",
 			"value": "hruser",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "b2d89221-8a02-4808-8559-3b73347bda8c",
+			"id": "0cbffb7e-a094-4648-bf9c-d7df9f9746e5",
 			"key": "testUserPassword",
 			"value": "password",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "cf6688e3-c2a9-4e98-a7a8-d156b12cfe50",
+			"id": "0cbe6e7f-99dd-43c8-b906-d63cceb87a0e",
 			"key": "testUserEmail",
 			"value": "test@test.com",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "390f0696-2997-444b-8741-2a3c1872896b",
+			"id": "90661a2c-954b-4c25-9a2a-c058f0eec366",
 			"key": "apsLocalAdminUser",
 			"value": "admin@app.activiti.com",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "6c85a2c3-9c45-4465-96fc-6f61e63460b2",
+			"id": "48ec614a-c965-41d3-bd25-4e73b0a51bbb",
 			"key": "apsLocalAdminPassword",
 			"value": "admin",
 			"type": "string",

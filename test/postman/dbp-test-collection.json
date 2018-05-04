@@ -343,7 +343,7 @@
 			"description": null,
 			"item": [
 				{
-					"name": "key cloak",
+					"name": "Generate keycloak access token",
 					"event": [
 						{
 							"listen": "test",
@@ -386,19 +386,19 @@
 								},
 								{
 									"key": "username",
-									"value": "{{testUsername}}",
+									"value": "{{testUserUsername}}",
 									"type": "text"
 								},
 								{
 									"key": "password",
-									"value": "{{testPassword}}",
+									"value": "{{testUserPassword}}",
 									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "http://{{identityServiceUrl}}/realms/{{identityServiceRealm}}/protocol/openid-connect/token",
-							"protocol": "http",
+							"raw": "https://{{identityServiceUrl}}/realms/{{identityServiceRealm}}/protocol/openid-connect/token",
+							"protocol": "https",
 							"host": [
 								"{{identityServiceUrl}}"
 							],
@@ -747,7 +747,7 @@
 			"description": "This folder will contain all the cases related to APS",
 			"item": [
 				{
-					"name": "aps version",
+					"name": "Get APS version",
 					"event": [
 						{
 							"listen": "test",
@@ -771,27 +771,160 @@
 						}
 					],
 					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{apsUrl}}/api/enterprise/app-version",
+							"protocol": "http",
+							"host": [
+								"{{apsUrl}}"
+							],
+							"path": [
+								"api",
+								"enterprise",
+								"app-version"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create local user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "57704914-3c69-43b3-9ebe-cbbdb9424f11",
+								"type": "text/javascript",
+								"exec": [
+									"pm.globals.get(\"url\");",
+									"",
+									"",
+									"pm.test(\"Status code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n\t\"firstName\": \"Test\", \n\t\"lastName\": \"User\", \n\t\"fullname\": \"Test User\", \n\t\"email\": \"{{testUserEmail}}\", \n\t\"password\": \"Fifi4567\"\n}"
+						},
+						"url": {
+							"raw": "http://{{apsUrl}}/api/enterprise/admin/users",
+							"protocol": "http",
+							"host": [
+								"{{apsUrl}}"
+							],
+							"path": [
+								"api",
+								"enterprise",
+								"admin",
+								"users"
+							]
+						},
+						"description": "Creates local user with dummy password. Note there are password strenght requirements on dummy password."
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "basic",
+				"basic": [
+					{
+						"key": "password",
+						"value": "{{apsLocalAdminPassword}}",
+						"type": "string"
+					},
+					{
+						"key": "username",
+						"value": "{{apsLocalAdminUser}}",
+						"type": "string"
+					},
+					{
+						"key": "saveHelperData",
+						"type": "any"
+					},
+					{
+						"key": "showPassword",
+						"value": false,
+						"type": "boolean"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "b016d990-fa80-491b-84b8-04734fa51b55",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "5455ed2b-225f-44a7-b0d3-07187af3fb2e",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "05 APS-token-auth",
+			"description": "",
+			"item": [
+				{
+					"name": "Get user profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c94fe3e7-a35e-4d52-8d7e-e48524ffcd24",
+								"type": "text/javascript",
+								"exec": [
+									"pm.globals.get(\"url\");",
+									"",
+									"",
+									"pm.test(\"Status code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Own profile retrieved\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.email).to.eql(pm.variables.get(\"testUserEmail\"));",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
 						"auth": {
-							"type": "basic",
-							"basic": [
+							"type": "bearer",
+							"bearer": [
 								{
-									"key": "username",
-									"value": "admin",
+									"key": "token",
+									"value": "{{kcAccessToken}}",
 									"type": "string"
-								},
-								{
-									"key": "password",
-									"value": "admin",
-									"type": "string"
-								},
-								{
-									"key": "saveHelperData",
-									"type": "any"
-								},
-								{
-									"key": "showPassword",
-									"value": false,
-									"type": "boolean"
 								}
 							]
 						},
@@ -802,7 +935,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://{{apsUrl}}/api/enterprise/app-version",
+							"raw": "http://{{apsUrl}}/api/enterprise/profile",
 							"protocol": "http",
 							"host": [
 								"{{apsUrl}}"
@@ -810,59 +943,7 @@
 							"path": [
 								"api",
 								"enterprise",
-								"app-version"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "05 APS-token-auth",
-			"description": "",
-			"item": [
-				{
-					"name": "aps version (token)",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.globals.get(\"url\");",
-									"",
-									"",
-									"pm.test(\"apsstatuscode\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"pm.test(\"validateAPSEditionTest\", function () {",
-									"    var jsonData = pm.response.json().edition;",
-									"    pm.expect(jsonData).to.eql(\"Alfresco Process Services (powered by Activiti)\");",
-									"});"
-								],
-								"id": "c90fbb35-45a9-4cd4-9189-76750e6570cb",
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "http://{{apsUrl}}/api/enterprise/app-version",
-							"protocol": "http",
-							"host": [
-								"{{apsUrl}}"
-							],
-							"path": [
-								"api",
-								"enterprise",
-								"app-version"
+								"profile"
 							]
 						}
 					},
@@ -870,14 +951,7 @@
 				}
 			],
 			"auth": {
-				"type": "bearer",
-				"bearer": [
-					{
-						"key": "token",
-						"value": "{{kcAccessToken}}",
-						"type": "string"
-					}
-				]
+				"type": "noauth"
 			},
 			"event": [
 				{
@@ -974,65 +1048,79 @@
 	],
 	"variable": [
 		{
-			"id": "e52def81-8f41-4cd8-a132-e658e620f48f",
+			"id": "2de5d3b2-7981-40bc-b56e-a5531d20c606",
 			"key": "acsUrl",
 			"value": "{{url}}/alfresco",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "5847e1b6-22fc-487f-b141-70fa643db604",
+			"id": "6c778ec2-fc07-459e-86f3-cc88d7325650",
 			"key": "shareUrl",
 			"value": "{{url}}/share",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "16a1e197-6636-4c03-a4a7-14b4181b4ddb",
+			"id": "5f0f2cd8-00fa-4b7e-b921-6431924d16e1",
 			"key": "apsUrl",
 			"value": "{{url}}/activiti-app",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "f08f114a-2a4f-4d9a-b291-909777aee175",
+			"id": "b6d26f9b-fdb0-4b0d-a5ca-e68fbd057bac",
 			"key": "identityServiceUrl",
 			"value": "{{url}}/auth",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "4c8afcea-e687-4941-88f8-e2760e28236c",
+			"id": "34982007-eac0-460e-8056-f7866ca9e7d4",
 			"key": "identityServiceRealm",
 			"value": "springboot",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "16d0e4e8-2031-4732-a6ae-0692ab4e2701",
+			"id": "242ed70f-02f8-4d3e-974b-718676f8a463",
 			"key": "identityServiceClientId",
 			"value": "activiti",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "cec4f9c7-d656-4ddf-92c7-f616e22f81aa",
-			"key": "testUsername",
+			"id": "6f22eccf-1bc7-43f5-adff-6ed0e1c54b51",
+			"key": "testUserUsername",
 			"value": "hruser",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "6531d76d-cb87-4d55-b2a6-54ed4b295c10",
-			"key": "testPassword",
+			"id": "b2d89221-8a02-4808-8559-3b73347bda8c",
+			"key": "testUserPassword",
 			"value": "password",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "378e0330-81cb-48c2-97ef-a564ab8b94e9",
-			"key": "testEmail",
+			"id": "cf6688e3-c2a9-4e98-a7a8-d156b12cfe50",
+			"key": "testUserEmail",
 			"value": "test@test.com",
+			"type": "string",
+			"description": ""
+		},
+		{
+			"id": "390f0696-2997-444b-8741-2a3c1872896b",
+			"key": "apsLocalAdminUser",
+			"value": "admin@app.activiti.com",
+			"type": "string",
+			"description": ""
+		},
+		{
+			"id": "6c85a2c3-9c45-4465-96fc-6f61e63460b2",
+			"key": "apsLocalAdminPassword",
+			"value": "admin",
 			"type": "string",
 			"description": ""
 		}

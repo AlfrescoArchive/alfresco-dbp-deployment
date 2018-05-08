@@ -11,29 +11,25 @@
 			"description": null,
 			"item": [
 				{
-					"name": "repo-discovery with amps",
+					"name": "Repository discovery with amp versions",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "06401158-6474-419a-9e7c-842039969fb9",
+								"id": "8496978a-e1a9-4ba9-afba-76aca7b469e1",
 								"type": "text/javascript",
 								"exec": [
-									"",
-									"pm.globals.get(\"url\");",
-									"",
-									"",
-									"pm.test(\"validateStatusCodeTest\", function () {",
+									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
 									"",
-									"pm.test(\"validateLicenseTest\", function () {",
+									"pm.test(\"License is ENTERPRISE\", function () {",
 									"    pm.expect(pm.response.text()).to.include(\"ENTERPRISE\");",
 									"});",
 									"",
 									"",
-									"pm.test(\"validateModuleTest\", function () {",
+									"pm.test(\"Module versions are valid\", function () {",
 									"    var jsonData = pm.response.json();",
 									"    var modulesArray= jsonData.entry.repository.modules;",
 									"    for(var key in modulesArray)",
@@ -120,18 +116,17 @@
 					"response": []
 				},
 				{
-					"name": "Validate-share and rm module",
+					"name": "Validate Share is deployed",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "8dcec1dc-4dbb-492f-a0bf-3c30274cc650",
+								"id": "ad1108fa-a196-41e1-9f88-a182bca61b4c",
 								"type": "text/javascript",
 								"exec": [
-									"",
 									"pm.globals.get(\"url\");",
 									"",
-									"pm.test(\"share is up and running\", function () {",
+									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
@@ -191,22 +186,19 @@
 					"response": []
 				},
 				{
-					"name": "google-docs",
+					"name": "Validate Google Docs deployment",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
+								"id": "89681be8-b391-4efe-9ae6-8158742e93ff",
+								"type": "text/javascript",
 								"exec": [
-									"pm.globals.get(\"url\");",
-									"",
-									"pm.test(\"validateGoogleDocsImage\", function () ",
-									"{",
+									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									""
-								],
-								"id": "93bc0117-c1b8-4cbf-98b2-307154bacf24",
-								"type": "text/javascript"
+								]
 							}
 						}
 					],
@@ -258,19 +250,19 @@
 					"response": []
 				},
 				{
-					"name": "solr-validation",
+					"name": "Validate Solr deployment",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
+								"id": "f7790914-dc1d-4fee-a06f-09cd10fca8a4",
+								"type": "text/javascript",
 								"exec": [
-									"pm.globals.get(\"url\");",
-									"",
-									"pm.test(\"solr status code\", function () {",
+									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"pm.test(\"solr response test\", function() {",
+									"pm.test(\"Solr response is valid\", function() {",
 									"   var jsonData = pm.response.json();",
 									"    var modulesArray= jsonData.resultset.queryInfo;",
 									"    for(var key in modulesArray)",
@@ -281,9 +273,7 @@
 									"        pm.expect(id).to.be.eql(\"199\");",
 									"    }    ",
 									"});"
-								],
-								"id": "42c706d8-c92f-49dd-884d-8eb47f6ac808",
-								"type": "text/javascript"
+								]
 							}
 						}
 					],
@@ -339,7 +329,7 @@
 			"description": null,
 			"item": [
 				{
-					"name": "Generate keycloak access token",
+					"name": "Generate Keycloak access token",
 					"event": [
 						{
 							"listen": "test",
@@ -415,34 +405,29 @@
 			"description": null,
 			"item": [
 				{
-					"name": "Retrieve HR User Profile using token",
+					"name": "Retrieve test user profile using token",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "8a612dab-6562-40ec-b07c-8872a857103e",
+								"id": "be6bb3a3-d1eb-4846-ad2c-9259e89bec54",
 								"type": "text/javascript",
 								"exec": [
-									"pm.globals.get(\"url\");",
-									"",
-									"",
-									"",
-									"pm.test(\"resonse code test\", function () {",
+									"pm.test(\"Response code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"pm.test(\"validateUserName\", function () {",
+									"pm.test(\"Username in response is valid\", function () {",
 									"    var jsonData = pm.response.json();",
 									"    var userName= jsonData.entry.firstName;",
-									"    pm.expect(userName).to.be.eql(\"hruser\");",
+									"    pm.expect(userName).to.be.eql(pm.variables.get(\"testUserUsername\"));",
 									"        ",
 									"});",
 									"",
-									"pm.test(\"validateid\", function () {",
+									"pm.test(\"Id in response is valid\", function () {",
 									"    var jsonData = pm.response.json();",
-									"    var id= jsonData.entry.id;",
-									"    pm.expect(id).to.be.eql(\"hruser\");",
-									"        ",
+									"    var id = jsonData.entry.id;",
+									"    pm.expect(id).to.be.eql(pm.variables.get(\"testUserUsername\"));",
 									"});"
 								]
 							}
@@ -485,18 +470,17 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "7710e690-3b80-482d-be72-d7fa4e059137",
+								"id": "6999b794-4487-4081-bb73-f87efdb8c75c",
 								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Status code is 201\", function () {",
 									"    pm.response.to.have.status(201);",
 									"});",
 									"",
-									"pm.test(\"validateUserName\", function () {",
+									"pm.test(\"Created content has test user metadata\", function () {",
 									"    var jsonData = pm.response.json();",
-									"    var userName= jsonData.entry.createdByUser.id;",
-									"    pm.expect(userName).to.be.eql(\"hruser\");",
-									"        ",
+									"    var userName = jsonData.entry.createdByUser.id;",
+									"    pm.expect(userName).to.be.eql(pm.variables.get(\"testUserUsername\"));",
 									"});"
 								]
 							}
@@ -535,30 +519,29 @@
 					"response": []
 				},
 				{
-					"name": "Retrieve HR User Files using token",
+					"name": "Retrieve test user files using token",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "ac8db113-7bc5-4583-8d2a-8134719547b2",
+								"id": "4a2f9c82-c9a9-45ed-8941-66a585c19b4a",
 								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Status code is 200\", function() {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"pm.test(\"validateid\", function() {",
+									"pm.test(\"User Id in file list is valid\", function() {",
 									"    var jsonData = pm.response.json();",
 									"    var modulesArray = jsonData.list.source.properties;",
 									"    for (var key in modulesArray) {",
 									"        var obj = modulesArray[key];",
 									"        var id = obj.id;",
-									"        pm.expect(id).to.be.eql(\"hruser\");",
+									"        pm.expect(id).to.be.eql(pm.variables.get(\"testUserUsername\"));",
 									"    }",
-									"",
 									"});",
 									"",
-									"pm.test(\"validateFile\", function() {",
+									"pm.test(\"File name in file list is valid\", function() {",
 									"    var jsonData = pm.response.json();",
 									"    var userName = jsonData.list.entries.properties;",
 									"    for (var key in userName) {",
@@ -615,16 +598,14 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "944abf41-ed4a-4517-8be3-1869ba136a7a",
+								"id": "736642b9-1e60-431a-968c-c4c8edd11642",
 								"type": "text/javascript",
 								"exec": [
-									"pm.test(\"StatuscodeValidation\", function () {",
+									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"",
-									"",
-									"pm.test(\"Body matches string\", function () {",
+									"pm.test(\"Server signature contains Alfresco\", function () {",
 									"    pm.expect(pm.response.text()).to.include(\"Alfresco\");",
 									"});"
 								]
@@ -667,15 +648,14 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "c501b26d-d6a9-47b0-b82d-dbb33bc610e0",
+								"id": "8f028067-607b-4d17-8bcb-5017e991c9d5",
 								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"",
-									" pm.test(\"validateSiteTitle\", function () {",
+									"pm.test(\"Test site title is valid\", function () {",
 									"      pm.expect(pm.response.text()).to.include(\"Sample: Web Site Design Project\");",
 									"});"
 								]
@@ -742,21 +722,18 @@
 						{
 							"listen": "test",
 							"script": {
+								"id": "5cfef929-277b-4980-b44e-e787fa8560fe",
+								"type": "text/javascript",
 								"exec": [
-									"pm.globals.get(\"url\");",
-									"",
-									"",
-									"pm.test(\"apsstatuscode\", function () {",
+									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"pm.test(\"validateAPSEditionTest\", function () {",
+									"pm.test(\"APS edition string is valid\", function () {",
 									"    var jsonData = pm.response.json().edition;",
 									"    pm.expect(jsonData).to.eql(\"Alfresco Process Services (powered by Activiti)\");",
 									"});"
-								],
-								"id": "c90fbb35-45a9-4cd4-9189-76750e6570cb",
-								"type": "text/javascript"
+								]
 							}
 						}
 					],
@@ -787,13 +764,10 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "57704914-3c69-43b3-9ebe-cbbdb9424f11",
+								"id": "707cbbc8-69d5-4a7e-860e-ce75ef35fabb",
 								"type": "text/javascript",
 								"exec": [
-									"pm.globals.get(\"url\");",
-									"",
-									"",
-									"pm.test(\"Status code\", function () {",
+									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									""
@@ -887,17 +861,14 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "c94fe3e7-a35e-4d52-8d7e-e48524ffcd24",
+								"id": "c336edd3-a6c0-43bc-a0ff-86ff887c2d4e",
 								"type": "text/javascript",
 								"exec": [
-									"pm.globals.get(\"url\");",
-									"",
-									"",
-									"pm.test(\"Status code\", function () {",
+									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"pm.test(\"Own profile retrieved\", function () {",
+									"pm.test(\"Email in user's profile is valid\", function () {",
 									"    var jsonData = pm.response.json();",
 									"    pm.expect(jsonData.email).to.eql(pm.variables.get(\"testUserEmail\"));",
 									"});"
@@ -964,23 +935,18 @@
 			]
 		},
 		{
-			"name": "auth gateway",
+			"name": "Auth Gateway routes",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
+						"id": "db57447f-44f7-4e84-bbc2-7ed8ebf53c4b",
+						"type": "text/javascript",
 						"exec": [
-							"pm.globals.get(\"url\");",
-							"",
-							"pm.globals.get(\"kcAccessToken\");",
-							"",
-							"",
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
 							"});"
-						],
-						"id": "4c86da4e-1493-44d7-8830-2e79f09530c1",
-						"type": "text/javascript"
+						]
 					}
 				}
 			],
@@ -1034,77 +1000,77 @@
 	],
 	"variable": [
 		{
-			"id": "3711508d-aeec-4070-9957-f39859592f1f",
+			"id": "96b5baa4-d3d5-4b18-be9e-448c9e055918",
 			"key": "acsUrl",
 			"value": "{{url}}/alfresco",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "88f8f24b-ed19-4c9f-8714-5cc5e057640d",
+			"id": "aa64ccbe-797c-4dfd-8011-ca27e8d2b413",
 			"key": "shareUrl",
 			"value": "{{url}}/share",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "f931cf66-9d64-420d-bdd9-b5028f980c88",
+			"id": "8ed8c88b-227e-4727-9215-fadaa9c93837",
 			"key": "apsUrl",
 			"value": "{{url}}/activiti-app",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "de2ce724-f95a-475a-a454-89027a987dce",
+			"id": "6dbd49bb-9839-44ca-9e1e-8c06b256d77d",
 			"key": "identityServiceUrl",
 			"value": "{{url}}/auth",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "b2f847c1-035e-4adf-975b-fa9f87b35926",
+			"id": "c66d9815-e0e2-4fb0-8ec3-5650d14c136b",
 			"key": "identityServiceRealm",
 			"value": "springboot",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "16de79d7-6268-40e7-a6d2-cae228e8e7a9",
+			"id": "2ca1d548-7ddc-428f-b812-e5a0eff26d8c",
 			"key": "identityServiceClientId",
 			"value": "activiti",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "627315ca-c685-4c3c-a81a-dbca65610176",
+			"id": "1c4a8d44-b217-4653-b6a4-13c294114df1",
 			"key": "testUserUsername",
 			"value": "hruser",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "0cbffb7e-a094-4648-bf9c-d7df9f9746e5",
+			"id": "1fc7714d-7925-4d3a-9a24-68e40f5aad2f",
 			"key": "testUserPassword",
 			"value": "password",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "0cbe6e7f-99dd-43c8-b906-d63cceb87a0e",
+			"id": "332d87a4-5437-4922-97a3-aa7debc5fc36",
 			"key": "testUserEmail",
 			"value": "test@test.com",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "90661a2c-954b-4c25-9a2a-c058f0eec366",
+			"id": "03552b51-5aa8-45cb-98e9-e2672ab7835b",
 			"key": "apsLocalAdminUser",
 			"value": "admin@app.activiti.com",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "48ec614a-c965-41d3-bd25-4e73b0a51bbb",
+			"id": "484e7747-98c9-45bf-a19e-a63fd970a448",
 			"key": "apsLocalAdminPassword",
 			"value": "admin",
 			"type": "string",

@@ -334,7 +334,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "66c97421-4cf8-4772-a8d1-15cf39216dd7",
+								"id": "60576189-e1f8-4bb6-97c9-52f5c4884832",
 								"type": "text/javascript",
 								"exec": [
 									"var jsonData = pm.response.json();",
@@ -352,9 +352,7 @@
 									"});",
 									"",
 									"var tokens=JSON.parse(responseBody); ",
-									"postman.setGlobalVariable(\"kcAccessToken\", tokens.access_token); ",
-									"",
-									"",
+									"pm.environment.set(\"kcAccessToken\", tokens.access_token);",
 									""
 								]
 							}
@@ -1010,77 +1008,77 @@
 	],
 	"variable": [
 		{
-			"id": "96bbb1d5-6fa4-4593-8962-4b7501ce01d6",
+			"id": "bdfade65-7194-4d70-a2ea-abe900c12476",
 			"key": "acsUrl",
 			"value": "{{url}}/alfresco",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "bc8de51e-a9aa-4b24-af00-0e09b5b0b3f3",
+			"id": "0c5debff-4152-4fe8-991d-71a57268900e",
 			"key": "shareUrl",
 			"value": "{{url}}/share",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "74a7c1f4-eb96-48bb-a15f-ea3f3257051d",
+			"id": "3128650b-4590-4c31-b6b4-30f82ca176d6",
 			"key": "apsUrl",
 			"value": "{{url}}/activiti-app",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "95c3e9ff-ed17-434d-b17c-05efea526f5a",
+			"id": "43349ee7-2356-485d-9fed-8b53a1e6fa84",
 			"key": "identityServiceUrl",
 			"value": "{{url}}/auth",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "673ddff2-9a0b-410e-80e8-79bef73670dc",
+			"id": "cc7dd96d-7c1a-4b71-9950-75c094b0519f",
 			"key": "identityServiceRealm",
 			"value": "springboot",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "faab53fd-649a-4c29-83d2-e9a2320bdcf2",
+			"id": "81934340-56be-49cf-9127-4ce88ad52ee3",
 			"key": "identityServiceClientId",
 			"value": "activiti",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "3080ec0a-47f7-4562-97cb-902744224582",
+			"id": "0c41bc4f-b03b-46e2-b433-c2c19d9b7ae6",
 			"key": "testUserUsername",
 			"value": "hruser",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "df294a87-a5f4-443b-aa7e-2c7848e72343",
+			"id": "42aa42c8-d157-478f-bb35-33a03907dc65",
 			"key": "testUserPassword",
 			"value": "password",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "775c5662-ffca-487e-81dc-0687347a3142",
+			"id": "e8ebf708-2341-4a2f-8faf-54eff476eae8",
 			"key": "testUserEmail",
 			"value": "test@test.com",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "24e784b0-363e-4884-a437-5a236ec6cbd0",
+			"id": "2706f494-d786-4312-9725-c5e9d416b095",
 			"key": "apsLocalAdminUser",
 			"value": "admin@app.activiti.com",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "cfd0ffe1-cd75-4990-a75e-b8405c9376f6",
+			"id": "2dc5cf8e-538b-4db3-b7ee-1b9837d78b14",
 			"key": "apsLocalAdminPassword",
 			"value": "admin",
 			"type": "string",

@@ -401,7 +401,7 @@
 							]
 						},
 						"url": {
-							"raw": "https://{{url}}/auth/realms/springboot/protocol/openid-connect/token",
+							"raw": "https://{{url}}/auth/realms/alfresco/protocol/openid-connect/token",
 							"protocol": "https",
 							"host": [
 								"{{url}}"
@@ -409,7 +409,7 @@
 							"path": [
 								"auth",
 								"realms",
-								"springboot",
+								"alfresco",
 								"protocol",
 								"openid-connect",
 								"token"

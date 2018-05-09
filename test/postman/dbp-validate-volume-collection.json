@@ -3,7 +3,7 @@
 		"name": "dbp-validate-volume",
 		"_postman_id": "da06ad38-1347-44e6-a4d9-f37f7f4697b0",
 		"description": "This collection will test whether content created is still working when the acs pod is deleted and restarted.",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "httpss://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -61,8 +61,8 @@
 					]
 				},
 				"url": {
-					"raw": "http://{{url}}/auth/realms/springboot/protocol/openid-connect/token",
-					"protocol": "http",
+					"raw": "https://{{url}}/auth/realms/springboot/protocol/openid-connect/token",
+					"protocol": "https",
 					"host": [
 						"{{url}}"
 					],
@@ -129,8 +129,8 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://{{url}}/alfresco/api/-default-/public/alfresco/versions/1/nodes/-my-/children?includeSource=true",
-					"protocol": "http",
+					"raw": "https://{{url}}/alfresco/api/-default-/public/alfresco/versions/1/nodes/-my-/children?includeSource=true",
+					"protocol": "https",
 					"host": [
 						"{{url}}"
 					],

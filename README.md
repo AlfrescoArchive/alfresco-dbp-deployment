@@ -262,8 +262,8 @@ helm get values -a $DBPRELEASE
 ### 11. Teardown:
 
 ```bash
-helm delete $INGRESSRELEASE
-helm delete $DBPRELEASE
+helm delete --purge $INGRESSRELEASE
+helm delete --purge $DBPRELEASE
 kubectl delete namespace $DESIREDNAMESPACE
 ```
 Depending on your cluster type you should be able to also delete it if you want.

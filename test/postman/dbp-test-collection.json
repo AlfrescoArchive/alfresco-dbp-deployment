@@ -334,17 +334,28 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "7f98812c-e8cd-4794-8e41-a3b91c959525",
+								"id": "66c97421-4cf8-4772-a8d1-15cf39216dd7",
 								"type": "text/javascript",
 								"exec": [
-									"pm.globals.get(\"url\");",
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Token is bearer token\", function () {",
+									"    pm.expect(jsonData.token_type).to.eql(\"bearer\");",
+									"});",
+									"",
+									"pm.test(\"Response contains access token\", function () {",
+									"    pm.expect(\"access_token\" in jsonData).to.be.true;",
+									"});",
 									"",
 									"var tokens=JSON.parse(responseBody); ",
 									"postman.setGlobalVariable(\"kcAccessToken\", tokens.access_token); ",
 									"",
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});"
+									"",
+									""
 								]
 							}
 						}
@@ -410,7 +421,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "be6bb3a3-d1eb-4846-ad2c-9259e89bec54",
+								"id": "cf5678ae-cc22-4e8c-967a-25809a0a6a1c",
 								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Response code is 200\", function () {",
@@ -421,7 +432,6 @@
 									"    var jsonData = pm.response.json();",
 									"    var userName= jsonData.entry.firstName;",
 									"    pm.expect(userName).to.be.eql(pm.variables.get(\"testUserUsername\"));",
-									"        ",
 									"});",
 									"",
 									"pm.test(\"Id in response is valid\", function () {",
@@ -465,7 +475,7 @@
 					"response": []
 				},
 				{
-					"name": "Create Content using HR user",
+					"name": "Create content using test user",
 					"event": [
 						{
 							"listen": "test",
@@ -519,7 +529,7 @@
 					"response": []
 				},
 				{
-					"name": "Retrieve test user files using token",
+					"name": "Retrieve test user's files using token",
 					"event": [
 						{
 							"listen": "test",
@@ -1000,77 +1010,77 @@
 	],
 	"variable": [
 		{
-			"id": "96b5baa4-d3d5-4b18-be9e-448c9e055918",
+			"id": "96bbb1d5-6fa4-4593-8962-4b7501ce01d6",
 			"key": "acsUrl",
 			"value": "{{url}}/alfresco",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "aa64ccbe-797c-4dfd-8011-ca27e8d2b413",
+			"id": "bc8de51e-a9aa-4b24-af00-0e09b5b0b3f3",
 			"key": "shareUrl",
 			"value": "{{url}}/share",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "8ed8c88b-227e-4727-9215-fadaa9c93837",
+			"id": "74a7c1f4-eb96-48bb-a15f-ea3f3257051d",
 			"key": "apsUrl",
 			"value": "{{url}}/activiti-app",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "6dbd49bb-9839-44ca-9e1e-8c06b256d77d",
+			"id": "95c3e9ff-ed17-434d-b17c-05efea526f5a",
 			"key": "identityServiceUrl",
 			"value": "{{url}}/auth",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "c66d9815-e0e2-4fb0-8ec3-5650d14c136b",
+			"id": "673ddff2-9a0b-410e-80e8-79bef73670dc",
 			"key": "identityServiceRealm",
 			"value": "springboot",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "2ca1d548-7ddc-428f-b812-e5a0eff26d8c",
+			"id": "faab53fd-649a-4c29-83d2-e9a2320bdcf2",
 			"key": "identityServiceClientId",
 			"value": "activiti",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "1c4a8d44-b217-4653-b6a4-13c294114df1",
+			"id": "3080ec0a-47f7-4562-97cb-902744224582",
 			"key": "testUserUsername",
 			"value": "hruser",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "1fc7714d-7925-4d3a-9a24-68e40f5aad2f",
+			"id": "df294a87-a5f4-443b-aa7e-2c7848e72343",
 			"key": "testUserPassword",
 			"value": "password",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "332d87a4-5437-4922-97a3-aa7debc5fc36",
+			"id": "775c5662-ffca-487e-81dc-0687347a3142",
 			"key": "testUserEmail",
 			"value": "test@test.com",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "03552b51-5aa8-45cb-98e9-e2672ab7835b",
+			"id": "24e784b0-363e-4884-a437-5a236ec6cbd0",
 			"key": "apsLocalAdminUser",
 			"value": "admin@app.activiti.com",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "484e7747-98c9-45bf-a19e-a63fd970a448",
+			"id": "cfd0ffe1-cd75-4990-a75e-b8405c9376f6",
 			"key": "apsLocalAdminPassword",
 			"value": "admin",
 			"type": "string",

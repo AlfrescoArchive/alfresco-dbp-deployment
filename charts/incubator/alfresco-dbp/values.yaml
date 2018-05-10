@@ -19,9 +19,10 @@ alfresco-content-services:
   alfresco-infrastructure:
     enabled: false
   repository:
-    image:
-      repository: quay.io/alfresco/alfresco-dbp-repository
-      tag: "0.3-SNAPSHOT"
+# DEPLOY-466 / DEPLOY-467 - Remove image pin as we are using the ACS provided images
+#    image:
+#      repository: quay.io/alfresco/alfresco-dbp-repository
+#      tag: "0.3-SNAPSHOT"
     environment:
       # The ACTIVEMQ_HOST is the DNS name of the ActiveMQ Broker. If deployed 
       # from the Alfresco ActiveMQ Chart it will be
@@ -42,21 +43,10 @@ alfresco-content-services:
         -Didentity-service.authentication.validation.failure.silent=false
         -Didentity-service.auth-server-url=\"$IDENTITY_SERVICE_URI\""
   share:
-    image:
-      repository: quay.io/alfresco/alfresco-dbp-share
-      tag: "0.3-SNAPSHOT"
-    resources:
-      requests:
-        memory: "1000Mi"
-      limits:
-        memory: "2000Mi"
-  solr:
-    resources:
-      requests:
-        memory: "500Mi"
-      limits:
-        memory: "1500Mi"
-
+# DEPLOY-466 / DEPLOY-467 - Remove image pin as we are using the ACS provided images
+#    image:
+#      repository: quay.io/alfresco/alfresco-dbp-share
+#      tag: "0.3-SNAPSHOT"
 alfresco-sync-service:
   enabled: false
   alfresco-infrastructure:

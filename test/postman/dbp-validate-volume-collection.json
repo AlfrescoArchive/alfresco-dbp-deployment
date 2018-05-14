@@ -61,15 +61,15 @@
 					]
 				},
 				"url": {
-					"raw": "http://{{url}}/auth/realms/springboot/protocol/openid-connect/token",
-					"protocol": "http",
+					"raw": "https://{{url}}/auth/realms/alfresco/protocol/openid-connect/token",
+					"protocol": "https",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
 						"auth",
 						"realms",
-						"springboot",
+						"alfresco",
 						"protocol",
 						"openid-connect",
 						"token"
@@ -129,8 +129,8 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://{{url}}/alfresco/api/-default-/public/alfresco/versions/1/nodes/-my-/children?includeSource=true",
-					"protocol": "http",
+					"raw": "https://{{url}}/alfresco/api/-default-/public/alfresco/versions/1/nodes/-my-/children?includeSource=true",
+					"protocol": "https",
 					"host": [
 						"{{url}}"
 					],

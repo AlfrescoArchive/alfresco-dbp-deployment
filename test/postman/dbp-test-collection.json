@@ -108,8 +108,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://{{url}}/alfresco/api/discovery",
-							"protocol": "http",
+							"raw": "https://{{url}}/alfresco/api/discovery",
+							"protocol": "https",
 							"host": [
 								"{{url}}"
 							],
@@ -180,8 +180,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://{{url}}/share/page/modules/deploy",
-							"protocol": "http",
+							"raw": "https://{{url}}/share/page/modules/deploy",
+							"protocol": "https",
 							"host": [
 								"{{url}}"
 							],
@@ -248,8 +248,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://{{url}}/share/res/components/documentlibrary/actions/google-edit-flat-16.png",
-							"protocol": "http",
+							"raw": "https://{{url}}/share/res/components/documentlibrary/actions/google-edit-flat-16.png",
+							"protocol": "https",
 							"host": [
 								"{{url}}"
 							],
@@ -327,8 +327,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://{{url}}/alfresco/s/api/solrstats",
-							"protocol": "http",
+							"raw": "https://{{url}}/alfresco/s/api/solrstats",
+							"protocol": "https",
 							"host": [
 								"{{url}}"
 							],
@@ -403,15 +403,15 @@
 							]
 						},
 						"url": {
-							"raw": "http://{{url}}/auth/realms/springboot/protocol/openid-connect/token",
-							"protocol": "http",
+							"raw": "https://{{url}}/auth/realms/alfresco/protocol/openid-connect/token",
+							"protocol": "https",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"auth",
 								"realms",
-								"springboot",
+								"alfresco",
 								"protocol",
 								"openid-connect",
 								"token"
@@ -473,8 +473,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://{{url}}/alfresco/api/-default-/public/alfresco/versions/1/people/-me-",
-							"protocol": "http",
+							"raw": "https://{{url}}/alfresco/api/-default-/public/alfresco/versions/1/people/-me-",
+							"protocol": "https",
 							"host": [
 								"{{url}}"
 							],
@@ -529,8 +529,8 @@
 							"raw": "{\n  \"name\":\"hrusertestfile.txt\",\n  \"nodeType\":\"cm:content\"\n}"
 						},
 						"url": {
-							"raw": "http://{{url}}/alfresco/api/-default-/public/alfresco/versions/1/nodes/-my-/children",
-							"protocol": "http",
+							"raw": "https://{{url}}/alfresco/api/-default-/public/alfresco/versions/1/nodes/-my-/children",
+							"protocol": "https",
 							"host": [
 								"{{url}}"
 							],
@@ -600,8 +600,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://{{url}}/alfresco/api/-default-/public/alfresco/versions/1/nodes/-my-/children?includeSource=true",
-							"protocol": "http",
+							"raw": "https://{{url}}/alfresco/api/-default-/public/alfresco/versions/1/nodes/-my-/children?includeSource=true",
+							"protocol": "https",
 							"host": [
 								"{{url}}"
 							],
@@ -662,8 +662,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://{{url}}/alfresco/api/-default-/public/cmis/versions/1.1/browser",
-							"protocol": "http",
+							"raw": "https://{{url}}/alfresco/api/-default-/public/cmis/versions/1.1/browser",
+							"protocol": "https",
 							"host": [
 								"{{url}}"
 							],
@@ -715,8 +715,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://{{url}}/alfresco/service/api/sites",
-							"protocol": "http",
+							"raw": "https://{{url}}/alfresco/service/api/sites",
+							"protocol": "https",
 							"host": [
 								"{{url}}"
 							],
@@ -814,8 +814,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://{{url}}/activiti-app/api/enterprise/app-version",
-							"protocol": "http",
+							"raw": "https://{{url}}/activiti-app/api/enterprise/app-version",
+							"protocol": "https",
 							"host": [
 								"{{url}}"
 							],
@@ -865,8 +865,8 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://{{url}}/actuator/routes",
-					"protocol": "http",
+					"raw": "https://{{url}}/actuator/routes",
+					"protocol": "https",
 					"host": [
 						"{{url}}"
 					],

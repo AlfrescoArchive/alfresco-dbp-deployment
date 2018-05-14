@@ -427,7 +427,7 @@
 			"description": null,
 			"item": [
 				{
-					"name": "Retrieve HR User Profile using token",
+					"name": "Retrieve testuser Profile using token",
 					"event": [
 						{
 							"listen": "test",
@@ -494,7 +494,7 @@
 					"response": []
 				},
 				{
-					"name": "Create Content using HR user",
+					"name": "Create Content using testuser",
 					"event": [
 						{
 							"listen": "test",
@@ -551,7 +551,7 @@
 					"response": []
 				},
 				{
-					"name": "Retrieve HR User Files using token",
+					"name": "Retrieve testuser Files using token",
 					"event": [
 						{
 							"listen": "test",

@@ -80,7 +80,7 @@
 			"response": []
 		},
 		{
-			"name": "Retrieve HR User Files using token",
+			"name": "Retrieve testuser Files using token",
 			"event": [
 				{
 					"listen": "test",

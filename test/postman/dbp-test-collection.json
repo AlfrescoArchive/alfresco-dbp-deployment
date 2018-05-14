@@ -382,7 +382,7 @@
 							"urlencoded": [
 								{
 									"key": "client_id",
-									"value": "activiti",
+									"value": "alfresco",
 									"type": "text"
 								},
 								{
@@ -392,7 +392,7 @@
 								},
 								{
 									"key": "username",
-									"value": "hruser",
+									"value": "testuser",
 									"type": "text"
 								},
 								{

@@ -3,7 +3,7 @@
 		"name": "dbp-validate-volume",
 		"_postman_id": "da06ad38-1347-44e6-a4d9-f37f7f4697b0",
 		"description": "This collection will test whether content created is still working when the acs pod is deleted and restarted.",
-		"schema": "httpss://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{

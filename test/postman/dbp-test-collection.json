@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "0f006bd1-aba2-4957-8c04-ad19386d0418",
 		"name": "DBP Deployment Test",
-		"description": "```The Suite of cases are divided into 6\ndifferent categories\n1) Acs-basic-auth\n* Request to validate the discovery api\n* Request to validate modules are applied correctly\n2) Generate the token \n3) ACS-token-auth \n* Post to generate the token\n* Request to validate ACS request using token\n* Request to validate CMIS request using token\n* Request to validate vo request using token\n4) APS\n* Request to validate using token\n5) Sync service\n6) get way validation\n```",
+		"description": "The Suite of cases are divided into 6\ndifferent categories\n1) Acs-basic-auth\n* Request to validate the discovery api\n* Request to validate modules are applied correctly\n2) Generate the token \n3) ACS-token-auth \n* Post to generate the token\n* Request to validate ACS request using token\n* Request to validate CMIS request using token\n* Request to validate vo request using token\n4) APS\n* Request to validate using token\n5) Sync service\n6) get way validation\n",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -876,86 +876,86 @@
 	],
 	"variable": [
 		{
-			"id": "9fd3960c-c895-4248-b47e-e5b80877c142",
+			"id": "3de1ca96-1c37-424d-9397-d7edf8a68a3b",
 			"key": "acsUrl",
 			"value": "{{url}}/alfresco",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "d9798cdd-842d-422f-aa37-cfc7c0381711",
+			"id": "41445b16-4bba-4d2c-afb5-5451a75988ca",
 			"key": "shareUrl",
 			"value": "{{url}}/share",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "5e902528-9bcd-4bb0-999d-c932d67c0ea5",
+			"id": "f56e62cc-25ac-44f1-8208-e6220ad69e18",
 			"key": "apsUrl",
 			"value": "{{url}}/activiti-app",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "c6d57412-9e27-4dcd-8056-85a13d396a59",
+			"id": "aaf6ca65-cd8a-44be-881f-b5fa35fdf4d0",
 			"key": "identityServiceUrl",
 			"value": "{{url}}/auth",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "8dac89ee-01a6-42e4-a1e2-054aa7e7f98b",
+			"id": "e32b0a99-5c6a-40b4-9e6b-ba95340ceab1",
 			"key": "identityServiceRealm",
 			"value": "springboot",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "5e68c97d-cdce-4dc7-8db1-fe41e70d11a8",
+			"id": "f30db13c-769a-4fc0-9230-cfcfb3463818",
 			"key": "identityServiceClientId",
 			"value": "activiti",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "336d473f-cca3-48e7-a93b-f61fa8e07526",
+			"id": "b87f9762-2628-4c8e-8700-b5c726116f0c",
 			"key": "testUserUsername",
 			"value": "hruser",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "6b868be0-246d-41a9-a04f-a3e86f07528d",
+			"id": "02fefd39-bb4f-412a-b439-c18739694c36",
 			"key": "testUserPassword",
 			"value": "password",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "504ceb37-ff6a-4865-ba51-2c5504298af1",
+			"id": "93aa7b22-7d0f-4f5e-82ca-455f8fe11552",
 			"key": "testUserEmail",
 			"value": "test@test.com",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "8d3f0683-f331-4b26-93b4-304eebbd155d",
+			"id": "bba32e4e-e740-494f-88cf-f8e8db53edfb",
 			"key": "apsLocalAdminUser",
 			"value": "admin@app.activiti.com",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "373deae6-015a-4635-8f22-700bca20c257",
+			"id": "e3cb4746-b262-423b-a1cf-4304f407c83d",
 			"key": "apsLocalAdminPassword",
 			"value": "admin",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "1856603f-c4ed-44d5-84c6-7fb6436d0654",
+			"id": "5a0c5d82-33c7-4586-b9b8-0a0a10a8a072",
 			"key": "moduleVersions",
-			"value": "[{\"moduleName\":\"alfresco-aos-module\",\"moduleVersion\":\"1.1.7\"},{\"moduleName\":\"org.alfresco.integrations.google.docs\",\"moduleVersion\":\"3.0.4.2\"},{\"moduleName\":\"alfresco-share-services\",\"moduleVersion\":\"6.0.0\"}]",
+			"value": "[{\"moduleName\":\"alfresco-aos-module\",\"moduleVersion\":\"1.2.0-RC2\"},{\"moduleName\":\"org.alfresco.integrations.google.docs\",\"moduleVersion\":\"3.1.0-RC1\"},{\"moduleName\":\"alfresco-share-services\",\"moduleVersion\":\"6.0.0\"}]",
 			"type": "string",
 			"description": ""
 		}

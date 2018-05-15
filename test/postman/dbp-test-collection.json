@@ -403,8 +403,8 @@
 							]
 						},
 						"url": {
-							"raw": "https://{{url}}/auth/realms/alfresco/protocol/openid-connect/token",
-							"protocol": "https",
+							"raw": "http://{{url}}/auth/realms/alfresco/protocol/openid-connect/token",
+							"protocol": "http",
 							"host": [
 								"{{url}}"
 							],
@@ -473,8 +473,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "https://{{url}}/alfresco/api/-default-/public/alfresco/versions/1/people/-me-",
-							"protocol": "https",
+							"raw": "http://{{url}}/alfresco/api/-default-/public/alfresco/versions/1/people/-me-",
+							"protocol": "http",
 							"host": [
 								"{{url}}"
 							],
@@ -529,8 +529,8 @@
 							"raw": "{\n  \"name\":\"testusertestfile.txt\",\n  \"nodeType\":\"cm:content\"\n}"
 						},
 						"url": {
-							"raw": "https://{{url}}/alfresco/api/-default-/public/alfresco/versions/1/nodes/-my-/children",
-							"protocol": "https",
+							"raw": "http://{{url}}/alfresco/api/-default-/public/alfresco/versions/1/nodes/-my-/children",
+							"protocol": "http",
 							"host": [
 								"{{url}}"
 							],
@@ -600,8 +600,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "https://{{url}}/alfresco/api/-default-/public/alfresco/versions/1/nodes/-my-/children?includeSource=true",
-							"protocol": "https",
+							"raw": "http://{{url}}/alfresco/api/-default-/public/alfresco/versions/1/nodes/-my-/children?includeSource=true",
+							"protocol": "http",
 							"host": [
 								"{{url}}"
 							],
@@ -662,8 +662,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "https://{{url}}/alfresco/api/-default-/public/cmis/versions/1.1/browser",
-							"protocol": "https",
+							"raw": "http://{{url}}/alfresco/api/-default-/public/cmis/versions/1.1/browser",
+							"protocol": "http",
 							"host": [
 								"{{url}}"
 							],
@@ -715,8 +715,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "https://{{url}}/alfresco/service/api/sites",
-							"protocol": "https",
+							"raw": "http://{{url}}/alfresco/service/api/sites",
+							"protocol": "http",
 							"host": [
 								"{{url}}"
 							],
@@ -865,8 +865,8 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "https://{{url}}/actuator/routes",
-					"protocol": "https",
+					"raw": "http://{{url}}/actuator/routes",
+					"protocol": "http",
 					"host": [
 						"{{url}}"
 					],

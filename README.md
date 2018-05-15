@@ -209,6 +209,7 @@ helm install alfresco-incubator/alfresco-dbp \
 --namespace=$DESIREDNAMESPACE
 
 #On AWS
+# Remember to use https here if you have a trusted certificate set on the ingress
 helm install alfresco-incubator/alfresco-dbp \
 --set alfresco-infrastructure.alfresco-api-gateway.keycloakURL="http://$ELBADDRESS/auth/" \
 --set alfresco-infrastructure.persistence.efs.enabled=true \

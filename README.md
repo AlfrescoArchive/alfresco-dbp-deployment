@@ -204,7 +204,7 @@ We don't advise you to use the same EFS instance for persisting the data from mu
 #On MINIKUBE
 helm install alfresco-incubator/alfresco-dbp \
 --set alfresco-infrastructure.alfresco-api-gateway.keycloakURL="http://$ELBADDRESS:$INFRAPORT/auth/" \
---set alfresco-infrastructure.alfresco-identity-service.ingressHostName="$ELBADDRESS" \
+--set alfresco-infrastructure.alfresco-identity-service.ingressHostName="$ELBADDRESS:$INFRAPORT" \
 --set alfresco-content-services.repository.environment.IDENTITY_SERVICE_URI="http://$ELBADDRESS:$INFRAPORT/auth" \
 --namespace=$DESIREDNAMESPACE
 

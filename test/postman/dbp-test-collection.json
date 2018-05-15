@@ -16,55 +16,51 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "8496978a-e1a9-4ba9-afba-76aca7b469e1",
+								"id": "e12518ac-dd89-41cf-bc97-2e00206ce839",
 								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
+									"pm.test(\"Response has JSON body\", function () {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"});",
 									"",
 									"pm.test(\"License is ENTERPRISE\", function () {",
 									"    pm.expect(pm.response.text()).to.include(\"ENTERPRISE\");",
 									"});",
 									"",
+									"var responseJson = pm.response.json();",
+									"var responseModules = responseJson.entry.repository.modules;",
 									"",
-									"pm.test(\"Module versions are valid\", function () {",
-									"    var jsonData = pm.response.json();",
-									"    var modulesArray= jsonData.entry.repository.modules;",
-									"    for(var key in modulesArray)",
-									"    {",
-									"        var obj = modulesArray[key];",
-									"        var id = obj.id;",
-									"        if (\"org_alfresco_module_rm\" === id)",
-									"        {",
-									"            pm.expect(obj.version).to.eql(\"2.6.0\");",
-									"        }",
-									"        if(\"alfresco-aos-module\" === id)",
-									"        {",
-									"            pm.expect(obj.version).to.eql(\"1.1.7\");",
-									"        }",
-									"        if(\"org.alfresco.integrations.google.docs\" === id)",
-									"        {",
-									"             pm.expect(obj.version).to.eql(\"3.0.4.2\");",
-									"        }",
-									"        if(\"org_alfresco_device_sync_repo\" === id)",
-									"        {",
-									"            pm.expect(obj.version).to.eql(\"2.2\");",
-									"        }",
-									"        if(\"alfresco-share-services\" === id)",
-									"        {",
-									"            pm.expect(obj.version).to.eql(\"6.0.0\");",
-									"        }",
-									"        if(\"alfresco-rm-enterprise-repo\" === id)",
-									"        {",
-									"            pm.expect(obj.title).to.eql(\"Alfresco Records Management Enterprise Repo\");",
-									"            pm.expect(obj.version).to.eql(\"2.6.0\");",
-									"        }    ",
-									"    }",
-									"});",
+									"// callback to compare expected against returned module versions",
+									"function checkModuleVersion(module) {",
+									"    ",
+									"    pm.test(\"Module version: \" + module.moduleName + \" (\" + module.moduleVersion + \")\", function() {",
+									"        var responseModule = responseModules.filter(m => m.id === module.moduleName);",
+									"        pm.expect(responseModule.length).to.eql(1);",
+									"        ",
+									"        var foundVersion = responseModule[0].version;",
+									"        pm.expect(foundVersion).to.eql(module.moduleVersion);",
+									"    });",
+									"}",
 									"",
-									"",
+									"var modules = JSON.parse(pm.variables.get(\"moduleVersions\"));",
+									"for (i=0; i < modules.length; i++) {",
+									"    checkModuleVersion(modules[i]);",
+									"}",
+									""
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "bd8701f8-d7da-4455-8444-c60553778f91",
+								"type": "text/javascript",
+								"exec": [
 									""
 								]
 							}
@@ -880,84 +876,84 @@
 	],
 	"variable": [
 		{
-			"id": "6d48c1fd-3bdf-49d3-87d6-fd111554522a",
+			"id": "1ea9911f-a0b4-4401-b6f8-60af6eee6220",
 			"key": "acsUrl",
 			"value": "{{url}}/alfresco",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "1a5a7a80-ea8a-4de9-b42e-b68cdf551db6",
+			"id": "53ce5857-3c50-4e36-bce2-22d00b0e99d1",
 			"key": "shareUrl",
 			"value": "{{url}}/share",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "373a874a-2a47-4672-b05c-30225d96473f",
+			"id": "59fdce5c-b46f-4e67-acd2-13765c8c766b",
 			"key": "apsUrl",
 			"value": "{{url}}/activiti-app",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "cd61b81d-55f4-43a1-9f3e-ce71c7e9cfbf",
+			"id": "8a4d27d3-894f-4bce-9498-09f24bae2cf1",
 			"key": "identityServiceUrl",
 			"value": "{{url}}/auth",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "3336bced-d06e-48ea-9f1e-2e196770b0b6",
+			"id": "64bbe1d7-1fd2-4a6c-abfa-de743b9b9d4e",
 			"key": "identityServiceRealm",
 			"value": "springboot",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "bf6982b5-3501-4f70-8db6-02a3c15904d8",
+			"id": "fadd6945-b2c2-4e8f-8365-5b4f19f1864c",
 			"key": "identityServiceClientId",
 			"value": "activiti",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "5caf005e-ddcd-4cc9-a16e-b18d08c2ff27",
+			"id": "a3e1033f-9b7e-419d-897c-3d0e54ec08e0",
 			"key": "testUserUsername",
 			"value": "hruser",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "485a8a73-23d1-42f5-9815-5a92759584c5",
+			"id": "0f39ed26-4948-46c2-85fa-678c40b00556",
 			"key": "testUserPassword",
 			"value": "password",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "8f464706-ec09-4fbb-90fc-8ef5ebf190b1",
+			"id": "60b1640c-cde7-49bf-bc56-b3d75bb5c18d",
 			"key": "testUserEmail",
 			"value": "test@test.com",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "cee4def3-4450-4746-8260-5571a0d86db6",
+			"id": "ea17b406-b11d-49bc-89db-ae5da529f436",
 			"key": "apsLocalAdminUser",
 			"value": "admin@app.activiti.com",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "7a2c7318-2700-4457-ab08-9d88ca4cfcf9",
+			"id": "a81ae091-8862-4959-a6ea-b9df3177604b",
 			"key": "apsLocalAdminPassword",
 			"value": "admin",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "50702bb7-91ab-42f1-aae4-8ee41cbd310c",
+			"id": "7208fb0d-77bd-449a-a212-c4c62f8bcdbb",
 			"key": "moduleVersions",
 			"value": "[{\"moduleName\":\"org_alfresco_module_rm\",\"moduleVersion\":\"2.6.0\"},{\"moduleName\":\"alfresco-aos-module\",\"moduleVersion\":\"1.1.7\"},{\"moduleName\":\"org.alfresco.integrations.google.docs\",\"moduleVersion\":\"3.0.4.2\"},{\"moduleName\":\"org_alfresco_device_sync_repo\",\"moduleVersion\":\"2.2\"},{\"moduleName\":\"alfresco-share-services\",\"moduleVersion\":\"6.0.0\"},{\"moduleName\":\"alfresco-rm-enterprise-repo\",\"moduleVersion\":\"2.6.0\"}]",
 			"type": "string",

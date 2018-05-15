@@ -1,8 +1,8 @@
 {
 	"info": {
-		"_postman_id": "d92e4da9-0cea-4482-bdf5-1a6501e50c7d",
+		"_postman_id": "0f006bd1-aba2-4957-8c04-ad19386d0418",
 		"name": "DBP Deployment Test",
-		"description": "The Suite of cases are divided into 6\ndifferent categories\n1) Acs-basic-auth\n* Request to validate the discovery api\n* Request to validate modules are applied correctly\n2) Generate the token \n3) ACS-token-auth \n* Post to generate the token\n* Request to validate ACS request using token\n* Request to validate CMIS request using token\n* Request to validate vo request using token\n4) APS\n* Request to validate using token\n5) Sync service\n6) get way validation",
+		"description": "```The Suite of cases are divided into 6\ndifferent categories\n1) Acs-basic-auth\n* Request to validate the discovery api\n* Request to validate modules are applied correctly\n2) Generate the token \n3) ACS-token-auth \n* Post to generate the token\n* Request to validate ACS request using token\n* Request to validate CMIS request using token\n* Request to validate vo request using token\n4) APS\n* Request to validate using token\n5) Sync service\n6) get way validation\n```",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -11,62 +11,56 @@
 			"description": null,
 			"item": [
 				{
-					"name": "repo-discovery with amps",
+					"name": "Repository discovery with amp versions",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "06401158-6474-419a-9e7c-842039969fb9",
+								"id": "8496978a-e1a9-4ba9-afba-76aca7b469e1",
 								"type": "text/javascript",
 								"exec": [
-									"",
-									"pm.globals.get(\"url\");",
-									"",
-									"",
-									"pm.test(\"validateStatusCodeTest\", function () {",
+									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
 									"",
-									"pm.test(\"validateLicenseTest\", function () {",
+									"pm.test(\"License is ENTERPRISE\", function () {",
 									"    pm.expect(pm.response.text()).to.include(\"ENTERPRISE\");",
 									"});",
 									"",
 									"",
-									"pm.test(\"validateModuleTest\", function () {",
+									"pm.test(\"Module versions are valid\", function () {",
 									"    var jsonData = pm.response.json();",
 									"    var modulesArray= jsonData.entry.repository.modules;",
 									"    for(var key in modulesArray)",
 									"    {",
 									"        var obj = modulesArray[key];",
 									"        var id = obj.id;",
+									"        if (\"org_alfresco_module_rm\" === id)",
+									"        {",
+									"            pm.expect(obj.version).to.eql(\"2.6.0\");",
+									"        }",
 									"        if(\"alfresco-aos-module\" === id)",
 									"        {",
-									"            pm.expect(obj.version).to.eql(\"1.2.0-RC2\");",
+									"            pm.expect(obj.version).to.eql(\"1.1.7\");",
 									"        }",
 									"        if(\"org.alfresco.integrations.google.docs\" === id)",
 									"        {",
-									"             pm.expect(obj.version).to.eql(\"3.1.0-RC1\");",
-									"        }",
-									"        if(\"alfresco-share-services\" === id)",
-									"        {",
-									"            pm.expect(obj.version).to.eql(\"6.0.0\");",
-									"        }",
-									"/* Disabled for DEPLOY-401",
-									"        if (\"org_alfresco_module_rm\" === id)",
-									"        {", 
-									"            pm.expect(obj.version).to.eql(\"2.6.0\");",
+									"             pm.expect(obj.version).to.eql(\"3.0.4.2\");",
 									"        }",
 									"        if(\"org_alfresco_device_sync_repo\" === id)",
 									"        {",
 									"            pm.expect(obj.version).to.eql(\"2.2\");",
+									"        }",
+									"        if(\"alfresco-share-services\" === id)",
+									"        {",
+									"            pm.expect(obj.version).to.eql(\"6.0.0\");",
 									"        }",
 									"        if(\"alfresco-rm-enterprise-repo\" === id)",
 									"        {",
 									"            pm.expect(obj.title).to.eql(\"Alfresco Records Management Enterprise Repo\");",
 									"            pm.expect(obj.version).to.eql(\"2.6.0\");",
 									"        }    ",
-									"*/",
 									"    }",
 									"});",
 									"",
@@ -108,13 +102,11 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "https://{{url}}/alfresco/api/discovery",
-							"protocol": "https",
+							"raw": "{{acsUrl}}/api/discovery",
 							"host": [
-								"{{url}}"
+								"{{acsUrl}}"
 							],
 							"path": [
-								"alfresco",
 								"api",
 								"discovery"
 							]
@@ -124,18 +116,17 @@
 					"response": []
 				},
 				{
-					"name": "Validate-share and rm module",
+					"name": "Validate Share is deployed",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "8dcec1dc-4dbb-492f-a0bf-3c30274cc650",
+								"id": "ad1108fa-a196-41e1-9f88-a182bca61b4c",
 								"type": "text/javascript",
 								"exec": [
-									"",
 									"pm.globals.get(\"url\");",
 									"",
-									"pm.test(\"share is up and running\", function () {",
+									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
@@ -180,13 +171,11 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "https://{{url}}/share/page/modules/deploy",
-							"protocol": "https",
+							"raw": "{{shareUrl}}/page/modules/deploy",
 							"host": [
-								"{{url}}"
+								"{{shareUrl}}"
 							],
 							"path": [
-								"share",
 								"page",
 								"modules",
 								"deploy"
@@ -197,22 +186,19 @@
 					"response": []
 				},
 				{
-					"name": "google-docs",
+					"name": "Validate Google Docs deployment",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
+								"id": "89681be8-b391-4efe-9ae6-8158742e93ff",
+								"type": "text/javascript",
 								"exec": [
-									"pm.globals.get(\"url\");",
-									"",
-									"pm.test(\"validateGoogleDocsImage\", function () ",
-									"{",
+									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									""
-								],
-								"id": "93bc0117-c1b8-4cbf-98b2-307154bacf24",
-								"type": "text/javascript"
+								]
 							}
 						}
 					],
@@ -248,13 +234,11 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "https://{{url}}/share/res/components/documentlibrary/actions/google-edit-flat-16.png",
-							"protocol": "https",
+							"raw": "{{shareUrl}}/res/components/documentlibrary/actions/google-edit-flat-16.png",
 							"host": [
-								"{{url}}"
+								"{{shareUrl}}"
 							],
 							"path": [
-								"share",
 								"res",
 								"components",
 								"documentlibrary",
@@ -266,19 +250,19 @@
 					"response": []
 				},
 				{
-					"name": "solr-validation",
+					"name": "Validate Solr deployment",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
+								"id": "f7790914-dc1d-4fee-a06f-09cd10fca8a4",
+								"type": "text/javascript",
 								"exec": [
-									"pm.globals.get(\"url\");",
-									"",
-									"pm.test(\"solr status code\", function () {",
+									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"pm.test(\"solr response test\", function() {",
+									"pm.test(\"Solr response is valid\", function() {",
 									"   var jsonData = pm.response.json();",
 									"    var modulesArray= jsonData.resultset.queryInfo;",
 									"    for(var key in modulesArray)",
@@ -289,9 +273,7 @@
 									"        pm.expect(id).to.be.eql(\"199\");",
 									"    }    ",
 									"});"
-								],
-								"id": "42c706d8-c92f-49dd-884d-8eb47f6ac808",
-								"type": "text/javascript"
+								]
 							}
 						}
 					],
@@ -327,13 +309,11 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "https://{{url}}/alfresco/s/api/solrstats",
-							"protocol": "https",
+							"raw": "{{acsUrl}}/s/api/solrstats",
 							"host": [
-								"{{url}}"
+								"{{acsUrl}}"
 							],
 							"path": [
-								"alfresco",
 								"s",
 								"api",
 								"solrstats"
@@ -349,22 +329,31 @@
 			"description": null,
 			"item": [
 				{
-					"name": "key cloak",
+					"name": "Generate Keycloak access token",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "7f98812c-e8cd-4794-8e41-a3b91c959525",
+								"id": "b74db1aa-4c4a-4e30-bd1e-6e1501c57216",
 								"type": "text/javascript",
 								"exec": [
-									"pm.globals.get(\"url\");",
-									"",
-									"var tokens=JSON.parse(responseBody); ",
-									"postman.setGlobalVariable(\"kcAccessToken\", tokens.access_token); ",
-									"",
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
-									"});"
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Token is bearer token\", function () {",
+									"    pm.expect(jsonData.token_type).to.eql(\"bearer\");",
+									"});",
+									"",
+									"pm.test(\"Response contains access token\", function () {",
+									"    pm.expect(\"access_token\" in jsonData).to.be.true;",
+									"});",
+									"",
+									"var tokens = JSON.parse(responseBody); ",
+									"pm.environment.set(\"kcAccessToken\", tokens.access_token);",
+									""
 								]
 							}
 						}
@@ -382,7 +371,7 @@
 							"urlencoded": [
 								{
 									"key": "client_id",
-									"value": "activiti",
+									"value": "{{identityServiceClientId}}",
 									"type": "text"
 								},
 								{
@@ -392,26 +381,24 @@
 								},
 								{
 									"key": "username",
-									"value": "hruser",
+									"value": "{{testUserUsername}}",
 									"type": "text"
 								},
 								{
 									"key": "password",
-									"value": "password",
+									"value": "{{testUserPassword}}",
 									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "https://{{url}}/auth/realms/alfresco/protocol/openid-connect/token",
-							"protocol": "https",
+							"raw": "{{identityServiceUrl}}/realms/{{identityServiceRealm}}/protocol/openid-connect/token",
 							"host": [
-								"{{url}}"
+								"{{identityServiceUrl}}"
 							],
 							"path": [
-								"auth",
 								"realms",
-								"alfresco",
+								"{{identityServiceRealm}}",
 								"protocol",
 								"openid-connect",
 								"token"
@@ -427,34 +414,28 @@
 			"description": null,
 			"item": [
 				{
-					"name": "Retrieve HR User Profile using token",
+					"name": "Retrieve test user profile using token",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "8a612dab-6562-40ec-b07c-8872a857103e",
+								"id": "cf5678ae-cc22-4e8c-967a-25809a0a6a1c",
 								"type": "text/javascript",
 								"exec": [
-									"pm.globals.get(\"url\");",
-									"",
-									"",
-									"",
-									"pm.test(\"resonse code test\", function () {",
+									"pm.test(\"Response code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"pm.test(\"validateUserName\", function () {",
+									"pm.test(\"Username in response is valid\", function () {",
 									"    var jsonData = pm.response.json();",
 									"    var userName= jsonData.entry.firstName;",
-									"    pm.expect(userName).to.be.eql(\"hruser\");",
-									"        ",
+									"    pm.expect(userName).to.be.eql(pm.variables.get(\"testUserUsername\"));",
 									"});",
 									"",
-									"pm.test(\"validateid\", function () {",
+									"pm.test(\"Id in response is valid\", function () {",
 									"    var jsonData = pm.response.json();",
-									"    var id= jsonData.entry.id;",
-									"    pm.expect(id).to.be.eql(\"hruser\");",
-									"        ",
+									"    var id = jsonData.entry.id;",
+									"    pm.expect(id).to.be.eql(pm.variables.get(\"testUserUsername\"));",
 									"});"
 								]
 							}
@@ -473,13 +454,11 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "https://{{url}}/alfresco/api/-default-/public/alfresco/versions/1/people/-me-",
-							"protocol": "https",
+							"raw": "{{acsUrl}}/api/-default-/public/alfresco/versions/1/people/-me-",
 							"host": [
-								"{{url}}"
+								"{{acsUrl}}"
 							],
 							"path": [
-								"alfresco",
 								"api",
 								"-default-",
 								"public",
@@ -494,23 +473,22 @@
 					"response": []
 				},
 				{
-					"name": "Create Content using HR user",
+					"name": "Create content using test user",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "7710e690-3b80-482d-be72-d7fa4e059137",
+								"id": "6999b794-4487-4081-bb73-f87efdb8c75c",
 								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Status code is 201\", function () {",
 									"    pm.response.to.have.status(201);",
 									"});",
 									"",
-									"pm.test(\"validateUserName\", function () {",
+									"pm.test(\"Created content has test user metadata\", function () {",
 									"    var jsonData = pm.response.json();",
-									"    var userName= jsonData.entry.createdByUser.id;",
-									"    pm.expect(userName).to.be.eql(\"hruser\");",
-									"        ",
+									"    var userName = jsonData.entry.createdByUser.id;",
+									"    pm.expect(userName).to.be.eql(pm.variables.get(\"testUserUsername\"));",
 									"});"
 								]
 							}
@@ -529,13 +507,11 @@
 							"raw": "{\n  \"name\":\"hrusertestfile.txt\",\n  \"nodeType\":\"cm:content\"\n}"
 						},
 						"url": {
-							"raw": "https://{{url}}/alfresco/api/-default-/public/alfresco/versions/1/nodes/-my-/children",
-							"protocol": "https",
+							"raw": "{{acsUrl}}/api/-default-/public/alfresco/versions/1/nodes/-my-/children",
 							"host": [
-								"{{url}}"
+								"{{acsUrl}}"
 							],
 							"path": [
-								"alfresco",
 								"api",
 								"-default-",
 								"public",
@@ -551,30 +527,29 @@
 					"response": []
 				},
 				{
-					"name": "Retrieve HR User Files using token",
+					"name": "Retrieve test user's files using token",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "ac8db113-7bc5-4583-8d2a-8134719547b2",
+								"id": "4a2f9c82-c9a9-45ed-8941-66a585c19b4a",
 								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Status code is 200\", function() {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"pm.test(\"validateid\", function() {",
+									"pm.test(\"User Id in file list is valid\", function() {",
 									"    var jsonData = pm.response.json();",
 									"    var modulesArray = jsonData.list.source.properties;",
 									"    for (var key in modulesArray) {",
 									"        var obj = modulesArray[key];",
 									"        var id = obj.id;",
-									"        pm.expect(id).to.be.eql(\"hruser\");",
+									"        pm.expect(id).to.be.eql(pm.variables.get(\"testUserUsername\"));",
 									"    }",
-									"",
 									"});",
 									"",
-									"pm.test(\"validateFile\", function() {",
+									"pm.test(\"File name in file list is valid\", function() {",
 									"    var jsonData = pm.response.json();",
 									"    var userName = jsonData.list.entries.properties;",
 									"    for (var key in userName) {",
@@ -600,13 +575,11 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "https://{{url}}/alfresco/api/-default-/public/alfresco/versions/1/nodes/-my-/children?includeSource=true",
-							"protocol": "https",
+							"raw": "{{acsUrl}}/api/-default-/public/alfresco/versions/1/nodes/-my-/children?includeSource=true",
 							"host": [
-								"{{url}}"
+								"{{acsUrl}}"
 							],
 							"path": [
-								"alfresco",
 								"api",
 								"-default-",
 								"public",
@@ -633,16 +606,14 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "944abf41-ed4a-4517-8be3-1869ba136a7a",
+								"id": "736642b9-1e60-431a-968c-c4c8edd11642",
 								"type": "text/javascript",
 								"exec": [
-									"pm.test(\"StatuscodeValidation\", function () {",
+									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"",
-									"",
-									"pm.test(\"Body matches string\", function () {",
+									"pm.test(\"Server signature contains Alfresco\", function () {",
 									"    pm.expect(pm.response.text()).to.include(\"Alfresco\");",
 									"});"
 								]
@@ -662,13 +633,11 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "https://{{url}}/alfresco/api/-default-/public/cmis/versions/1.1/browser",
-							"protocol": "https",
+							"raw": "{{acsUrl}}/api/-default-/public/cmis/versions/1.1/browser",
 							"host": [
-								"{{url}}"
+								"{{acsUrl}}"
 							],
 							"path": [
-								"alfresco",
 								"api",
 								"-default-",
 								"public",
@@ -687,15 +656,14 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "c501b26d-d6a9-47b0-b82d-dbb33bc610e0",
+								"id": "8f028067-607b-4d17-8bcb-5017e991c9d5",
 								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"",
-									" pm.test(\"validateSiteTitle\", function () {",
+									"pm.test(\"Test site title is valid\", function () {",
 									"      pm.expect(pm.response.text()).to.include(\"Sample: Web Site Design Project\");",
 									"});"
 								]
@@ -715,13 +683,11 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "https://{{url}}/alfresco/service/api/sites",
-							"protocol": "https",
+							"raw": "{{acsUrl}}/service/api/sites",
 							"host": [
-								"{{url}}"
+								"{{acsUrl}}"
 							],
 							"path": [
-								"alfresco",
 								"service",
 								"api",
 								"sites"
@@ -755,58 +721,31 @@
 			]
 		},
 		{
-			"name": "04 APS-case",
+			"name": "04 APS-basic-auth",
 			"description": "This folder will contain all the cases related to APS",
 			"item": [
 				{
-					"name": "aps version",
+					"name": "Get APS version",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
+								"id": "5cfef929-277b-4980-b44e-e787fa8560fe",
+								"type": "text/javascript",
 								"exec": [
-									"pm.globals.get(\"url\");",
-									"",
-									"",
-									"pm.test(\"apsstatuscode\", function () {",
+									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"pm.test(\"validateAPSEditionTest\", function () {",
+									"pm.test(\"APS edition string is valid\", function () {",
 									"    var jsonData = pm.response.json().edition;",
 									"    pm.expect(jsonData).to.eql(\"Alfresco Process Services (powered by Activiti)\");",
 									"});"
-								],
-								"id": "c90fbb35-45a9-4cd4-9189-76750e6570cb",
-								"type": "text/javascript"
+								]
 							}
 						}
 					],
 					"request": {
-						"auth": {
-							"type": "basic",
-							"basic": [
-								{
-									"key": "username",
-									"value": "admin@app.activiti.com",
-									"type": "string"
-								},
-								{
-									"key": "password",
-									"value": "admin",
-									"type": "string"
-								},
-								{
-									"key": "saveHelperData",
-									"type": "any"
-								},
-								{
-									"key": "showPassword",
-									"value": false,
-									"type": "boolean"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"body": {
@@ -814,13 +753,11 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "https://{{url}}/activiti-app/api/enterprise/app-version",
-							"protocol": "https",
+							"raw": "{{apsUrl}}/api/enterprise/app-version",
 							"host": [
-								"{{url}}"
+								"{{apsUrl}}"
 							],
 							"path": [
-								"activiti-app",
 								"api",
 								"enterprise",
 								"app-version"
@@ -829,26 +766,67 @@
 					},
 					"response": []
 				}
+			],
+			"auth": {
+				"type": "basic",
+				"basic": [
+					{
+						"key": "password",
+						"value": "{{apsLocalAdminPassword}}",
+						"type": "string"
+					},
+					{
+						"key": "username",
+						"value": "{{apsLocalAdminUser}}",
+						"type": "string"
+					},
+					{
+						"key": "saveHelperData",
+						"type": "any"
+					},
+					{
+						"key": "showPassword",
+						"value": false,
+						"type": "boolean"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "b016d990-fa80-491b-84b8-04734fa51b55",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "5455ed2b-225f-44a7-b0d3-07187af3fb2e",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
 			]
 		},
 		{
-			"name": "auth gateway",
+			"name": "Auth Gateway routes",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
+						"id": "db57447f-44f7-4e84-bbc2-7ed8ebf53c4b",
+						"type": "text/javascript",
 						"exec": [
-							"pm.globals.get(\"url\");",
-							"",
-							"pm.globals.get(\"kcAccessToken\");",
-							"",
-							"",
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
 							"});"
-						],
-						"id": "4c86da4e-1493-44d7-8830-2e79f09530c1",
-						"type": "text/javascript"
+						]
 					}
 				}
 			],
@@ -865,8 +843,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "https://{{url}}/actuator/routes",
-					"protocol": "https",
+					"raw": "{{url}}/actuator/routes",
 					"host": [
 						"{{url}}"
 					],
@@ -899,6 +876,92 @@
 					""
 				]
 			}
+		}
+	],
+	"variable": [
+		{
+			"id": "6d48c1fd-3bdf-49d3-87d6-fd111554522a",
+			"key": "acsUrl",
+			"value": "{{url}}/alfresco",
+			"type": "string",
+			"description": ""
+		},
+		{
+			"id": "1a5a7a80-ea8a-4de9-b42e-b68cdf551db6",
+			"key": "shareUrl",
+			"value": "{{url}}/share",
+			"type": "string",
+			"description": ""
+		},
+		{
+			"id": "373a874a-2a47-4672-b05c-30225d96473f",
+			"key": "apsUrl",
+			"value": "{{url}}/activiti-app",
+			"type": "string",
+			"description": ""
+		},
+		{
+			"id": "cd61b81d-55f4-43a1-9f3e-ce71c7e9cfbf",
+			"key": "identityServiceUrl",
+			"value": "{{url}}/auth",
+			"type": "string",
+			"description": ""
+		},
+		{
+			"id": "3336bced-d06e-48ea-9f1e-2e196770b0b6",
+			"key": "identityServiceRealm",
+			"value": "springboot",
+			"type": "string",
+			"description": ""
+		},
+		{
+			"id": "bf6982b5-3501-4f70-8db6-02a3c15904d8",
+			"key": "identityServiceClientId",
+			"value": "activiti",
+			"type": "string",
+			"description": ""
+		},
+		{
+			"id": "5caf005e-ddcd-4cc9-a16e-b18d08c2ff27",
+			"key": "testUserUsername",
+			"value": "hruser",
+			"type": "string",
+			"description": ""
+		},
+		{
+			"id": "485a8a73-23d1-42f5-9815-5a92759584c5",
+			"key": "testUserPassword",
+			"value": "password",
+			"type": "string",
+			"description": ""
+		},
+		{
+			"id": "8f464706-ec09-4fbb-90fc-8ef5ebf190b1",
+			"key": "testUserEmail",
+			"value": "test@test.com",
+			"type": "string",
+			"description": ""
+		},
+		{
+			"id": "cee4def3-4450-4746-8260-5571a0d86db6",
+			"key": "apsLocalAdminUser",
+			"value": "admin@app.activiti.com",
+			"type": "string",
+			"description": ""
+		},
+		{
+			"id": "7a2c7318-2700-4457-ab08-9d88ca4cfcf9",
+			"key": "apsLocalAdminPassword",
+			"value": "admin",
+			"type": "string",
+			"description": ""
+		},
+		{
+			"id": "50702bb7-91ab-42f1-aae4-8ee41cbd310c",
+			"key": "moduleVersions",
+			"value": "[{\"moduleName\":\"org_alfresco_module_rm\",\"moduleVersion\":\"2.6.0\"},{\"moduleName\":\"alfresco-aos-module\",\"moduleVersion\":\"1.1.7\"},{\"moduleName\":\"org.alfresco.integrations.google.docs\",\"moduleVersion\":\"3.0.4.2\"},{\"moduleName\":\"org_alfresco_device_sync_repo\",\"moduleVersion\":\"2.2\"},{\"moduleName\":\"alfresco-share-services\",\"moduleVersion\":\"6.0.0\"},{\"moduleName\":\"alfresco-rm-enterprise-repo\",\"moduleVersion\":\"2.6.0\"}]",
+			"type": "string",
+			"description": ""
 		}
 	]
 }

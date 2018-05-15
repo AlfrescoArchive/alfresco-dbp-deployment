@@ -1,13 +1,13 @@
 {
 	"info": {
+		"_postman_id": "00ca703a-a38e-492c-b288-a6b31618045a",
 		"name": "dbp-validate-volume",
-		"_postman_id": "da06ad38-1347-44e6-a4d9-f37f7f4697b0",
 		"description": "This collection will test whether content created is still working when the acs pod is deleted and restarted.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "key cloak token",
+			"name": "Generate key cloak token",
 			"event": [
 				{
 					"listen": "test",
@@ -61,26 +61,25 @@
 					]
 				},
 				"url": {
-					"raw": "http://{{url}}/auth/realms/springboot/protocol/openid-connect/token",
-					"protocol": "http",
+					"raw": "https://{{url}}/auth/realms/alfresco/protocol/openid-connect/token",
+					"protocol": "https",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
 						"auth",
 						"realms",
-						"springboot",
+						"alfresco",
 						"protocol",
 						"openid-connect",
 						"token"
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
 		{
-			"name": "Retrieve HR User Files using token",
+			"name": "Retrieve test user's files using token",
 			"event": [
 				{
 					"listen": "test",
@@ -129,8 +128,8 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://{{url}}/alfresco/api/-default-/public/alfresco/versions/1/nodes/-my-/children?includeSource=true",
-					"protocol": "http",
+					"raw": "https://{{url}}/alfresco/api/-default-/public/alfresco/versions/1/nodes/-my-/children?includeSource=true",
+					"protocol": "https",
 					"host": [
 						"{{url}}"
 					],
@@ -149,12 +148,10 @@
 					"query": [
 						{
 							"key": "includeSource",
-							"value": "true",
-							"equals": true
+							"value": "true"
 						}
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		}

@@ -876,86 +876,86 @@
 	],
 	"variable": [
 		{
-			"id": "1ea9911f-a0b4-4401-b6f8-60af6eee6220",
+			"id": "9fd3960c-c895-4248-b47e-e5b80877c142",
 			"key": "acsUrl",
 			"value": "{{url}}/alfresco",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "53ce5857-3c50-4e36-bce2-22d00b0e99d1",
+			"id": "d9798cdd-842d-422f-aa37-cfc7c0381711",
 			"key": "shareUrl",
 			"value": "{{url}}/share",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "59fdce5c-b46f-4e67-acd2-13765c8c766b",
+			"id": "5e902528-9bcd-4bb0-999d-c932d67c0ea5",
 			"key": "apsUrl",
 			"value": "{{url}}/activiti-app",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "8a4d27d3-894f-4bce-9498-09f24bae2cf1",
+			"id": "c6d57412-9e27-4dcd-8056-85a13d396a59",
 			"key": "identityServiceUrl",
 			"value": "{{url}}/auth",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "64bbe1d7-1fd2-4a6c-abfa-de743b9b9d4e",
+			"id": "8dac89ee-01a6-42e4-a1e2-054aa7e7f98b",
 			"key": "identityServiceRealm",
 			"value": "springboot",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "fadd6945-b2c2-4e8f-8365-5b4f19f1864c",
+			"id": "5e68c97d-cdce-4dc7-8db1-fe41e70d11a8",
 			"key": "identityServiceClientId",
 			"value": "activiti",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "a3e1033f-9b7e-419d-897c-3d0e54ec08e0",
+			"id": "336d473f-cca3-48e7-a93b-f61fa8e07526",
 			"key": "testUserUsername",
 			"value": "hruser",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "0f39ed26-4948-46c2-85fa-678c40b00556",
+			"id": "6b868be0-246d-41a9-a04f-a3e86f07528d",
 			"key": "testUserPassword",
 			"value": "password",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "60b1640c-cde7-49bf-bc56-b3d75bb5c18d",
+			"id": "504ceb37-ff6a-4865-ba51-2c5504298af1",
 			"key": "testUserEmail",
 			"value": "test@test.com",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "ea17b406-b11d-49bc-89db-ae5da529f436",
+			"id": "8d3f0683-f331-4b26-93b4-304eebbd155d",
 			"key": "apsLocalAdminUser",
 			"value": "admin@app.activiti.com",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "a81ae091-8862-4959-a6ea-b9df3177604b",
+			"id": "373deae6-015a-4635-8f22-700bca20c257",
 			"key": "apsLocalAdminPassword",
 			"value": "admin",
 			"type": "string",
 			"description": ""
 		},
 		{
-			"id": "7208fb0d-77bd-449a-a212-c4c62f8bcdbb",
+			"id": "1856603f-c4ed-44d5-84c6-7fb6436d0654",
 			"key": "moduleVersions",
-			"value": "[{\"moduleName\":\"org_alfresco_module_rm\",\"moduleVersion\":\"2.6.0\"},{\"moduleName\":\"alfresco-aos-module\",\"moduleVersion\":\"1.1.7\"},{\"moduleName\":\"org.alfresco.integrations.google.docs\",\"moduleVersion\":\"3.0.4.2\"},{\"moduleName\":\"org_alfresco_device_sync_repo\",\"moduleVersion\":\"2.2\"},{\"moduleName\":\"alfresco-share-services\",\"moduleVersion\":\"6.0.0\"},{\"moduleName\":\"alfresco-rm-enterprise-repo\",\"moduleVersion\":\"2.6.0\"}]",
+			"value": "[{\"moduleName\":\"alfresco-aos-module\",\"moduleVersion\":\"1.1.7\"},{\"moduleName\":\"org.alfresco.integrations.google.docs\",\"moduleVersion\":\"3.0.4.2\"},{\"moduleName\":\"alfresco-share-services\",\"moduleVersion\":\"6.0.0\"}]",
 			"type": "string",
 			"description": ""
 		}

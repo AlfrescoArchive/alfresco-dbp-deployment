@@ -549,7 +549,7 @@
 									"    for (var key in userName) {",
 									"        var obj = modulesArray[key];",
 									"        var id = obj.name;",
-									"        pm.expect(id).to.be.eql(\"hrusertestfile.txt\");",
+									"        pm.expect(id).to.be.eql(\"testusertestfile.txt\");",
 									"    }",
 									"});"
 								]

@@ -108,8 +108,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://{{url}}/alfresco/api/discovery",
-							"protocol": "http",
+							"raw": "https://{{url}}/alfresco/api/discovery",
+							"protocol": "https",
 							"host": [
 								"{{url}}"
 							],
@@ -180,8 +180,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://{{url}}/share/page/modules/deploy",
-							"protocol": "http",
+							"raw": "https://{{url}}/share/page/modules/deploy",
+							"protocol": "https",
 							"host": [
 								"{{url}}"
 							],
@@ -248,8 +248,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://{{url}}/share/res/components/documentlibrary/actions/google-edit-flat-16.png",
-							"protocol": "http",
+							"raw": "https://{{url}}/share/res/components/documentlibrary/actions/google-edit-flat-16.png",
+							"protocol": "https",
 							"host": [
 								"{{url}}"
 							],
@@ -327,8 +327,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://{{url}}/alfresco/s/api/solrstats",
-							"protocol": "http",
+							"raw": "https://{{url}}/alfresco/s/api/solrstats",
+							"protocol": "https",
 							"host": [
 								"{{url}}"
 							],
@@ -382,7 +382,7 @@
 							"urlencoded": [
 								{
 									"key": "client_id",
-									"value": "activiti",
+									"value": "alfresco",
 									"type": "text"
 								},
 								{
@@ -392,7 +392,7 @@
 								},
 								{
 									"key": "username",
-									"value": "hruser",
+									"value": "testuser",
 									"type": "text"
 								},
 								{
@@ -403,7 +403,7 @@
 							]
 						},
 						"url": {
-							"raw": "http://{{url}}/auth/realms/springboot/protocol/openid-connect/token",
+							"raw": "http://{{url}}/auth/realms/alfresco/protocol/openid-connect/token",
 							"protocol": "http",
 							"host": [
 								"{{url}}"
@@ -411,7 +411,7 @@
 							"path": [
 								"auth",
 								"realms",
-								"springboot",
+								"alfresco",
 								"protocol",
 								"openid-connect",
 								"token"
@@ -427,7 +427,7 @@
 			"description": null,
 			"item": [
 				{
-					"name": "Retrieve HR User Profile using token",
+					"name": "Retrieve testuser Profile using token",
 					"event": [
 						{
 							"listen": "test",
@@ -446,14 +446,14 @@
 									"pm.test(\"validateUserName\", function () {",
 									"    var jsonData = pm.response.json();",
 									"    var userName= jsonData.entry.firstName;",
-									"    pm.expect(userName).to.be.eql(\"hruser\");",
+									"    pm.expect(userName).to.be.eql(\"testuser\");",
 									"        ",
 									"});",
 									"",
 									"pm.test(\"validateid\", function () {",
 									"    var jsonData = pm.response.json();",
 									"    var id= jsonData.entry.id;",
-									"    pm.expect(id).to.be.eql(\"hruser\");",
+									"    pm.expect(id).to.be.eql(\"testuser\");",
 									"        ",
 									"});"
 								]
@@ -494,7 +494,7 @@
 					"response": []
 				},
 				{
-					"name": "Create Content using HR user",
+					"name": "Create Content using testuser",
 					"event": [
 						{
 							"listen": "test",
@@ -509,7 +509,7 @@
 									"pm.test(\"validateUserName\", function () {",
 									"    var jsonData = pm.response.json();",
 									"    var userName= jsonData.entry.createdByUser.id;",
-									"    pm.expect(userName).to.be.eql(\"hruser\");",
+									"    pm.expect(userName).to.be.eql(\"testuser\");",
 									"        ",
 									"});"
 								]
@@ -526,7 +526,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\":\"hrusertestfile.txt\",\n  \"nodeType\":\"cm:content\"\n}"
+							"raw": "{\n  \"name\":\"testusertestfile.txt\",\n  \"nodeType\":\"cm:content\"\n}"
 						},
 						"url": {
 							"raw": "http://{{url}}/alfresco/api/-default-/public/alfresco/versions/1/nodes/-my-/children",
@@ -551,7 +551,7 @@
 					"response": []
 				},
 				{
-					"name": "Retrieve HR User Files using token",
+					"name": "Retrieve testuser Files using token",
 					"event": [
 						{
 							"listen": "test",
@@ -569,7 +569,7 @@
 									"    for (var key in modulesArray) {",
 									"        var obj = modulesArray[key];",
 									"        var id = obj.id;",
-									"        pm.expect(id).to.be.eql(\"hruser\");",
+									"        pm.expect(id).to.be.eql(\"testuser\");",
 									"    }",
 									"",
 									"});",
@@ -580,7 +580,7 @@
 									"    for (var key in userName) {",
 									"        var obj = modulesArray[key];",
 									"        var id = obj.name;",
-									"        pm.expect(id).to.be.eql(\"hrusertestfile.txt\");",
+									"        pm.expect(id).to.be.eql(\"testusertestfile.txt\");",
 									"    }",
 									"});"
 								]
@@ -814,8 +814,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://{{url}}/activiti-app/api/enterprise/app-version",
-							"protocol": "http",
+							"raw": "https://{{url}}/activiti-app/api/enterprise/app-version",
+							"protocol": "https",
 							"host": [
 								"{{url}}"
 							],

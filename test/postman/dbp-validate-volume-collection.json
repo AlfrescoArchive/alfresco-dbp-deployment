@@ -40,7 +40,7 @@
 					"urlencoded": [
 						{
 							"key": "client_id",
-							"value": "activiti",
+							"value": "alfresco",
 							"type": "text"
 						},
 						{
@@ -50,7 +50,7 @@
 						},
 						{
 							"key": "username",
-							"value": "hruser",
+							"value": "testuser",
 							"type": "text"
 						},
 						{
@@ -61,7 +61,7 @@
 					]
 				},
 				"url": {
-					"raw": "http://{{url}}/auth/realms/springboot/protocol/openid-connect/token",
+					"raw": "http://{{url}}/auth/realms/alfresco/protocol/openid-connect/token",
 					"protocol": "http",
 					"host": [
 						"{{url}}"
@@ -69,7 +69,7 @@
 					"path": [
 						"auth",
 						"realms",
-						"springboot",
+						"alfresco",
 						"protocol",
 						"openid-connect",
 						"token"
@@ -80,7 +80,7 @@
 			"response": []
 		},
 		{
-			"name": "Retrieve HR User Files using token",
+			"name": "Retrieve testuser Files using token",
 			"event": [
 				{
 					"listen": "test",
@@ -98,7 +98,7 @@
 							"    for (var key in modulesArray) {",
 							"        var obj = modulesArray[key];",
 							"        var id = obj.id;",
-							"        pm.expect(id).to.be.eql(\"hruser\");",
+							"        pm.expect(id).to.be.eql(\"testuser\");",
 							"    }",
 							"",
 							"});",
@@ -109,7 +109,7 @@
 							"    for (var key in userName) {",
 							"        var obj = modulesArray[key];",
 							"        var id = obj.name;",
-							"        pm.expect(id).to.be.eql(\"hrusertestfile.txt\");",
+							"        pm.expect(id).to.be.eql(\"testusertestfile.txt\");",
 							"    }",
 							"});"
 						]

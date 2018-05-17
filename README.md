@@ -175,7 +175,11 @@ curl -v --insecure https://$ELBADDRESS/
 
 ### 5. EFS Storage
 
-Create an EFS storage on AWS and make sure it is in the same VPC as your cluster. Make sure you open inbound traffic in the security group to allow NFS traffic. Save the name of the server ex:
+Create an [EFS storage](https://docs.aws.amazon.com/efs/latest/ug/creating-using-create-fs.html) on AWS and make sure 
+it is in the same VPC as your cluster. Make sure you [open inbound traffic](https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_SecurityGroups.html) 
+in the security group to allow NFS traffic. 
+
+Save the name of the server ex:
 ```bash
 export NFSSERVER=fs-d660549f.efs.us-east-1.amazonaws.com
 ```

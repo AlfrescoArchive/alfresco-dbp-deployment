@@ -13,19 +13,16 @@ The Alfresco Digital Business Platform Deployment requires:
 
 Any variation from these technologies and versions may affect the end result. If you do experience any issues please let us know through our [Gitter channel](https://gitter.im/Alfresco/platform-services?utm_source=share-link&utm_medium=link&utm_campaign=share-link).
 
-*Note*: You do not need to clone this repo to deploy the dbp.
+*Note:* You do not need to clone this repo to deploy the dbp.
+
+*Note:* [Minikube deployments](README-minikube.md) currently aren't officially supported by Alfresco. Minikube version listed above is for information purposes only.
 
 ### Kubernetes Cluster
 
-You can choose to deploy the infrastructure to a local kubernetes cluster (illustrated using minikube) or you can choose to deploy to the cloud (illustrated using AWS).
-Please check the Anaxes Shipyard documentation on [running a cluster](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/docs/running-a-cluster.md).
+For mode information please check the Anaxes Shipyard documentation on [running a cluster](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/docs/running-a-cluster.md).
 
-Note the resource requirements:
-* Minikube: At least 12 gigs of memory, i.e.:
-```bash
-minikube start --memory 12000
-```
-* AWS: A VPC and cluster with 5 nodes. Each node should be a m4.xlarge EC2 instance.
+Resource requirements for AWS: 
+* A VPC and cluster with 5 nodes. Each node should be a m4.xlarge EC2 instance.
 
 ### Helm Tiller
 
@@ -157,29 +154,22 @@ helm install stable/nginx-ingress --version=0.12.3 -f ingressvalues.yaml \
 export INGRESSRELEASE=knobby-wolf
 ```
 
-### 3. Wait for the nginx-ingress-controller release to get deployed (When checking status your pod should be READY 1/1):
+### 3. Wait for the nginx-ingress-controller release to get deployed:
 ```bash
 helm status $INGRESSRELEASE
 ```
 
-### 4. (**NOTE! ONLY FOR MINIKUBE**) Get the nginx-ingress-controller port for the infrastructure :
-```bash
-export INFRAPORT=$(kubectl get service $INGRESSRELEASE-nginx-ingress-controller --namespace $DESIREDNAMESPACE -o jsonpath={.spec.ports[0].nodePort})
-```
+*Note:* When checking status your pod should be ```READY 1/1```
 
-### 5. Get Minikube or ELB IP and set it as a variable for future use:
+### 4. Get ELB IP and set it as a variable for future use:
 
 ```bash
-#ON MINIKUBE
-export ELBADDRESS=$(minikube ip)
-
-#ON AWS
 export ELBADDRESS=$(kubectl get services $INGRESSRELEASE-nginx-ingress-controller --namespace=$DESIREDNAMESPACE -o jsonpath={.status.loadBalancer.ingress[0].hostname})
 ```
 
-### 6. EFS Storage (**NOTE! ONLY FOR AWS!**)
+### 5. EFS Storage
 
-Create a EFS storage on AWS and make sure it is in the same VPC as your cluster. Make sure you open inbound traffic in the security group to allow NFS traffic. Save the name of the server ex:
+Create an EFS storage on AWS and make sure it is in the same VPC as your cluster. Make sure you open inbound traffic in the security group to allow NFS traffic. Save the name of the server ex:
 ```bash
 export NFSSERVER=fs-d660549f.efs.us-east-1.amazonaws.com
 ```
@@ -193,22 +183,13 @@ For more Information on Reclaim Policies checkout the official K8S documentation
 
 We don't advise you to use the same EFS instance for persisting the data from multiple dbp deployments.
 
-### 7. Add the Alfresco Kubernetes repository to helm.
+### 6. Add the Alfresco Kubernetes repository to helm.
 
 ```helm repo add alfresco-incubator http://kubernetes-charts.alfresco.com/incubator```
 
-### 8. Deploy the DBP
+### 7. Deploy the DBP
 
 ```bash
-
-#On MINIKUBE
-helm install alfresco-incubator/alfresco-dbp \
---set alfresco-infrastructure.alfresco-api-gateway.keycloakURL="http://$ELBADDRESS:$INFRAPORT/auth/" \
---set alfresco-infrastructure.alfresco-identity-service.ingressHostName="$ELBADDRESS:$INFRAPORT" \
---set alfresco-content-services.repository.environment.IDENTITY_SERVICE_URI="http://$ELBADDRESS:$INFRAPORT/auth" \
---namespace=$DESIREDNAMESPACE
-
-#On AWS
 # Remember to use https here if you have a trusted certificate set on the ingress
 helm install alfresco-incubator/alfresco-dbp \
 --set alfresco-infrastructure.alfresco-api-gateway.keycloakURL="http://$ELBADDRESS/auth/" \
@@ -223,14 +204,15 @@ You can either deploy the dbp fully or choose the components you need for your s
 By default the dbp chart will deploy fully.
 
 To disable specific components you can set the following values to false when deploying:
-
+```bash 
 alfresco-content-services.enabled
 alfresco-process-services.enabled
 alfresco-sync-service.enabled
+```
 
+Example: For disabling sync-service you will need to append the following subcommand to the helm install command:
 ```bash
-#example: For disabling sync-service you will need to append the following subcommand to the helm install command:
- --set alfresco-sync-service.enabled=false 
+--set alfresco-sync-service.enabled=false 
 ```
 
 ### 9. Get the DBP release name from the previous command and set it as a variable:
@@ -244,16 +226,6 @@ export DBPRELEASE=littering-lizzard
 ```bash
 helm status $INGRESSRELEASE
 helm status $DBPRELEASE
-
-#On MINIKUBE: Open Alfresco Repository in Browser
-open http://$ELBADDRESS:`kubectl get service $DBPRELEASE-alfresco-content-services-repository -o jsonpath={.spec.ports[0].nodePort} --namespace $DESIREDNAMESPACE `/alfresco
-
-#On MINIKUBE: Open Alfresco Share in Browser
-open http://$ELBADDRESS:`kubectl get service $DBPRELEASE-alfresco-content-services-share -o jsonpath={.spec.ports[0].nodePort} --namespace $DESIREDNAMESPACE `/share
-
-#On MINIKUBE: Open Alfresco Process Services in Browser
-open http://$ELBADDRESS:`kubectl get service $DBPRELEASE-alfresco-process-services -o jsonpath={.spec.ports[0].nodePort} --namespace $DESIREDNAMESPACE `/activiti-app
-
 ```
 
 If you want to see the full list of values that have been applied to the deployment you can run:
@@ -270,10 +242,6 @@ helm delete --purge $DBPRELEASE
 kubectl delete namespace $DESIREDNAMESPACE
 ```
 Depending on your cluster type you should be able to also delete it if you want.
-For minikube you can just run to delete the whole minikube vm.
-```bash
-minikube delete
-```
 
 For more information on running and tearing down k8s environments, follow this [guide](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/docs/running-a-cluster.md).
 

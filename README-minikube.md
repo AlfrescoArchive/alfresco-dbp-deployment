@@ -137,10 +137,12 @@ helm install stable/nginx-ingress --version=0.12.3 -f ingressvalues.yaml \
 export INGRESSRELEASE=knobby-wolf
 ```
 
-### 3. Wait for the nginx-ingress-controller release to get deployed (When checking status your pod should be READY 1/1):
+### 3. Wait for the nginx-ingress-controller release to get deployed:
 ```bash
 helm status $INGRESSRELEASE
 ```
+
+*Note:* When checking status, your pods should be ```READY 1/1```
 
 ### 4. Get the nginx-ingress-controller port for the infrastructure :
 ```bash

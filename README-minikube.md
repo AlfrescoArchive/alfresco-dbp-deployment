@@ -173,7 +173,7 @@ You can either deploy the dbp fully or choose the components you need for your s
 By default the dbp chart will deploy fully.
 
 To disable specific components you can set the following values to false when deploying:
-```bash
+```
 alfresco-content-services.enabled
 alfresco-process-services.enabled
 alfresco-sync-service.enabled

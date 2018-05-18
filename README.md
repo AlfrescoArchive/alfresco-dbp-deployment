@@ -9,7 +9,6 @@ The Alfresco Digital Business Platform Deployment requires:
 | [Docker](https://docs.docker.com/)     | 17.0.9.1 |
 | [Kubernetes](https://kubernetes.io/docs/tutorials/kubernetes-basics/) | 1.8.4    |
 | [Helm](https://docs.helm.sh/using_helm/#quickstart-guide)       | 2.8.2    |
-| [Minikube](https://kubernetes.io/docs/getting-started-guides/minikube/)   | 0.25.0   |
 
 Any variation from these technologies and versions may affect the end result. If you do experience any issues please let us know through our [Gitter channel](https://gitter.im/Alfresco/platform-services?utm_source=share-link&utm_medium=link&utm_campaign=share-link).
 
@@ -214,7 +213,7 @@ You can either deploy the dbp fully or choose the components you need for your s
 By default the dbp chart will deploy fully.
 
 To disable specific components you can set the following values to false when deploying:
-```bash 
+```
 alfresco-content-services.enabled
 alfresco-process-services.enabled
 alfresco-sync-service.enabled

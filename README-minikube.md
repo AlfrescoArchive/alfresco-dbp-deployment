@@ -12,12 +12,14 @@ document for details about supported platforms.
 
 The Alfresco Digital Business Platform Deployment requires:
 
-| Component        | Recommended version |
-| ---------------- |:-------------:|
-| [Docker](https://docs.docker.com/)     | 17.0.9.1 |
-| [Kubernetes](https://kubernetes.io/docs/tutorials/kubernetes-basics/) | 1.8.4    |
-| [Helm](https://docs.helm.sh/using_helm/#quickstart-guide)       | 2.8.2    |
-| [Minikube](https://kubernetes.io/docs/getting-started-guides/minikube/)   | 0.25.0   |
+| Component   | Recommended version | Getting Started Guide |
+| ------------|:-----------: | ---------------------- |
+| Docker      | 17.0.9.1     | https://docs.docker.com/ |
+| Kubernetes  | 1.8.4        | https://kubernetes.io/docs/tutorials/kubernetes-basics/ |
+| Kubectl     | 1.8.4        | https://kubernetes.io/docs/tasks/tools/install-kubectl/ |
+| Helm        | 2.8.2        | https://docs.helm.sh/using_helm/#quickstart-guide |
+| Kops        | 1.8.1        | https://github.com/kubernetes/kops/blob/master/docs/aws.md |
+| Minikube    | 0.25.0       | https://kubernetes.io/docs/getting-started-guides/minikube/ |
 
 Any variation from these technologies and versions may affect the end result. If you do experience any issues please let us know through our [Gitter channel](https://gitter.im/Alfresco/platform-services?utm_source=share-link&utm_medium=link&utm_campaign=share-link).
 

@@ -192,7 +192,7 @@ For more Information on Reclaim Policies checkout the official K8S documentation
 
 We don't advise you to use the same EFS instance for persisting the data from multiple dbp deployments.
 
-### 6. Add the Alfresco Kubernetes repository to helm.
+### 6. Add the Alfresco Helm repository to helm
 
 ```helm repo add alfresco-incubator http://kubernetes-charts.alfresco.com/incubator```
 

@@ -157,7 +157,7 @@ export INFRAPORT=$(kubectl get service $INGRESSRELEASE-nginx-ingress-controller 
 export ELBADDRESS=$(minikube ip)
 ```
 
-### 6. Add the Alfresco Kubernetes repository to helm.
+### 6. Add the Alfresco Helm repository to helm
 
 ```helm repo add alfresco-incubator http://kubernetes-charts.alfresco.com/incubator```
 

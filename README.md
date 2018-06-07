@@ -148,7 +148,7 @@ helm install stable/nginx-ingress --version=0.12.3 -f ingressvalues.yaml \
 
 ```
 
-### 2. Get the nginx-ingress-controller release name from the previous command and set it as a varible:
+### 2. Get the nginx-ingress-controller release name from the previous command and set it as a variable:
 ```bash
 export INGRESSRELEASE=knobby-wolf
 ```

@@ -1,5 +1,5 @@
 name: alfresco-dbp
-version: 0.5.0
+version: 0.6.0
 description: A Helm chart for the Alfresco Digital Business Platform
 keywords:
 - alfresco
@@ -7,4 +7,4 @@ keywords:
 - platform
 home: https://www.alfresco.com/platform
 maintainers:
-- name: Alfresco Platform Services Team 
+- name: Alfresco Platform Services Team

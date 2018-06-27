@@ -211,6 +211,7 @@ helm install alfresco-incubator/alfresco-dbp \
 --set alfresco-infrastructure.persistence.efs.enabled=true \
 --set alfresco-infrastructure.persistence.efs.dns="$NFSSERVER" \
 --set alfresco-content-services.externalHost="$ELBADDRESS" \
+--set alfresco-content-services.networkpolicysetting.enabled=false \
 --set alfresco-content-services.repository.environment.IDENTITY_SERVICE_URI="http://$ELBADDRESS/auth" \
 --namespace=$DESIREDNAMESPACE
 ```

@@ -36,6 +36,9 @@ alfresco-content-services:
       JAVA_OPTS: " -Dsolr.base.url=/solr
         -Dsolr.secureComms=none
         -Dindex.subsystem.name=solr6
+        -Dalfresco.cluster.enabled=true
+        -Ddeployment.method=HELM_CHART
+        -Xms2000M -Xmx2000M
         -Ddsync.service.uris=\"$SYNC_SERVICE_URI\"
         -Dmessaging.broker.url=\"failover:(tcp://${ACTIVEMQ_HOST}:61616)?timeout=3000\"
         -Dauthentication.chain=identity-service1:identity-service,alfrescoNtlm1:alfrescoNtlm

@@ -172,6 +172,12 @@ Note: there may be a short delay before the ingress controller starts listening 
 curl -v --insecure https://$ELBADDRESS/
 ```
 
+Note: If you use AWS route53 deployment on the Ingress chart then your ELBADDRESS will be your route53 entry $DESIREDNAMESPACE.YourDNSZone
+
+```bash
+export ELBADDRESS=$DESIREDNAMESPACE.YourDNSZone
+```
+
 ### 5. EFS Storage
 
 Create an [EFS storage](https://docs.aws.amazon.com/efs/latest/ug/creating-using-create-fs.html) on AWS and make sure 
@@ -204,7 +210,8 @@ helm install alfresco-incubator/alfresco-dbp \
 --set alfresco-infrastructure.alfresco-api-gateway.keycloakURL="http://$ELBADDRESS/auth/" \
 --set alfresco-infrastructure.persistence.efs.enabled=true \
 --set alfresco-infrastructure.persistence.efs.dns="$NFSSERVER" \
---set alfresco-infrastructure.alfresco-identity-service.ingressHostName="$ELBADDRESS" \
+--set alfresco-content-services.externalHost="$ELBADDRESS" \ 
+--set alfresco-content-services.networkpolicysetting.enabled=false \
 --set alfresco-content-services.repository.environment.IDENTITY_SERVICE_URI="http://$ELBADDRESS/auth" \
 --namespace=$DESIREDNAMESPACE
 ```

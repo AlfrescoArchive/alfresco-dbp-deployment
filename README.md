@@ -104,14 +104,14 @@ We don't advise you to use the same EFS instance for persisting the data from mu
 
 ```helm repo add alfresco-incubator http://kubernetes-charts.alfresco.com/incubator```
 
-### 4. Define a variable for your Route53 entry that you will use for the deployment
+### 3. Define a variable for your Route53 entry that you will use for the deployment
 
 ```bash
 export ELB_CNAME="YourDesiredCname.YourRoute53DnsZone"
 #example export ELB_CNAME="alfresco.example.com"
 ```
 
-### 5. Deploy the DBP
+### 4. Deploy the DBP
 
 ```bash
 # Remember to use https here if you have a trusted certificate set on the ingress
@@ -141,20 +141,20 @@ Example: For disabling sync-service you will need to append the following subcom
 --set alfresco-sync-service.enabled=false 
 ```
 
-### 6. Get the DBP release name from the previous command and set it as a variable:
+### 5. Get the DBP release name from the previous command and set it as a variable:
 
 ```bash
 export DBPRELEASE=littering-lizzard
 ```
 
-### 7. Get ELB IP and copy it for linking the ELB in AWS Route53:
+### 6. Get ELB IP and copy it for linking the ELB in AWS Route53:
 
 ```bash
 export ELBADDRESS=$(kubectl get services $DBPRELEASE-nginx-ingress-controller --namespace=$DESIREDNAMESPACE -o jsonpath={.status.loadBalancer.ingress[0].hostname})
 echo $ELBADDRESS
 ```
 
-### 8. Create a Route 53 Record Set in your Hosted Zone
+### 7. Create a Route 53 Record Set in your Hosted Zone
 
 * Go to **AWS Management Console** and open the **Route 53** console.
 * Click **Hosted Zones** in the left navigation panel, then **Create Record Set**.
@@ -164,7 +164,7 @@ echo $ELBADDRESS
 
 You may need to wait a couple of minutes before the record set propagates around the world.
 
-### 9. Checkout the status of your DBP deployment:
+### 8. Checkout the status of your DBP deployment:
 
 *Note:* When checking status, your pods should be ```READY 1/1```
 
@@ -178,7 +178,7 @@ If you want to see the full list of values that have been applied to the deploym
 helm get values -a $DBPRELEASE
 ```
 
-### 10. Teardown:
+### 9. Teardown:
 
 ```bash
 helm delete --purge $DBPRELEASE

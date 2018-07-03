@@ -6,7 +6,7 @@ dependencies:
   - name: alfresco-content-services
     version: 1.0.0
     condition: alfresco-content-services.enabled
-    repository: http://kubernetes-charts.alfresco.com/incubator
+    repository: http://kubernetes-charts.alfresco.com/stable
   - name: alfresco-sync-service
     version: ^0.1.0
     condition: alfresco-sync-service.enabled

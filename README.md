@@ -72,113 +72,15 @@ kubectl create -f secrets.yaml --namespace $DESIREDNAMESPACE
 
 *Note*: Make sure the $DESIREDNAMESPACE variable has been set when the infrastructure chart was deployed so that the secret gets created in the same namespace.
 
+### Ingress Customization
+
+For routing the components of the DBP deployment outside the k8s cluster we use [nginx-ingress](https://github.com/kubernetes/charts/tree/master/stable/nginx-ingress). For your deployment to function properly you must have a route53 DNSZone and you will need to create a route53 record set in the following steps.
+
+For more options on configuring the ingress controller that is deployed trough the alfresco-infrastructure chart please check the [Alfresco Infrastructure](https://github.com/Alfresco/alfresco-infrastructure-deployment/tree/DEPLOY-456#nginx-ingress-custom-configuration) chart Readme.
+
 ## Deployment
 
-### 1. Install the nginx-ingress-controller
-
-Install the nginx-ingress-controller into your cluster
-```bash
-helm repo update
-
-cat <<EOF > ingressvalues.yaml
-controller:
-  config:
-    ssl-redirect: "false"
-  scope:
-    enabled: true
-    namespace: $DESIREDNAMESPACE
-EOF
-
-helm install stable/nginx-ingress --version=0.12.3 -f ingressvalues.yaml \
---namespace $DESIREDNAMESPACE
-```
-
-
-** !Optional **
-
-If you want your own certificate set here you should create a secret from your cert files:
-
-```bash
-kubectl create secret tls certsecret --key /tmp/tls.key --cert /tmp/tls.crt --namespace $DESIREDNAMESPACE
-```
-
-Then deploy the ingress with following settings
-```bash
-cat <<EOF > ingressvalues.yaml
-controller:
-  config:
-    ssl-redirect: "false"
-  scope:
-    enabled: true
-    namespace: $DESIREDNAMESPACE
-  publishService:
-    enabled: true
-  extraArgs:
-    default-ssl-certificate: $DESIREDNAMESPACE/certsecret
-EOF
-
-helm install stable/nginx-ingress --version=0.12.3 -f ingressvalues.yaml \
---namespace $DESIREDNAMESPACE
-```
-
-Or you can add an AWS generated certificate if you want and autogenerate a route53 entry
-
-```bash
-cat <<EOF > ingressvalues.yaml
-controller:
-  config:
-    ssl-redirect: "false"
-  scope:
-    enabled: true
-    namespace: $DESIREDNAMESPACE
-  publishService:
-    enabled: true
-  service:
-    targetPorts:
-      https: 80
-    annotations:
-      service.beta.kubernetes.io/aws-load-balancer-ssl-cert: #sslcert ARN -> https://github.com/kubernetes/kubernetes/blob/master/pkg/cloudprovider/providers/aws/aws.go
-      service.beta.kubernetes.io/aws-load-balancer-ssl-ports: https
-      # External dns will help you autogenerate an entry in route53 for your cluster. More info here -> https://github.com/kubernetes-incubator/external-dns
-      external-dns.alpha.kubernetes.io/hostname: $DESIREDNAMESPACE.YourDNSZone
-EOF
-
-helm install stable/nginx-ingress --version=0.12.3 -f ingressvalues.yaml \
---namespace $DESIREDNAMESPACE
-
-```
-
-### 2. Get the nginx-ingress-controller release name from the previous command and set it as a variable:
-```bash
-export INGRESSRELEASE=knobby-wolf
-```
-
-### 3. Wait for the nginx-ingress-controller release to get deployed:
-```bash
-helm status $INGRESSRELEASE
-```
-
-*Note:* When checking status, your pods should be ```READY 1/1```
-
-### 4. Get ELB IP and set it as a variable for future use:
-
-```bash
-export ELBADDRESS=$(kubectl get services $INGRESSRELEASE-nginx-ingress-controller --namespace=$DESIREDNAMESPACE -o jsonpath={.status.loadBalancer.ingress[0].hostname})
-```
-
-Note: there may be a short delay before the ingress controller starts listening on ```$ELBADDRESS```. You can use the ```curl``` command to check whether it is available:
-
-```bash
-curl -v --insecure https://$ELBADDRESS/
-```
-
-Note: If you use AWS route53 deployment on the Ingress chart then your ELBADDRESS will be your route53 entry $DESIREDNAMESPACE.YourDNSZone
-
-```bash
-export ELBADDRESS=$DESIREDNAMESPACE.YourDNSZone
-```
-
-### 5. EFS Storage
+### 1. EFS Storage
 
 Create an [EFS storage](https://docs.aws.amazon.com/efs/latest/ug/creating-using-create-fs.html) on AWS and make sure 
 it is in the same VPC as your cluster. Make sure you [open inbound traffic](https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_SecurityGroups.html) 
@@ -198,21 +100,28 @@ For more Information on Reclaim Policies checkout the official K8S documentation
 
 We don't advise you to use the same EFS instance for persisting the data from multiple dbp deployments.
 
-### 6. Add the Alfresco Helm repository to helm
+### 2. Add the Alfresco Helm repository to helm
 
 ```helm repo add alfresco-incubator http://kubernetes-charts.alfresco.com/incubator```
 
-### 7. Deploy the DBP
+### 3. Define a variable for your Route53 entry that you will use for the deployment
+
+```bash
+export ELB_CNAME="YourDesiredCname.YourRoute53DnsZone"
+#example export ELB_CNAME="alfresco.example.com"
+```
+
+### 4. Deploy the DBP
 
 ```bash
 # Remember to use https here if you have a trusted certificate set on the ingress
 helm install alfresco-incubator/alfresco-dbp \
---set alfresco-infrastructure.alfresco-api-gateway.keycloakURL="http://$ELBADDRESS/auth/" \
+--set alfresco-infrastructure.alfresco-api-gateway.keycloakURL="http://$ELB_CNAME/auth/" \
 --set alfresco-infrastructure.persistence.efs.enabled=true \
---set alfresco-infrastructure.persistence.efs.dns="$NFSSERVER" \
---set alfresco-content-services.externalHost="$ELBADDRESS" \ 
+--set alfresco-infrastructure.persistence.efs.dns="$ELB_CNAME" \
+--set alfresco-content-services.externalHost="$ELB_CNAME" \
 --set alfresco-content-services.networkpolicysetting.enabled=false \
---set alfresco-content-services.repository.environment.IDENTITY_SERVICE_URI="http://$ELBADDRESS/auth" \
+--set alfresco-content-services.repository.environment.IDENTITY_SERVICE_URI="http://$ELB_CNAME/auth" \
 --namespace=$DESIREDNAMESPACE
 ```
 
@@ -224,6 +133,7 @@ To disable specific components you can set the following values to false when de
 alfresco-content-services.enabled
 alfresco-process-services.enabled
 alfresco-sync-service.enabled
+alfresco-infrastructure.nginx-ingress.enabled
 ```
 
 Example: For disabling sync-service you will need to append the following subcommand to the helm install command:
@@ -231,16 +141,34 @@ Example: For disabling sync-service you will need to append the following subcom
 --set alfresco-sync-service.enabled=false 
 ```
 
-### 9. Get the DBP release name from the previous command and set it as a variable:
+### 5. Get the DBP release name from the previous command and set it as a variable:
 
 ```bash
 export DBPRELEASE=littering-lizzard
 ```
 
-### 10. Checkout the status of your DBP deployment:
+### 6. Get ELB IP and copy it for linking the ELB in AWS Route53:
 
 ```bash
-helm status $INGRESSRELEASE
+export ELBADDRESS=$(kubectl get services $DBPRELEASE-nginx-ingress-controller --namespace=$DESIREDNAMESPACE -o jsonpath={.status.loadBalancer.ingress[0].hostname})
+echo $ELBADDRESS
+```
+
+### 7. Create a Route 53 Record Set in your Hosted Zone
+
+* Go to **AWS Management Console** and open the **Route 53** console.
+* Click **Hosted Zones** in the left navigation panel, then **Create Record Set**.
+* In the **Name** field, enter your "`$ELB_CNAME`" defined in step 4.
+* In the **Alias Target**, select your ELB address ("`$ELBADDRESS`").
+* Click **Create**.
+
+You may need to wait a couple of minutes before the record set propagates around the world.
+
+### 8. Checkout the status of your DBP deployment:
+
+*Note:* When checking status, your pods should be ```READY 1/1```
+
+```bash
 helm status $DBPRELEASE
 ```
 
@@ -250,10 +178,9 @@ If you want to see the full list of values that have been applied to the deploym
 helm get values -a $DBPRELEASE
 ```
 
-### 11. Teardown:
+### 9. Teardown:
 
 ```bash
-helm delete --purge $INGRESSRELEASE
 helm delete --purge $DBPRELEASE
 kubectl delete namespace $DESIREDNAMESPACE
 ```

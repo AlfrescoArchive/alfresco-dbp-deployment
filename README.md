@@ -76,7 +76,7 @@ kubectl create -f secrets.yaml --namespace $DESIREDNAMESPACE
 
 For routing the components of the DBP deployment outside the k8s cluster we use [nginx-ingress](https://github.com/kubernetes/charts/tree/master/stable/nginx-ingress). For your deployment to function properly you must have a route53 DNSZone and you will need to create a route53 record set in the following steps.
 
-For more options on configuring the ingress controller that is deployed trough the alfresco-infrastructure chart please check the [Alfresco Infrastructure](https://github.com/Alfresco/alfresco-infrastructure-deployment/tree/DEPLOY-456#nginx-ingress-custom-configuration) chart Readme.
+For more options on configuring the ingress controller that is deployed through the alfresco-infrastructure chart, please check the [Alfresco Infrastructure](https://github.com/Alfresco/alfresco-infrastructure-deployment) chart Readme.
 
 ## Deployment
 

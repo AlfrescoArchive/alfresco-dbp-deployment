@@ -18,7 +18,7 @@ Any variation from these technologies and versions may affect the end result. If
 
 ### Kubernetes Cluster
 
-For mode information please check the Anaxes Shipyard documentation on [running a cluster](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/docs/running-a-cluster.md).
+For more information please check the Anaxes Shipyard documentation on [running a cluster](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/docs/running-a-cluster.md).
 
 Resource requirements for AWS: 
 * A VPC and cluster with 5 nodes. Each node should be a m4.xlarge EC2 instance.

@@ -23,7 +23,8 @@ If you are using the default dbp setup you can access all components as follows:
   Content: {{ index .Values "alfresco-content-services" "repository" "environment" "IDENTITY_SERVICE_URI" | trimSuffix "/" | trimSuffix "/auth" }}/alfresco
   Share: {{ index .Values "alfresco-content-services" "repository" "environment" "IDENTITY_SERVICE_URI" | trimSuffix "/" | trimSuffix "/auth" }}/share
   Solr: {{ index .Values "alfresco-content-services" "repository" "environment" "IDENTITY_SERVICE_URI" | trimSuffix "/" | trimSuffix "/auth" }}/solr
-  Process: {{ index .Values "alfresco-content-services" "repository" "environment" "IDENTITY_SERVICE_URI" | trimSuffix "/" | trimSuffix "/auth" }}/activiti-app
+  APS: {{ index .Values "alfresco-content-services" "repository" "environment" "IDENTITY_SERVICE_URI" | trimSuffix "/" | trimSuffix "/auth" }}/activiti-app
+  APS Admin: {{ index .Values "alfresco-content-services" "repository" "environment" "IDENTITY_SERVICE_URI" | trimSuffix "/" | trimSuffix "/auth" }}/activiti-admin
   API Gateway: {{ index .Values "alfresco-content-services" "repository" "environment" "IDENTITY_SERVICE_URI" | trimSuffix "/" | trimSuffix "/auth" }}/
   Keycloak: {{ index .Values "alfresco-content-services" "repository" "environment" "IDENTITY_SERVICE_URI" | trimSuffix "/" | trimSuffix "/auth" }}/auth/
 

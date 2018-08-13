@@ -7,6 +7,9 @@ alfresco-process-services:
   enabled: true
   alfresco-infrastructure:
     enabled: false
+  activiti_env:
+    IDENTITY_SERVICE_ENABLED: true
+    IDENTITY_SERVICE_AUTH: "<ingresscontrollerurl>/auth"
   resources:
     requests:
       memory: "2000Mi"

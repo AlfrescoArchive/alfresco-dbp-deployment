@@ -1,5 +1,5 @@
 name: alfresco-dbp
-version: 0.7.0
+version: 0.7.1
 description: A Helm chart for the Alfresco Digital Business Platform
 keywords:
 - alfresco

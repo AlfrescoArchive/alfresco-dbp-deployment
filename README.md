@@ -122,7 +122,7 @@ helm install alfresco-incubator/alfresco-dbp \
 --set alfresco-content-services.externalHost="$ELB_CNAME" \
 --set alfresco-content-services.networkpolicysetting.enabled=false \
 --set alfresco-content-services.repository.environment.IDENTITY_SERVICE_URI="http://$ELB_CNAME/auth" \
---set alfresco-process-services.activiti_env.IDENTITY_SERVICE_AUTH="http://$ELB_CNAME/auth" \
+--set alfresco-process-services.processEngine.environment.IDENTITY_SERVICE_AUTH="http://$ELB_CNAME/auth" \
 --namespace=$DESIREDNAMESPACE
 ```
 

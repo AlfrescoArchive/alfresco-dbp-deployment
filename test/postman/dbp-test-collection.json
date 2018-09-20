@@ -962,7 +962,66 @@
                     }
                 }
             ]
-        },
+        },		
+        {
+			"name": "06 ACA basic Tests",
+			"item": [
+				{
+					"name": "Check if ACA Login Page responds correctly",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3c43eeb3-7656-4486-89df-45fc2c5f9184",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Body matches string\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Alfresco Content App\");",
+									"});"
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "bd8701f8-d7da-4455-8444-c60553778f91",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{dbpurl}}/#/login",
+							"host": [
+								"{{dbpurl}}"
+							],
+							"path": [
+								""
+							],
+							"hash": "/login"
+						},
+						"description": "This request will validate whether the repo is set up correctly "
+					},
+					"response": []
+				}
+			]
+		},
         {
             "name": "Auth Gateway routes",
             "event": [

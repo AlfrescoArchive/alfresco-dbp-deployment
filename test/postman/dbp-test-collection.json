@@ -975,11 +975,11 @@
 								"id": "3c43eeb3-7656-4486-89df-45fc2c5f9184",
 								"type": "text/javascript",
 								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
+									"pm.test(\"Verify status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"pm.test(\"Body matches string\", function () {",
+									"pm.test(\"Verify Page Body Contains Alfresco Content App\", function () {",
 									"    pm.expect(pm.response.text()).to.include(\"Alfresco Content App\");",
 									"});"
 								]

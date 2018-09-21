@@ -1007,9 +1007,9 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{dbpurl}}/#/login",
+							"raw": "{{contentAppUrl}}/#/login",
 							"host": [
-								"{{dbpurl}}"
+								"{{contentAppUrl}}"
 							],
 							"path": [
 								""
@@ -1112,6 +1112,13 @@
             "id": "8529fd2c-39ae-4a3b-bb9b-c8219d786e4b",
             "key": "identityServiceUrl",
             "value": "{{dbpurl}}/auth",
+            "type": "string",
+            "description": ""
+        },
+        {
+            "id": "8529gg2c-39ae-4a3b-bb9b-c8219d786e4b",
+            "key": "contentAppUrl",
+            "value": "{{dbpurl}}/content-app",
             "type": "string",
             "description": ""
         },

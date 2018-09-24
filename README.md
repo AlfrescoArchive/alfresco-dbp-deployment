@@ -218,7 +218,7 @@ After installing Docker for Desktop you must enable Kubernetes and we recommend 
 - Memory mimimum: 8 GB
 - Core minimum: 4 cores
 
-We also recommend that you use Homebrew to install the Helm prerequisite.
+We also recommend that you use Homebrew to install the Helm prerequisite. The homebrew package name is kubernetes-helm.
 
 If you have previously deployed the DBP to AWS you will need to change/verify the ```docker-for-desktop``` context is being used.
 
@@ -233,16 +233,6 @@ Initialize the Helm Tiller:
 ```bash
 helm init
 ```
-
-### K8s Cluster Namespace
-
-As mentioned as part of the Anaxes Shipyard guidelines, you should deploy into a separate namespace in the cluster to avoid conflicts (create the namespace only if it does not already exist):
-```bash
-export DESIREDNAMESPACE=example
-kubectl create namespace $DESIREDNAMESPACE
-```
-
-This environment variable will be used in the deployment steps.
 
 ## Deployment
 
@@ -263,6 +253,8 @@ sudo sh -c 'echo "`ipconfig getifaddr en0`       localhost-k8s" >> /etc/hosts'; 
 *Note:* If your IP address changes you will need to update the ```/etc/hosts``` entry for localhost-k8s.
 
 ### 3. Deploy the DBP
+
+The extended install command configures the hostnames, URLs and memory requirements needed to run in Docker for Desktop.  It also configures the time for initiating the kubernetes probes to test if a serivce is available.
 
 ```bash
 helm install alfresco-incubator/alfresco-dbp \
@@ -289,13 +281,12 @@ helm install alfresco-incubator/alfresco-dbp \
 --set alfresco-process-services.processEngine.environment.IDENTITY_SERVICE_ENABLED=true \
 --set alfresco-process-services.processEngine.resources.requests.memory="1000Mi" \
 --set alfresco-process-services.adminApp.resources.requests.memory="250Mi"
---namespace $DESIREDNAMESPACE
 ```
 
 ### 4. Check deployment status of DBP
 
 ```bash
-kubectl get pods --namespace $DESIREDNAMESPACE
+kubectl get pods
 ```
 
 *Note:* When checking status, your pods should be ```READY 1/1``` and ```STATUS Running```
@@ -303,18 +294,18 @@ kubectl get pods --namespace $DESIREDNAMESPACE
 ### 5. Check DBP Components
 
 You can access DBP components at the following address
-- http://localhost/alfresco
-- http://localhost/share
-- http://localhost/activiti-app
-- http://localhost/activiti-admin
-- http://localhost/auth/
+- http://localhost-k8s/alfresco
+- http://localhost-k8s/share
+- http://localhost-k8s/activiti-app
+- http://localhost-k8s/activiti-admin
+- http://localhost-k8s/auth/
 
 *Notes:*
 
 - As deployed, the activiti-app starts in read-only mode.  
   - Apply a license by uploading an Activiti license file after deployment.
 
-- As deployed, the activit-admin app does not work because it is not configured with the correct server endpoint. 
+- As deployed, the activiti-admin app does not work because it is not configured with the correct server endpoint. 
   - To fix that, click 'Edit endpoint configuration' and then in the form enter http://localhost-k8s for the server address.
   - Save the form and  click 'Check Process Services REST endpoint' to see if it is valid.
 
@@ -329,5 +320,24 @@ helm ls
 Use the name of the DBP release found above as DBPRELEASE
 ```bash 
 helm delete --purge <DBPRELEASE>
-kubectl delete namespace <DESIREDNAMESPACE>
+```
+
+### Notes
+
+#### K8s Cluster Namespace
+
+If you are deploying mutliple projects in your Docker for Desktop Kuberenetes Cluster you may find it useful to use namespaces to segement the projects.
+
+To create a namespace
+```bash
+export DESIREDNAMESPACE=example
+kubectl create namespace $DESIREDNAMESPACE
+```
+
+You can then use this environment variable ```DESIREDNAMESPACE``` in the deployment steps by appending ```--namespace $DESIREDNAMESPACE``` to the ```helm``` and ```kubectl``` commands.
+
+You may also need to remove this namespace when you no longer need it.
+
+```bash
+kubectl delete namespace $DESIREDNAMESPACE
 ```

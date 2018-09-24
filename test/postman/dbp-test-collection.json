@@ -962,7 +962,66 @@
                     }
                 }
             ]
-        },
+        },		
+        {
+			"name": "06 ACA basic Tests",
+			"item": [
+				{
+					"name": "Check if ACA Login Page responds correctly",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3c43eeb3-7656-4486-89df-45fc2c5f9184",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Verify status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Verify Page Body Contains Alfresco Content App\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Alfresco Content App\");",
+									"});"
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "bd8701f8-d7da-4455-8444-c60553778f91",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{contentAppUrl}}/#/login",
+							"host": [
+								"{{contentAppUrl}}"
+							],
+							"path": [
+								""
+							],
+							"hash": "/login"
+						},
+						"description": "This request will validate whether the repo is set up correctly "
+					},
+					"response": []
+				}
+			]
+		},
         {
             "name": "Auth Gateway routes",
             "event": [
@@ -1053,6 +1112,13 @@
             "id": "8529fd2c-39ae-4a3b-bb9b-c8219d786e4b",
             "key": "identityServiceUrl",
             "value": "{{dbpurl}}/auth",
+            "type": "string",
+            "description": ""
+        },
+        {
+            "id": "8529gg2c-39ae-4a3b-bb9b-c8219d786e4b",
+            "key": "contentAppUrl",
+            "value": "{{dbpurl}}/content-app",
             "type": "string",
             "description": ""
         },

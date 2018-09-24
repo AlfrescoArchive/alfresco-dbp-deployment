@@ -1,5 +1,12 @@
 # Alfresco Digital Business Platform Deployment
 
+The Alfresco Digital Business Platform can be deployed to different platforms: AWS or locally.
+
+- [Deploy to AWS](#AWS)
+- [Deploy to Docker for Desktop - Mac](#docker-for-desktop-mac)
+
+# AWS
+
 ## Prerequisites
 
 The Alfresco Digital Business Platform Deployment requires:
@@ -193,3 +200,134 @@ For more information on running and tearing down k8s environments, follow this [
 
 Because some of our modules pass headers bigger than 4k we had to increase the default value of the proxy buffer size for nginx.
 We also enable the CORS header for the applications that need it through the Ingress Rule.
+
+# Docker for Desktop - Mac
+
+## Prerequisites
+
+| Component   | Recommended version | Getting Started Guide |
+| ------------|:-----------: | ----------------------   |
+| Docker for Desktop | 18.06.1-ce   | https://www.docker.com/products/docker-desktop |
+| Homebrew           | 1.7.6        | https://brew.sh/         |
+| Helm               | 2.8.2        | https://docs.helm.sh/using_helm/#quickstart-guide |
+
+## Setup
+
+After installing Docker for Desktop you must enable Kubernetes and we recommend that you increase the memory and cores used by Docker for Desktop.
+
+- Memory mimimum: 8 GB
+- Core minimum: 4 cores
+
+We also recommend that you use Homebrew to install the Helm prerequisite.
+
+If you have previously deployed the DBP to AWS you will need to change/verify the ```docker-for-desktop``` context is being used.
+
+```bash
+kubectl config current-context                 # Display the current context
+kubectl config use-context docker-for-desktop  # Set the default context
+```
+
+### Helm Tiller
+
+Initialize the Helm Tiller:
+```bash
+helm init
+```
+
+### K8s Cluster Namespace
+
+As mentioned as part of the Anaxes Shipyard guidelines, you should deploy into a separate namespace in the cluster to avoid conflicts (create the namespace only if it does not already exist):
+```bash
+export DESIREDNAMESPACE=example
+kubectl create namespace $DESIREDNAMESPACE
+```
+
+This environment variable will be used in the deployment steps.
+
+## Deployment
+
+### 1. Add the Alfresco Helm repository to helm
+
+```bash
+helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubator
+```
+
+### 2. Add local DNS
+
+Add Local DNS Entry for Host Machine (needed for JWT issuer matching). Be sure to specify an active network interface.  It is not always ```en0``` as illustrated.  You can use the command ```ipconfig -a``` to find an active interface.
+
+```bash
+sudo sh -c 'echo "`ipconfig getifaddr en0`       localhost-k8s" >> /etc/hosts'; cat /etc/hosts
+```
+
+*Note:* If your IP address changes you will need to update the ```/etc/hosts``` entry for localhost-k8s.
+
+### 3. Deploy the DBP
+
+```bash
+helm install alfresco-incubator/alfresco-dbp \
+--set alfresco-infrastructure.alfresco-api-gateway.keycloakURL="http://localhost-k8s/auth/" \
+--set alfresco-infrastructure.rabbitmq-ha.enabled=false \
+--set alfresco-infrastructure.alfresco-activiti-cloud-registry.enabled=false \
+--set alfresco-infrastructure.alfresco-api-gateway.enabled=false \
+--set alfresco-content-services.externalHost="localhost-k8s" \
+--set alfresco-content-services.networkpolicysetting.enabled=false \
+--set alfresco-content-services.repository.environment.IDENTITY_SERVICE_URI="http://localhost-k8s/auth" \
+--set alfresco-content-services.repository.replicaCount=1 \
+--set alfresco-content-services.repository.livenessProbe.initialDelaySeconds=420 \
+--set alfresco-content-services.pdfrenderer.livenessProbe.initialDelaySeconds=300 \
+--set alfresco-content-services.libreoffice.livenessProbe.initialDelaySeconds=300 \
+--set alfresco-content-services.imagemagick.livenessProbe.initialDelaySeconds=300 \
+--set alfresco-content-services.share.livenessProbe.initialDelaySeconds=420 \
+--set alfresco-content-services.repository.resources.requests.memory="2000Mi" \
+--set alfresco-content-services.pdfrenderer.resources.requests.memory="500Mi" \
+--set alfresco-content-services.imagemagick.resources.requests.memory="500Mi" \
+--set alfresco-content-services.libreoffice.resources.requests.memory="500Mi" \
+--set alfresco-content-services.share.resources.requests.memory="1000Mi" \
+--set alfresco-content-services.postgresql.resources.requests.memory="500Mi" \
+--set alfresco-process-services.processEngine.environment.IDENTITY_SERVICE_AUTH="http://localhost-k8s/auth" \
+--set alfresco-process-services.processEngine.environment.IDENTITY_SERVICE_ENABLED=true \
+--set alfresco-process-services.processEngine.resources.requests.memory="1000Mi" \
+--set alfresco-process-services.adminApp.resources.requests.memory="250Mi"
+--namespace $DESIREDNAMESPACE
+```
+
+### 4. Check deployment status of DBP
+
+```bash
+kubectl get pods --namespace $DESIREDNAMESPACE
+```
+
+*Note:* When checking status, your pods should be ```READY 1/1``` and ```STATUS Running```
+
+### 5. Check DBP Components
+
+You can access DBP components at the following address
+- http://localhost/alfresco
+- http://localhost/share
+- http://localhost/activiti-app
+- http://localhost/activiti-admin
+- http://localhost/auth/
+
+*Notes:*
+
+- As deployed, the activiti-app starts in read-only mode.  
+  - Apply a license by uploading an Activiti license file after deployment.
+
+- As deployed, the activit-admin app does not work because it is not configured with the correct server endpoint. 
+  - To fix that, click 'Edit endpoint configuration' and then in the form enter http://localhost-k8s for the server address.
+  - Save the form and  click 'Check Process Services REST endpoint' to see if it is valid.
+
+- The http://localhost-k8s/activiti-admin/solr endpoint is disabled by default.   
+  - See https://github.com/Alfresco/acs-deployment/blob/master/docs/examples/search-external-access.md for more information.
+
+### 6. Teardown:
+
+```bash
+helm ls
+```
+Use the name of the DBP release found above as DBPRELEASE
+```bash 
+helm delete --purge <DBPRELEASE>
+kubectl delete namespace <DESIREDNAMESPACE>
+```

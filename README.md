@@ -1,6 +1,6 @@
 # Alfresco Digital Business Platform Deployment
 
-The Alfresco Digital Business Platform can be deployed to different platforms: AWS or locally.
+The Alfresco Digital Business Platform can be deployed to different environments such as AWS or locally.
 
 - [Deploy to AWS](#AWS)
 - [Deploy to Docker for Desktop - Mac](#docker-for-desktop-mac)
@@ -220,7 +220,7 @@ After installing Docker for Desktop you must enable Kubernetes and we recommend 
 
 We also recommend that you use Homebrew to install the Helm prerequisite. The homebrew package name is kubernetes-helm.
 
-If you have previously deployed the DBP to AWS you will need to change/verify the ```docker-for-desktop``` context is being used.
+If you have previously deployed the DBP to AWS you will need to change/verify the `docker-for-desktop` context is being used.
 
 ```bash
 kubectl config current-context                 # Display the current context
@@ -244,13 +244,13 @@ helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubato
 
 ### 2. Add local DNS
 
-Add Local DNS Entry for Host Machine (needed for JWT issuer matching). Be sure to specify an active network interface.  It is not always ```en0``` as illustrated.  You can use the command ```ipconfig -a``` to find an active interface.
+Add Local DNS Entry for Host Machine (needed for JWT issuer matching). Be sure to specify an active network interface.  It is not always `en0` as illustrated.  You can use the command `ipconfig -a` to find an active interface.
 
 ```bash
 sudo sh -c 'echo "`ipconfig getifaddr en0`       localhost-k8s" >> /etc/hosts'; cat /etc/hosts
 ```
 
-*Note:* If your IP address changes you will need to update the ```/etc/hosts``` entry for localhost-k8s.
+*Note:* If your IP address changes you will need to update the `/etc/hosts` entry for localhost-k8s.
 
 ### 3. Deploy the DBP
 
@@ -289,7 +289,7 @@ helm install alfresco-incubator/alfresco-dbp \
 kubectl get pods
 ```
 
-*Note:* When checking status, your pods should be ```READY 1/1``` and ```STATUS Running```
+*Note:* When checking status, your pods should be `READY 1/1` and `STATUS Running`
 
 ### 5. Check DBP Components
 
@@ -335,7 +335,7 @@ export DESIREDNAMESPACE=example
 kubectl create namespace $DESIREDNAMESPACE
 ```
 
-You can then use this environment variable ```DESIREDNAMESPACE``` in the deployment steps by appending ```--namespace $DESIREDNAMESPACE``` to the ```helm``` and ```kubectl``` commands.
+You can then use this environment variable `DESIREDNAMESPACE` in the deployment steps by appending `--namespace $DESIREDNAMESPACE` to the `helm` and `kubectl` commands.
 
 You may also need to remove this namespace when you no longer need it.
 

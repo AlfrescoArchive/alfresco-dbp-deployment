@@ -296,6 +296,7 @@ kubectl get pods
 You can access DBP components at the following address
 - http://localhost-k8s/alfresco
 - http://localhost-k8s/share
+- http://localhost-k8s/content-app
 - http://localhost-k8s/activiti-app
 - http://localhost-k8s/activiti-admin
 - http://localhost-k8s/auth/

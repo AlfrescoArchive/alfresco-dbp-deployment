@@ -326,7 +326,7 @@ helm delete --purge <DBPRELEASE>
 
 #### K8s Cluster Namespace
 
-If you are deploying mutliple projects in your Docker for Desktop Kuberenetes Cluster you may find it useful to use namespaces to segement the projects.
+If you are deploying multiple projects in your Docker for Desktop Kuberenetes Cluster you may find it useful to use namespaces to segment the projects.
 
 To create a namespace
 ```bash

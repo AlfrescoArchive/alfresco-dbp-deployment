@@ -243,7 +243,7 @@ helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubato
 
 ### 7. Add Local DNS
 
-Add Local DNS Entry for Host Machine (needed for JWT issuer matching). Be sure to specify an active network interface.  It is not always `en0` as illustrated.  You can use the command `ipconfig -a` to find an active interface.
+Add Local DNS Entry for Host Machine (needed for JWT issuer matching). Be sure to specify an active network interface.  It is not always `en0` as illustrated.  You can use the command `ifconfig -a` to find an active interface.
 
 ```bash
 sudo sh -c 'echo "`ipconfig getifaddr en0`       localhost-k8s" >> /etc/hosts'; cat /etc/hosts

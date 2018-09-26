@@ -209,37 +209,39 @@ We also enable the CORS header for the applications that need it through the Ing
 | ------------|:-----------: | ----------------------   |
 | Homebrew           | 1.7.6        | https://brew.sh/         |
 
-## 1. Install Docker for Desktop
+## Deployment
+
+### 1. Install Docker for Desktop
 
 You can download the installer from: https://www.docker.com/products/docker-desktop
 
-## 2. Enable Kubernetes
+### 2. Enable Kubernetes
 
 In the 'Kubernetes' tab of the Docker preferences,  click the 'Enable Kubernetes' checkbox.
 
-## 3. Increase Memory and CPUs
+### 3. Increase Memory and CPUs
 
 In the Advanced tab of the Docker preferences, set 'CPUs' to 4 and 'Memory' to 8 GiB
 
-## 4. Install Helm Client
+### 4. Install Helm Client
 
 ```bash
 brew update; brew install kubernetes-helm
 ```
 
-## 5. Initialize Helm Tiller (Server Component)
+### 5. Initialize Helm Tiller (Server Component)
 
 ```bash
 helm init
 ```
 
-## 6. Add the Alfresco Incubator Helm Repository
+### 6. Add the Alfresco Incubator Helm Repository
 
 ```bash
 helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubator
 ```
 
-## 7. Add Local DNS
+### 7. Add Local DNS
 
 Add Local DNS Entry for Host Machine (needed for JWT issuer matching). Be sure to specify an active network interface.  It is not always `en0` as illustrated.  You can use the command `ipconfig -a` to find an active interface.
 
@@ -249,7 +251,7 @@ sudo sh -c 'echo "`ipconfig getifaddr en0`       localhost-k8s" >> /etc/hosts'; 
 
 *Note:* If your IP address changes you will need to update the `/etc/hosts` entry for localhost-k8s.
 
-## 8. Deploy the DBP
+### 8. Deploy the DBP
 
 The extended install command configures the hostnames, URLs and memory requirements needed to run in Docker for Desktop.  It also configures the time for initiating the kubernetes probes to test if a serivce is available.
 
@@ -280,7 +282,7 @@ helm install alfresco-incubator/alfresco-dbp \
 --set alfresco-process-services.adminApp.resources.requests.memory="250Mi"
 ```
 
-## 9. Check Deployment Status of DBP
+### 9. Check Deployment Status of DBP
 
 ```bash
 kubectl get pods
@@ -288,7 +290,7 @@ kubectl get pods
 
 *Note:* When checking status, your pods should be `READY 1/1` and `STATUS Running`
 
-## 10. Check DBP Components
+### 10. Check DBP Components
 
 You can access DBP components at the following URLs:
 - http://localhost-k8s/alfresco
@@ -310,7 +312,7 @@ You can access DBP components at the following URLs:
 - The http://localhost-k8s/activiti-admin/solr endpoint is disabled by default.   
   - See https://github.com/Alfresco/acs-deployment/blob/master/docs/examples/search-external-access.md for more information.
 
-## 11. Teardown:
+### 11. Teardown:
 
 ```bash
 helm ls

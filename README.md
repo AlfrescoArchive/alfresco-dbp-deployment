@@ -1,31 +1,34 @@
 # Alfresco Digital Business Platform Deployment
 
+The Alfresco Digital Business Platform can be deployed to different environments such as AWS or locally.
+
+- [Deploy to AWS](#aws)
+- [Deploy to Docker for Desktop - Mac](#docker-for-desktop---mac)
+
+# AWS
+
 ## Prerequisites
 
 The Alfresco Digital Business Platform Deployment requires:
 
-| Component        | Recommended version |
-| ------------- |:-------------:|
-| Docker     | 17.0.9.1 |
-| Kubernetes | 1.8.4    |
-| Helm       | 2.8.2    |
-| Minikube   | 0.25.0   |
+| Component   | Recommended version | Getting Started Guide |
+| ------------|:-----------: | ---------------------- |
+| Docker      | 17.0.9.1     | https://docs.docker.com/ |
+| Kubernetes  | 1.8.4        | https://kubernetes.io/docs/tutorials/kubernetes-basics/ |
+| Kubectl     | 1.8.4        | https://kubernetes.io/docs/tasks/tools/install-kubectl/ |
+| Helm        | 2.8.2        | https://docs.helm.sh/using_helm/#quickstart-guide |
+| Kops        | 1.8.1        | https://github.com/kubernetes/kops/blob/master/docs/aws.md |
 
 Any variation from these technologies and versions may affect the end result. If you do experience any issues please let us know through our [Gitter channel](https://gitter.im/Alfresco/platform-services?utm_source=share-link&utm_medium=link&utm_campaign=share-link).
 
-*Note*: You do not need to clone this repo to deploy the dbp.
+*Note:* You do not need to clone this repo to deploy the dbp.
 
 ### Kubernetes Cluster
 
-You can choose to deploy the infrastructure to a local kubernetes cluster (illustrated using minikube) or you can choose to deploy to the cloud (illustrated using AWS).
-Please check the Anaxes Shipyard documentation on [running a cluster](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/docs/running-a-cluster.md).
+For more information please check the Anaxes Shipyard documentation on [running a cluster](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/docs/running-a-cluster.md).
 
-Note the resource requirements:
-* Minikube: At least 12 gigs of memory, i.e.:
-```bash
-minikube start --memory 12000
-```
-* AWS: A VPC and cluster with 5 nodes. Each node should be a m4.xlarge EC2 instance.
+Resource requirements for AWS: 
+* A VPC and cluster with 5 nodes. Each node should be a m4.xlarge EC2 instance.
 
 ### Helm Tiller
 
@@ -76,110 +79,21 @@ kubectl create -f secrets.yaml --namespace $DESIREDNAMESPACE
 
 *Note*: Make sure the $DESIREDNAMESPACE variable has been set when the infrastructure chart was deployed so that the secret gets created in the same namespace.
 
+### Ingress Customization
+
+For routing the components of the DBP deployment outside the k8s cluster we use [nginx-ingress](https://github.com/kubernetes/charts/tree/master/stable/nginx-ingress). For your deployment to function properly you must have a route53 DNSZone and you will need to create a route53 record set in the following steps.
+
+For more options on configuring the ingress controller that is deployed through the alfresco-infrastructure chart, please check the [Alfresco Infrastructure](https://github.com/Alfresco/alfresco-infrastructure-deployment) chart Readme.
+
 ## Deployment
 
-### 1. Install the nginx-ingress-controller
+### 1. EFS Storage
 
-Install the nginx-ingress-controller into your cluster
-```bash
-helm repo update
+Create an [EFS storage](https://docs.aws.amazon.com/efs/latest/ug/creating-using-create-fs.html) on AWS and make sure 
+it is in the same VPC as your cluster. Make sure you [open inbound traffic](https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_SecurityGroups.html) 
+in the security group to allow NFS traffic. 
 
-cat <<EOF > ingressvalues.yaml
-controller:
-  config:
-    ssl-redirect: "false"
-  scope:
-    enabled: true
-    namespace: $DESIREDNAMESPACE
-EOF
-
-helm install stable/nginx-ingress --version=0.12.3 -f ingressvalues.yaml \
---namespace $DESIREDNAMESPACE
-```
-
-
-** !Optional **
-
-If you want your own certificate set here you should create a secret from your cert files:
-
-```bash
-kubectl create secret tls certsecret --key /tmp/tls.key --cert /tmp/tls.crt --namespace $DESIREDNAMESPACE
-```
-
-Then deploy the ingress with following settings
-```bash
-cat <<EOF > ingressvalues.yaml
-controller:
-  config:
-    ssl-redirect: "false"
-  scope:
-    enabled: true
-    namespace: $DESIREDNAMESPACE
-  publishService:
-    enabled: true
-  extraArgs:
-    default-ssl-certificate: $DESIREDNAMESPACE/certsecret
-EOF
-
-helm install stable/nginx-ingress --version=0.12.3 -f ingressvalues.yaml \
---namespace $DESIREDNAMESPACE
-```
-
-Or you can add an AWS generated certificate if you want and autogenerate a route53 entry
-
-```bash
-cat <<EOF > ingressvalues.yaml
-controller:
-  config:
-    ssl-redirect: "false"
-  scope:
-    enabled: true
-    namespace: $DESIREDNAMESPACE
-  publishService:
-    enabled: true
-  service:
-    targetPorts:
-      https: 80
-    annotations:
-      service.beta.kubernetes.io/aws-load-balancer-ssl-cert: #sslcert ARN -> https://github.com/kubernetes/kubernetes/blob/master/pkg/cloudprovider/providers/aws/aws.go
-      service.beta.kubernetes.io/aws-load-balancer-ssl-ports: https
-      # External dns will help you autogenerate an entry in route53 for your cluster. More info here -> https://github.com/kubernetes-incubator/external-dns
-      external-dns.alpha.kubernetes.io/hostname: $DESIREDNAMESPACE.YourDNSZone
-EOF
-
-helm install stable/nginx-ingress --version=0.12.3 -f ingressvalues.yaml \
---namespace $DESIREDNAMESPACE
-
-```
-
-### 2. Get the nginx-ingress-controller release name from the previous command and set it as a varible:
-```bash
-export INGRESSRELEASE=knobby-wolf
-```
-
-### 3. Wait for the nginx-ingress-controller release to get deployed (When checking status your pod should be READY 1/1):
-```bash
-helm status $INGRESSRELEASE
-```
-
-### 4. (**NOTE! ONLY FOR MINIKUBE**) Get the nginx-ingress-controller port for the infrastructure :
-```bash
-export INFRAPORT=$(kubectl get service $INGRESSRELEASE-nginx-ingress-controller --namespace $DESIREDNAMESPACE -o jsonpath={.spec.ports[0].nodePort})
-```
-
-### 5. Get Minikube or ELB IP and set it as a variable for future use:
-
-```bash
-#ON MINIKUBE
-export ELBADDRESS=$(minikube ip)
-
-#ON AWS
-export ELBADDRESS=$(kubectl get services $INGRESSRELEASE-nginx-ingress-controller --namespace=$DESIREDNAMESPACE -o jsonpath={.status.loadBalancer.ingress[0].hostname})
-```
-
-### 6. EFS Storage (**NOTE! ONLY FOR AWS!**)
-
-Create a EFS storage on AWS and make sure it is in the same VPC as your cluster. Make sure you open inbound traffic in the security group to allow NFS traffic. Save the name of the server ex:
+Save the name of the server ex:
 ```bash
 export NFSSERVER=fs-d660549f.efs.us-east-1.amazonaws.com
 ```
@@ -193,26 +107,29 @@ For more Information on Reclaim Policies checkout the official K8S documentation
 
 We don't advise you to use the same EFS instance for persisting the data from multiple dbp deployments.
 
-### 7. Add the Alfresco Kubernetes repository to helm.
+### 2. Add the Alfresco Helm repository to helm
 
-```helm repo add alfresco-incubator http://kubernetes-charts.alfresco.com/incubator```
+```helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubator```
 
-### 8. Deploy the DBP
+### 3. Define a variable for your Route53 entry that you will use for the deployment
 
 ```bash
+export ELB_CNAME="YourDesiredCname.YourRoute53DnsZone"
+#example export ELB_CNAME="alfresco.example.com"
+```
 
-#On MINIKUBE
-helm install alfresco-incubator/alfresco-dbp \
---set alfresco-infrastructure.alfresco-api-gateway.keycloakURL="http://$ELBADDRESS:$INFRAPORT/auth/" \
---set alfresco-content-services.repository.environment.IDENTITY_SERVICE_URI="http://$ELBADDRESS:$INFRAPORT/auth" \
---namespace=$DESIREDNAMESPACE
+### 4. Deploy the DBP
 
-#On AWS
+```bash
+# Remember to use https here if you have a trusted certificate set on the ingress
 helm install alfresco-incubator/alfresco-dbp \
---set alfresco-infrastructure.alfresco-api-gateway.keycloakURL="http://$ELBADDRESS/auth/" \
+--set alfresco-infrastructure.alfresco-api-gateway.keycloakURL="http://$ELB_CNAME/auth/" \
 --set alfresco-infrastructure.persistence.efs.enabled=true \
 --set alfresco-infrastructure.persistence.efs.dns="$NFSSERVER" \
---set alfresco-content-services.repository.environment.IDENTITY_SERVICE_URI="http://$ELBADDRESS/auth" \
+--set alfresco-content-services.externalHost="$ELB_CNAME" \
+--set alfresco-content-services.networkpolicysetting.enabled=false \
+--set alfresco-content-services.repository.environment.IDENTITY_SERVICE_URI="http://$ELB_CNAME/auth" \
+--set alfresco-process-services.processEngine.environment.IDENTITY_SERVICE_AUTH="http://$ELB_CNAME/auth" \
 --namespace=$DESIREDNAMESPACE
 ```
 
@@ -220,37 +137,47 @@ You can either deploy the dbp fully or choose the components you need for your s
 By default the dbp chart will deploy fully.
 
 To disable specific components you can set the following values to false when deploying:
-
+```
 alfresco-content-services.enabled
 alfresco-process-services.enabled
 alfresco-sync-service.enabled
-
-```bash
-#example: For disabling sync-service you will need to append the following subcommand to the helm install command:
- --set alfresco-sync-service.enabled=false 
+alfresco-infrastructure.nginx-ingress.enabled
 ```
 
-### 9. Get the DBP release name from the previous command and set it as a variable:
+Example: For disabling sync-service you will need to append the following subcommand to the helm install command:
+```bash
+--set alfresco-sync-service.enabled=false 
+```
+
+### 5. Get the DBP release name from the previous command and set it as a variable:
 
 ```bash
 export DBPRELEASE=littering-lizzard
 ```
 
-### 10. Checkout the status of your DBP deployment:
+### 6. Get ELB IP and copy it for linking the ELB in AWS Route53:
 
 ```bash
-helm status $INGRESSRELEASE
+export ELBADDRESS=$(kubectl get services $DBPRELEASE-nginx-ingress-controller --namespace=$DESIREDNAMESPACE -o jsonpath={.status.loadBalancer.ingress[0].hostname})
+echo $ELBADDRESS
+```
+
+### 7. Create a Route 53 Record Set in your Hosted Zone
+
+* Go to **AWS Management Console** and open the **Route 53** console.
+* Click **Hosted Zones** in the left navigation panel, then **Create Record Set**.
+* In the **Name** field, enter your "`$ELB_CNAME`" defined in step 4.
+* In the **Alias Target**, select your ELB address ("`$ELBADDRESS`").
+* Click **Create**.
+
+You may need to wait a couple of minutes before the record set propagates around the world.
+
+### 8. Checkout the status of your DBP deployment:
+
+*Note:* When checking status, your pods should be ```READY 1/1```
+
+```bash
 helm status $DBPRELEASE
-
-#On MINIKUBE: Open Alfresco Repository in Browser
-open http://$ELBADDRESS:`kubectl get service $DBPRELEASE-alfresco-content-services-repository -o jsonpath={.spec.ports[0].nodePort} --namespace $DESIREDNAMESPACE `/alfresco
-
-#On MINIKUBE: Open Alfresco Share in Browser
-open http://$ELBADDRESS:`kubectl get service $DBPRELEASE-alfresco-content-services-share -o jsonpath={.spec.ports[0].nodePort} --namespace $DESIREDNAMESPACE `/share
-
-#On MINIKUBE: Open Alfresco Process Services in Browser
-open http://$ELBADDRESS:`kubectl get service $DBPRELEASE-alfresco-process-services -o jsonpath={.spec.ports[0].nodePort} --namespace $DESIREDNAMESPACE `/activiti-app
-
 ```
 
 If you want to see the full list of values that have been applied to the deployment you can run:
@@ -259,18 +186,13 @@ If you want to see the full list of values that have been applied to the deploym
 helm get values -a $DBPRELEASE
 ```
 
-### 11. Teardown:
+### 9. Teardown:
 
 ```bash
-helm delete --purge $INGRESSRELEASE
 helm delete --purge $DBPRELEASE
 kubectl delete namespace $DESIREDNAMESPACE
 ```
 Depending on your cluster type you should be able to also delete it if you want.
-For minikube you can just run to delete the whole minikube vm.
-```bash
-minikube delete
-```
 
 For more information on running and tearing down k8s environments, follow this [guide](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/docs/running-a-cluster.md).
 
@@ -278,3 +200,144 @@ For more information on running and tearing down k8s environments, follow this [
 
 Because some of our modules pass headers bigger than 4k we had to increase the default value of the proxy buffer size for nginx.
 We also enable the CORS header for the applications that need it through the Ingress Rule.
+
+# Docker for Desktop - Mac
+
+## Prerequisites
+
+| Component   | Recommended version | Getting Started Guide |
+| ------------|:-----------: | ----------------------   |
+| Homebrew           | 1.7.6        | https://brew.sh/         |
+
+## Deployment
+
+### 1. Install Docker for Desktop
+
+You can download the installer from: https://www.docker.com/products/docker-desktop
+
+### 2. Enable Kubernetes
+
+In the 'Kubernetes' tab of the Docker preferences,  click the 'Enable Kubernetes' checkbox.
+
+### 3. Increase Memory and CPUs
+
+In the Advanced tab of the Docker preferences, set 'CPUs' to 4 and 'Memory' to 8 GiB
+
+### 4. Install Helm Client
+
+```bash
+brew update; brew install kubernetes-helm
+```
+
+### 5. Initialize Helm Tiller (Server Component)
+
+```bash
+helm init
+```
+
+### 6. Add the Alfresco Incubator Helm Repository
+
+```bash
+helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubator
+```
+
+### 7. Add Local DNS
+
+Add Local DNS Entry for Host Machine (needed for JWT issuer matching). Be sure to specify an active network interface.  It is not always `en0` as illustrated.  You can use the command `ifconfig -a` to find an active interface.
+
+```bash
+sudo sh -c 'echo "`ipconfig getifaddr en0`       localhost-k8s" >> /etc/hosts'; cat /etc/hosts
+```
+
+*Note:* If your IP address changes you will need to update the `/etc/hosts` entry for localhost-k8s.
+
+### 8. Deploy the DBP
+
+The extended install command configures the hostnames, URLs and memory requirements needed to run in Docker for Desktop.  It also configures the time for initiating the kubernetes probes to test if a serivce is available.
+
+```bash
+helm install alfresco-incubator/alfresco-dbp \
+--set alfresco-infrastructure.alfresco-api-gateway.keycloakURL="http://localhost-k8s/auth/" \
+--set alfresco-infrastructure.rabbitmq-ha.enabled=false \
+--set alfresco-infrastructure.alfresco-activiti-cloud-registry.enabled=false \
+--set alfresco-infrastructure.alfresco-api-gateway.enabled=false \
+--set alfresco-content-services.externalHost="localhost-k8s" \
+--set alfresco-content-services.networkpolicysetting.enabled=false \
+--set alfresco-content-services.repository.environment.IDENTITY_SERVICE_URI="http://localhost-k8s/auth" \
+--set alfresco-content-services.repository.replicaCount=1 \
+--set alfresco-content-services.repository.livenessProbe.initialDelaySeconds=420 \
+--set alfresco-content-services.pdfrenderer.livenessProbe.initialDelaySeconds=300 \
+--set alfresco-content-services.libreoffice.livenessProbe.initialDelaySeconds=300 \
+--set alfresco-content-services.imagemagick.livenessProbe.initialDelaySeconds=300 \
+--set alfresco-content-services.share.livenessProbe.initialDelaySeconds=420 \
+--set alfresco-content-services.repository.resources.requests.memory="2000Mi" \
+--set alfresco-content-services.pdfrenderer.resources.requests.memory="500Mi" \
+--set alfresco-content-services.imagemagick.resources.requests.memory="500Mi" \
+--set alfresco-content-services.libreoffice.resources.requests.memory="500Mi" \
+--set alfresco-content-services.share.resources.requests.memory="1000Mi" \
+--set alfresco-content-services.postgresql.resources.requests.memory="500Mi" \
+--set alfresco-process-services.processEngine.environment.IDENTITY_SERVICE_AUTH="http://localhost-k8s/auth" \
+--set alfresco-process-services.processEngine.environment.IDENTITY_SERVICE_ENABLED=true \
+--set alfresco-process-services.processEngine.resources.requests.memory="1000Mi" \
+--set alfresco-process-services.adminApp.resources.requests.memory="250Mi"
+```
+
+### 9. Check Deployment Status of DBP
+
+```bash
+kubectl get pods
+```
+
+*Note:* When checking status, your pods should be `READY 1/1` and `STATUS Running`
+
+### 10. Check DBP Components
+
+You can access DBP components at the following URLs:
+- http://localhost-k8s/alfresco
+- http://localhost-k8s/share
+- http://localhost-k8s/content-app
+- http://localhost-k8s/activiti-app
+- http://localhost-k8s/activiti-admin
+- http://localhost-k8s/auth/
+
+*Notes:*
+
+- As deployed, the activiti-app starts in read-only mode.  
+  - Apply a license by uploading an Activiti license file after deployment.
+
+- As deployed, the activiti-admin app does not work because it is not configured with the correct server endpoint. 
+  - To fix that, click 'Edit endpoint configuration' and then in the form enter http://localhost-k8s for the server address.
+  - Save the form and  click 'Check Process Services REST endpoint' to see if it is valid.
+
+- The http://localhost-k8s/activiti-admin/solr endpoint is disabled by default.   
+  - See https://github.com/Alfresco/acs-deployment/blob/master/docs/examples/search-external-access.md for more information.
+
+### 11. Teardown:
+
+```bash
+helm ls
+```
+Use the name of the DBP release found above as DBPRELEASE
+```bash 
+helm delete --purge <DBPRELEASE>
+```
+
+### Notes
+
+#### K8s Cluster Namespace
+
+If you are deploying multiple projects in your Docker for Desktop Kuberenetes Cluster you may find it useful to use namespaces to segment the projects.
+
+To create a namespace
+```bash
+export DESIREDNAMESPACE=example
+kubectl create namespace $DESIREDNAMESPACE
+```
+
+You can then use this environment variable `DESIREDNAMESPACE` in the deployment steps by appending `--namespace $DESIREDNAMESPACE` to the `helm` and `kubectl` commands.
+
+You may also need to remove this namespace when you no longer need it.
+
+```bash
+kubectl delete namespace $DESIREDNAMESPACE
+```

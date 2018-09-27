@@ -277,7 +277,6 @@ helm install alfresco-incubator/alfresco-dbp \
 --set alfresco-content-services.share.resources.requests.memory="1000Mi" \
 --set alfresco-content-services.postgresql.resources.requests.memory="500Mi" \
 --set alfresco-process-services.processEngine.environment.IDENTITY_SERVICE_AUTH="http://localhost-k8s/auth" \
---set alfresco-process-services.processEngine.environment.IDENTITY_SERVICE_ENABLED=true \
 --set alfresco-process-services.processEngine.resources.requests.memory="1000Mi" \
 --set alfresco-process-services.adminApp.resources.requests.memory="250Mi"
 ```

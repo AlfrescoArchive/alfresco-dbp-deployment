@@ -1,28 +1,26 @@
 {
 	"info": {
+		"_postman_id": "11742db9-bc93-491a-94cb-9600717007a5",
 		"name": "dbp-validate-volume",
-		"_postman_id": "da06ad38-1347-44e6-a4d9-f37f7f4697b0",
 		"description": "This collection will test whether content created is still working when the acs pod is deleted and restarted.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "key cloak token",
+			"name": "Generate key cloak token",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "7f98812c-e8cd-4794-8e41-a3b91c959525",
+						"id": "a724f187-640e-491d-b331-3bc33ea9e2bf",
 						"type": "text/javascript",
 						"exec": [
-							"pm.globals.get(\"url\");",
-							"",
-							"var tokens=JSON.parse(responseBody); ",
-							"postman.setGlobalVariable(\"kcAccessToken\", tokens.access_token); ",
-							"",
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
-							"});"
+							"});",
+							"",
+							"var tokens = JSON.parse(responseBody); ",
+							"pm.environment.set(\"kcAccessToken\", tokens.access_token);"
 						]
 					}
 				}
@@ -40,7 +38,7 @@
 					"urlencoded": [
 						{
 							"key": "client_id",
-							"value": "activiti",
+							"value": "alfresco",
 							"type": "text"
 						},
 						{
@@ -50,7 +48,7 @@
 						},
 						{
 							"key": "username",
-							"value": "hruser",
+							"value": "testuser",
 							"type": "text"
 						},
 						{
@@ -61,55 +59,53 @@
 					]
 				},
 				"url": {
-					"raw": "http://{{url}}/auth/realms/springboot/protocol/openid-connect/token",
-					"protocol": "http",
+					"raw": "{{dbpurl}}/auth/realms/alfresco/protocol/openid-connect/token",
 					"host": [
-						"{{url}}"
+						"{{dbpurl}}"
 					],
 					"path": [
 						"auth",
 						"realms",
-						"springboot",
+						"alfresco",
 						"protocol",
 						"openid-connect",
 						"token"
 					]
 				},
-				"description": null
+				"description": "Generate key cloak token to be used for volume validation"
 			},
 			"response": []
 		},
 		{
-			"name": "Retrieve HR User Files using token",
+			"name": "Retrieve test user's files using token",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "ac8db113-7bc5-4583-8d2a-8134719547b2",
+						"id": "432815fa-1072-4abd-b228-9838f38f59c3",
 						"type": "text/javascript",
 						"exec": [
 							"pm.test(\"Status code is 200\", function() {",
 							"    pm.response.to.have.status(200);",
 							"});",
 							"",
-							"pm.test(\"validateid\", function() {",
+							"pm.test(\"Correct user id is returned in file list\", function() {",
 							"    var jsonData = pm.response.json();",
 							"    var modulesArray = jsonData.list.source.properties;",
 							"    for (var key in modulesArray) {",
 							"        var obj = modulesArray[key];",
 							"        var id = obj.id;",
-							"        pm.expect(id).to.be.eql(\"hruser\");",
+							"        pm.expect(id).to.be.eql(\"testuser\");",
 							"    }",
-							"",
 							"});",
 							"",
-							"pm.test(\"validateFile\", function() {",
+							"pm.test(\"User can access its files\", function() {",
 							"    var jsonData = pm.response.json();",
 							"    var userName = jsonData.list.entries.properties;",
 							"    for (var key in userName) {",
 							"        var obj = modulesArray[key];",
 							"        var id = obj.name;",
-							"        pm.expect(id).to.be.eql(\"hrusertestfile.txt\");",
+							"        pm.expect(id).to.be.eql(\"testusertestfile.txt\");",
 							"    }",
 							"});"
 						]
@@ -129,10 +125,9 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://{{url}}/alfresco/api/-default-/public/alfresco/versions/1/nodes/-my-/children?includeSource=true",
-					"protocol": "http",
+					"raw": "{{dbpurl}}/alfresco/api/-default-/public/alfresco/versions/1/nodes/-my-/children?includeSource=true",
 					"host": [
-						"{{url}}"
+						"{{dbpurl}}"
 					],
 					"path": [
 						"alfresco",
@@ -149,12 +144,11 @@
 					"query": [
 						{
 							"key": "includeSource",
-							"value": "true",
-							"equals": true
+							"value": "true"
 						}
 					]
 				},
-				"description": null
+				"description": "Volume validation: verify user's files are still accessible and metadata corresponds to original user"
 			},
 			"response": []
 		}

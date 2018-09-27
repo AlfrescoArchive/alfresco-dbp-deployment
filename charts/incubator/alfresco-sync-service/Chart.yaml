@@ -9,5 +9,5 @@ keywords:
 # sources:
 #   -
 maintainers:
-- name: Alfresco
+- name: Alfresco Apps Repo Team
 engine: gotpl

@@ -341,30 +341,8 @@ You may also need to remove this namespace when you no longer need it.
 kubectl delete namespace $DESIREDNAMESPACE
 ```
 
-#### Install the Kubernetes Dashboard.
+#### K8s Dashboard
 
-To install the [Dashboard](https://github.com/kubernetes/dashboard/blob/master/README.md) you can either use the recommended approach (which is more secure) ...
+You may find it helpful to see the Kubernetes resources visually which can be achieved by installing the Kubernetes Dashboard...
 
-```bash
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
-```
-
-To access the dashboard view [these instructions](https://github.com/kubernetes/dashboard/wiki/Accessing-Dashboard---1.7.X-and-above).
-
-... or you can use the alternative approach (which makes access easier in a local development environment)
-
-```bash
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/alternative/kubernetes-dashboard.yaml
-```
-
-To access the dashboard, you can start local proxy server.
-
-```bash
-$ kubectl proxy
-```
-
-Once proxy server is started you should be able to access Dashboard from your browser at:
-
-http://localhost:8001/api/v1/namespaces/kube-system/services/http:kubernetes-dashboard:/proxy/
-
-For more details view [these instructions](https://github.com/kubernetes/dashboard/wiki/Accessing-Dashboard---1.6.X-and-below).
+https://github.com/kubernetes/dashboard/wiki/Installation

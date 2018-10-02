@@ -562,6 +562,25 @@
 									"});"
 								]
 							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "5fe4b8b6-b2cd-47a5-b4bd-b4c2074dab33",
+								"type": "text/javascript",
+								"exec": [
+									"// generate random file so that subsequent requests don't fail with \"duplicate content\" exception",
+									"var uuid = require(\"uuid\");",
+									"var filename = uuid.v4() + \".txt\";",
+									"",
+									"var body = JSON.stringify({",
+									"  \"name\": filename,",
+									"  \"nodeType\":\"cm:content\"",
+									"});",
+									"",
+									"pm.environment.set(\"contentCreateBody\", body);"
+								]
+							}
 						}
 					],
 					"request": {
@@ -574,7 +593,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\":\"testusertestfile.txt\",\n  \"nodeType\":\"cm:content\"\n}"
+							"raw": "{{contentCreateBody}}"
 						},
 						"url": {
 							"raw": "{{acsUrl}}/api/-default-/public/alfresco/versions/1/nodes/-my-/children",
@@ -1044,99 +1063,99 @@
 	],
 	"variable": [
 		{
-			"id": "0e5c7fb8-8382-40ab-bf1e-f2dda2b2fd78",
+			"id": "4bac9578-b2a2-4048-9beb-0b76b3d6f321",
 			"key": "acsUrl",
 			"value": "{{dbpurl}}/alfresco",
 			"type": "string"
 		},
 		{
-			"id": "e914ea76-329e-4d04-8a6c-ee05ebe062b3",
+			"id": "deceb98d-8025-456e-b88f-75fc3089d732",
 			"key": "shareUrl",
 			"value": "{{dbpurl}}/share",
 			"type": "string"
 		},
 		{
-			"id": "b5c7aa1d-3fa2-4e1a-b979-6c6fc36ca973",
+			"id": "ef108835-da52-491b-b05a-848514041893",
 			"key": "apsUrl",
 			"value": "{{dbpurl}}/activiti-app",
 			"type": "string"
 		},
 		{
-			"id": "8529fd2c-39ae-4a3b-bb9b-c8219d786e4b",
+			"id": "ff4056a6-8b99-480d-a0ee-18f3e3949f46",
 			"key": "identityServiceUrl",
 			"value": "{{dbpurl}}/auth",
 			"type": "string"
 		},
 		{
-			"id": "8529gg2c-39ae-4a3b-bb9b-c8219d786e4b",
+			"id": "6aac6372-5045-4390-a49b-d2ad69a4467d",
 			"key": "contentAppUrl",
 			"value": "{{dbpurl}}/content-app",
 			"type": "string"
 		},
 		{
-			"id": "4feda1b4-bb21-4dec-a6fa-1e85af98bdbf",
+			"id": "42b0b9b2-de9d-4fb6-b147-bced1a352394",
 			"key": "identityServiceRealm",
 			"value": "alfresco",
 			"type": "string"
 		},
 		{
-			"id": "48fa0c8e-316a-4582-be52-94be6ae2f246",
+			"id": "10fbbd09-7a9b-4492-bfc2-f9786a15949b",
 			"key": "identityServiceClientId",
 			"value": "alfresco",
 			"type": "string"
 		},
 		{
-			"id": "820f0748-424c-48c3-9703-28e8eff930ff",
+			"id": "8afb9675-73b3-4356-b200-e5bf5c3d8a0c",
 			"key": "testUserUsername",
 			"value": "testuser",
 			"type": "string"
 		},
 		{
-			"id": "4c5cda71-947b-4e36-9efa-e7a003d2a234",
+			"id": "21ea4fb6-53fc-4e59-84d2-8356678fc2d1",
 			"key": "testUserPassword",
 			"value": "password",
 			"type": "string"
 		},
 		{
-			"id": "67d6926b-a9d2-4dca-bda1-d084e9528721",
+			"id": "d2ecba08-a6c5-4377-9d0e-41e43340ac2f",
 			"key": "testUserEmail",
 			"value": "test@test.com",
 			"type": "string"
 		},
 		{
-			"id": "3268c847-b165-41d9-b951-3384597f2e30",
+			"id": "3b1cbddb-ad6c-4a5c-9041-1fa692b4a7e4",
 			"key": "adminUserUsername",
 			"value": "admin",
 			"type": "string"
 		},
 		{
-			"id": "0df16d8e-23dc-400f-8cb2-aea01a7ab028",
+			"id": "d6623b97-9a06-453f-bbe0-823793ae3401",
 			"key": "adminUserPassword",
 			"value": "admin",
 			"type": "string"
 		},
 		{
-			"id": "2032ee66-f3e1-4834-b313-6bbb47959ca0",
+			"id": "b40b564a-ec69-4b26-8d69-b01cade73288",
 			"key": "adminUserEmail",
 			"value": "admin@app.activiti.com",
 			"type": "string"
 		},
 		{
-			"id": "e5e6840a-31c1-4a5d-ac90-7076e7c5dc0b",
+			"id": "f076fe6f-0828-4361-82ae-e7d8a61fedb3",
 			"key": "apsLocalAdminUser",
 			"value": "admin@app.activiti.com",
 			"type": "string"
 		},
 		{
-			"id": "108856b2-c0ca-48dd-ac13-bf607f3afb02",
+			"id": "e4e22b92-9714-4b1d-a3b4-53bd094ff609",
 			"key": "apsLocalAdminPassword",
 			"value": "admin",
 			"type": "string"
 		},
 		{
-			"id": "742416e5-80c3-468e-8979-404130dab6dc",
+			"id": "cc8a0514-7215-4182-8cd0-7d5969bebe41",
 			"key": "moduleVersions",
-                        "value": "[{\"moduleName\":\"alfresco-aos-module\",\"moduleVersion\":\"1.2.0\"},{\"moduleName\":\"org.alfresco.integrations.google.docs\",\"moduleVersion\":\"3.1.0\"},{\"moduleName\":\"alfresco-share-services\",\"moduleVersion\":\"6.0.1\"}]",
+			"value": "[{\"moduleName\":\"alfresco-aos-module\",\"moduleVersion\":\"1.2.0\"},{\"moduleName\":\"org.alfresco.integrations.google.docs\",\"moduleVersion\":\"3.1.0\"},{\"moduleName\":\"alfresco-share-services\",\"moduleVersion\":\"6.0.1\"}]",
 			"type": "string"
 		}
 	]

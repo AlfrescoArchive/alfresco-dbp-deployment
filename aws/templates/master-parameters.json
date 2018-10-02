@@ -1,0 +1,30 @@
+[
+  {
+    "ParameterKey": "AvailabilityZones",
+    "ParameterValue": "@@AvailabilityZonesValue@@"
+  },
+  {
+    "ParameterKey": "KeyPairName",
+    "ParameterValue": "@@KeyPairNameValue@@"
+  },
+  {
+    "ParameterKey": "RemoteAccessCIDR",
+    "ParameterValue": "@@RemoteAccessCIDRValue@@"
+  },
+  {
+    "ParameterKey": "TemplateBucketName",
+    "ParameterValue": "@@TemplateBucketNameValue@@"
+  },
+  {
+    "ParameterKey": "TemplateBucketKeyPrefix",
+    "ParameterValue": "@@TemplateBucketKeyPrefixValue@@"
+  },
+  {
+    "ParameterKey": "EksExternalUserArn",
+    "ParameterValue": "@@EksExternalUserArnValue@@"
+  },
+  {
+    "ParameterKey": "NodesMetricsEnabled",
+    "ParameterValue": "@@NodesMetricsEnabledValue@@"
+  }
+]

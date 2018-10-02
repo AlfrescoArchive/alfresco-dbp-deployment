@@ -343,6 +343,4 @@ kubectl delete namespace $DESIREDNAMESPACE
 
 #### K8s Dashboard
 
-You may find it helpful to see the Kubernetes resources visually which can be achieved by installing the Kubernetes Dashboard...
-
-https://github.com/kubernetes/dashboard/wiki/Installation
+You may find it helpful to see the Kubernetes resources visually which can be achieved by installing the Kubernetes Dashboard: https://github.com/kubernetes/dashboard/wiki/Installation

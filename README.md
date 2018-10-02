@@ -223,25 +223,34 @@ In the 'Kubernetes' tab of the Docker preferences,  click the 'Enable Kubernetes
 
 In the Advanced tab of the Docker preferences, set 'CPUs' to 4 and 'Memory' to 8 GiB
 
-### 4. Install Helm Client
+### 4. Change/Verify Context
+
+If you have previously deployed the DBP to AWS or minikube you will need to change/verify that the `docker-for-desktop` context is being used.
+
+```bash
+kubectl config current-context                 # Display the current context
+kubectl config use-context docker-for-desktop  # Set the default context if needed
+```
+
+### 5. Install Helm Client
 
 ```bash
 brew update; brew install kubernetes-helm
 ```
 
-### 5. Initialize Helm Tiller (Server Component)
+### 6. Initialize Helm Tiller (Server Component)
 
 ```bash
 helm init
 ```
 
-### 6. Add the Alfresco Incubator Helm Repository
+### 7. Add the Alfresco Incubator Helm Repository
 
 ```bash
 helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubator
 ```
 
-### 7. Add Local DNS
+### 8. Add Local DNS
 
 Add Local DNS Entry for Host Machine (needed for JWT issuer matching). Be sure to specify an active network interface.  It is not always `en0` as illustrated.  You can use the command `ifconfig -a` to find an active interface.
 
@@ -251,9 +260,9 @@ sudo sh -c 'echo "`ipconfig getifaddr en0`       localhost-k8s" >> /etc/hosts'; 
 
 *Note:* If your IP address changes you will need to update the `/etc/hosts` entry for localhost-k8s.
 
-### 8. Deploy the DBP
+### 9. Deploy the DBP
 
-The extended install command configures the hostnames, URLs and memory requirements needed to run in Docker for Desktop.  It also configures the time for initiating the kubernetes probes to test if a serivce is available.
+The extended install command configures the hostnames, URLs and memory requirements needed to run in Docker for Desktop.  It also configures the time for initiating the kubernetes probes to test if a service is available.
 
 ```bash
 helm install alfresco-incubator/alfresco-dbp \
@@ -281,7 +290,7 @@ helm install alfresco-incubator/alfresco-dbp \
 --set alfresco-process-services.adminApp.resources.requests.memory="250Mi"
 ```
 
-### 9. Check Deployment Status of DBP
+### 10. Check Deployment Status of DBP
 
 ```bash
 kubectl get pods
@@ -289,7 +298,7 @@ kubectl get pods
 
 *Note:* When checking status, your pods should be `READY 1/1` and `STATUS Running`
 
-### 10. Check DBP Components
+### 11. Check DBP Components
 
 You can access DBP components at the following URLs:
 - http://localhost-k8s/alfresco
@@ -311,7 +320,7 @@ You can access DBP components at the following URLs:
 - The http://localhost-k8s/activiti-admin/solr endpoint is disabled by default.   
   - See https://github.com/Alfresco/acs-deployment/blob/master/docs/examples/search-external-access.md for more information.
 
-### 11. Teardown:
+### 12. Teardown:
 
 ```bash
 helm ls
@@ -322,6 +331,10 @@ helm delete --purge <DBPRELEASE>
 ```
 
 ### Notes
+
+#### kubectl not found
+
+In some cases, after installing Docker for Desktop and enabling Kubernetes, the `kubectl` command may not be found. Docker for Desktop also installs the command as `kubectl.docker`. We would recommend using this command over installing the kubernetes cli which may not match the version of kubernetes that Docker for Desktop is using. 
 
 #### K8s Cluster Namespace
 
@@ -344,3 +357,4 @@ kubectl delete namespace $DESIREDNAMESPACE
 #### K8s Dashboard
 
 You may find it helpful to see the Kubernetes resources visually which can be achieved by installing the Kubernetes Dashboard: https://github.com/kubernetes/dashboard/wiki/Installation
+

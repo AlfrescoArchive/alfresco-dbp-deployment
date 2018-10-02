@@ -332,6 +332,10 @@ helm delete --purge <DBPRELEASE>
 
 ### Notes
 
+#### kubectl not found
+
+In some cases, after installing Docker for Desktop and enabling Kubernetes, the `kubectl` command may not be found. Docker for Desktop also installs the command as `kubectl.docker`. We would recommend using this command over installing the kubernetes cli which may not match the version of kubernetes that Docker for Desktop is using. 
+
 #### K8s Cluster Namespace
 
 If you are deploying multiple projects in your Docker for Desktop Kuberenetes Cluster you may find it useful to use namespaces to segment the projects.

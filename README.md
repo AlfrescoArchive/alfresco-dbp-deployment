@@ -253,7 +253,7 @@ sudo sh -c 'echo "`ipconfig getifaddr en0`       localhost-k8s" >> /etc/hosts'; 
 
 ### 8. Deploy the DBP
 
-The extended install command configures the hostnames, URLs and memory requirements needed to run in Docker for Desktop.  It also configures the time for initiating the kubernetes probes to test if a serivce is available.
+The extended install command configures the hostnames, URLs and memory requirements needed to run in Docker for Desktop.  It also configures the time for initiating the kubernetes probes to test if a service is available.
 
 ```bash
 helm install alfresco-incubator/alfresco-dbp \

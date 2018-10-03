@@ -274,7 +274,6 @@ helm install alfresco-incubator/alfresco-dbp \
 --set alfresco-infrastructure.alfresco-api-gateway.keycloakURL="http://localhost-k8s/auth/" \
 --set alfresco-infrastructure.alfresco-activiti-cloud-registry.enabled=false \
 --set alfresco-infrastructure.alfresco-api-gateway.enabled=false \
---set alfresco-content-services.externalProtocol="https" \
 --set alfresco-content-services.externalHost="localhost-k8s" \
 --set alfresco-content-services.networkpolicysetting.enabled=false \
 --set alfresco-content-services.repository.environment.IDENTITY_SERVICE_URI="http://localhost-k8s/auth" \
@@ -293,6 +292,12 @@ helm install alfresco-incubator/alfresco-dbp \
 --set alfresco-process-services.processEngine.environment.IDENTITY_SERVICE_AUTH="http://localhost-k8s/auth" \
 --set alfresco-process-services.processEngine.resources.requests.memory="1000Mi" \
 --set alfresco-process-services.adminApp.resources.requests.memory="250Mi"
+```
+
+If you want to use `https` you should update any reference to `http` above and include the following setting in your helm install command:
+
+```bash
+--set alfresco-content-services.externalProtocol="https" \
 ```
 
 ### 10. Check Deployment Status of DBP

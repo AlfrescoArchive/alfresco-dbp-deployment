@@ -126,6 +126,7 @@ helm install alfresco-incubator/alfresco-dbp \
 --set alfresco-infrastructure.alfresco-api-gateway.keycloakURL="http://$ELB_CNAME/auth/" \
 --set alfresco-infrastructure.persistence.efs.enabled=true \
 --set alfresco-infrastructure.persistence.efs.dns="$NFSSERVER" \
+--set alfresco-infrastructure.activemq.enabled=false \
 --set alfresco-content-services.externalHost="$ELB_CNAME" \
 --set alfresco-content-services.networkpolicysetting.enabled=false \
 --set alfresco-content-services.repository.environment.IDENTITY_SERVICE_URI="http://$ELB_CNAME/auth" \
@@ -269,6 +270,7 @@ helm install alfresco-incubator/alfresco-dbp \
 --set alfresco-infrastructure.alfresco-api-gateway.keycloakURL="http://localhost-k8s/auth/" \
 --set alfresco-infrastructure.alfresco-activiti-cloud-registry.enabled=false \
 --set alfresco-infrastructure.alfresco-api-gateway.enabled=false \
+--set alfresco-infrastructure.activemq.enabled=false \
 --set alfresco-content-services.externalHost="localhost-k8s" \
 --set alfresco-content-services.networkpolicysetting.enabled=false \
 --set alfresco-content-services.repository.environment.IDENTITY_SERVICE_URI="http://localhost-k8s/auth" \

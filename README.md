@@ -148,6 +148,11 @@ Example: For disabling sync-service you will need to append the following subcom
 ```bash
 --set alfresco-sync-service.enabled=false 
 ```
+If you are using `https` you should include the following setting in your helm install command:
+
+```bash
+--set alfresco-content-services.externalProtocol="https" \
+```
 
 ### 5. Get the DBP release name from the previous command and set it as a variable:
 
@@ -269,6 +274,7 @@ helm install alfresco-incubator/alfresco-dbp \
 --set alfresco-infrastructure.alfresco-api-gateway.keycloakURL="http://localhost-k8s/auth/" \
 --set alfresco-infrastructure.alfresco-activiti-cloud-registry.enabled=false \
 --set alfresco-infrastructure.alfresco-api-gateway.enabled=false \
+--set alfresco-content-services.externalProtocol="https" \
 --set alfresco-content-services.externalHost="localhost-k8s" \
 --set alfresco-content-services.networkpolicysetting.enabled=false \
 --set alfresco-content-services.repository.environment.IDENTITY_SERVICE_URI="http://localhost-k8s/auth" \

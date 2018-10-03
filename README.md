@@ -225,7 +225,7 @@ In the Advanced tab of the Docker preferences, set 'CPUs' to 4.
 
 While Alfresco Digital Business Platform installs and runs with only 8 GiB allocated to Docker, 
 for better performance we recommend that 'Memory' value be set slightly higher, to at least 10 - 12 GiB
-(depending on the amount RAM in your workstation). 
+(depending on the size of RAM in your workstation). 
 
 ### 4. Change/Verify Context
 

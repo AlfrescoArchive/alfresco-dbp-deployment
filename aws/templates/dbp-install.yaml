@@ -255,18 +255,44 @@ Resources:
               runCommand:
                 - "chmod u+x /tmp/helmDeploy.sh"
                 - !Sub "/tmp/helmDeploy.sh\
-                  \ --acs-release ${ReleaseName}\
-                  \ --efs-name ${EFSName}\
-                  \ --namespace ${K8sNamespace}\
+                  \ --helm-command \"helm install alfresco-incubator/alfresco-dbp \
+                  \ --name ${ReleaseName}\
+                  \ --set alfresco-infrastructure.alfresco-api-gateway.keycloakURL='https://${ExternalName}/auth/' \
+                  \ --set alfresco-infrastructure.alfresco-identity-service.keycloak.postgresql.persistence.subPath='${K8sNamespace}/alfresco-identity-service/database-data' \
+                  \ --set alfresco-infrastructure.persistence.efs.enabled=true \
+                  \ --set alfresco-infrastructure.nginx-ingress.enabled=false \
+                  \ --set alfresco-infrastructure.persistence.efs.dns=${EFSName} \
+                  \ --set alfresco-process-services.postgresql.persistence.subPath='${K8sNamespace}/alfresco-process-services/database-data' \
+                  \ --set alfresco-process-services.persistence.subPath='${K8sNamespace}/alfresco-process-services/process-data' \
+                  \ --set alfresco-process-services.processEngine.environment.IDENTITY_SERVICE_AUTH='https://${ExternalName}/auth/' \
+                  \ --set alfresco-content-services.repository.environment.IDENTITY_SERVICE_URI='https://${ExternalName}/auth/' \
+                  \ --set alfresco-content-services.alfresco-search.persistence.search.data.subPath='${K8sNamespace}/alfresco-content-services/solr-data' \
+                  \ --set alfresco-content-services.networkpolicysetting.enabled=false \
+                  \ --set alfresco-content-services.externalHost=${ExternalName} \
+                  \ --set alfresco-content-services.externalProtocol=https \
+                  \ --set alfresco-content-services.externalPort=443 \
+                  \ --set alfresco-content-services.alfresco-search.resources.requests.memory=2500Mi \
+                  \ --set alfresco-content-services.alfresco-search.resources.limits.memory=2500Mi \
+                  \ --set alfresco-content-services.alfresco-search.environment.SOLR_JAVA_MEM='-Xms2000M -Xmx2000M' \
+                  \ --set alfresco-content-services.postgresql.enabled=false \
+                  \ --set alfresco-content-services.database.external=true \
+                  \ --set alfresco-content-services.database.driver='org.mariadb.jdbc.Driver' \
+                  \ --set alfresco-content-services.database.url='jdbc:mariadb:aurora//${RDSEndpoint}:3306/alfresco?useUnicode=yes&characterEncoding=UTF-8' \
+                  \ --set alfresco-content-services.database.user=alfresco \
+                  \ --set alfresco-content-services.database.password=${DatabasePassword} \
+                  \ --set alfresco-content-services.persistence.repository.enabled=false \
+                  \ --set alfresco-content-services.s3connector.enabled=true \
+                  \ --set alfresco-content-services.s3connector.config.bucketName=${S3BucketName} \
+                  \ --set alfresco-content-services.s3connector.config.bucketLocation=${AWS::Region} \
+                  \ --set alfresco-content-services.s3connector.secrets.encryption=kms \
+                  \ --set alfresco-content-services.s3connector.secrets.awsKmsKeyId=${S3BucketKMSAlias} \
+                  \ --set alfresco-content-services.repository.image.repository='alfresco/alfresco-content-repository-aws' \
+                  \ --set alfresco-content-services.repository.image.tag='0.1.3-repo-6.0.0.3' \
+                  \ --set alfresco-content-services.repository.replicaCount=1 \
+                  \ --name dbp-deploy\"\
                   \ --alfresco-password ${AlfrescoPassword}\
-                  \ --rds-endpoint ${RDSEndpoint}\
-                  \ --database-password ${DatabasePassword}\
-                  \ --external-name ${ExternalName}\
-                  \ --s3bucket-name ${S3BucketName}\
-                  \ --s3bucket-kms-alias ${S3BucketKMSAlias}\
-                  \ --s3bucket-location ${AWS::Region}\
-                  \ --registry-secret ${RegistryCredentials}\
-                  \ --install"
+                  \ --namespace ${K8sNamespace}\
+                  \ --registry-secret ${RegistryCredentials}"
               timeoutSeconds: 60
       DocumentType: Command
 
@@ -299,13 +325,9 @@ Resources:
               runCommand:
                 - "chmod u+x /tmp/helmDeploy.sh"
                 - !Sub "/tmp/helmDeploy.sh\
-                  \ --acs-release ${ReleaseName}\
-                  \ --efs-name ${EFSName}\
-                  \ --namespace ${K8sNamespace}\
-                  \ --alfresco-password ${AlfrescoPassword}\
-                  \ --database-password ${DatabasePassword}\
-                  \ --external-name ${ExternalName}\
-                  \ --upgrade"
+                  \ --helm-command \"helm upgrade dbp-deploy alfresco-incubator/alfresco-dbp --reuse-values \
+                  \ --set alfresco-content-services.repository.image.repository='alfresco/alfresco-content-repository-aws' \
+                  \ --set alfresco-content-services.repository.image.tag='0.1.3-repo-6.0.0.3' \""
               timeoutSeconds: 60
       DocumentType: Command
   

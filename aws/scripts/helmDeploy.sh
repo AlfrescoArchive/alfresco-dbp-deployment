@@ -21,7 +21,7 @@ usage() {
   echo -e "--registry-secret \t Base64 dockerconfig.json string to private registry"
 }
 
-if [ $# -lt 12 ]; then
+if [ $# -lt 5 ]; then
   usage
 else
   # extract options and their arguments into variables.
@@ -30,10 +30,6 @@ else
           -h | --help)
               usage
               exit 1
-              ;;
-          --helm-release)
-              HELM_RELEASE="$2";
-              shift 2
               ;;
           --helm-command)
               HELM_COMMAND="$2";
@@ -75,6 +71,7 @@ ALFRESCO_PASSWORD=$(printf %s $ALFRESCO_PASSWORD | iconv -t utf16le | openssl md
 echo Running Helm Command...
 $HELM_COMMAND \
 --set registryPullSecrets=quay-registry-secret \
---set alfresco-content-services.repository.adminPassword="$ALFRESCO_PASSWORD"
+--set alfresco-content-services.repository.adminPassword="$ALFRESCO_PASSWORD" \
+--namespace $DESIREDNAMESPACE
 
 fi

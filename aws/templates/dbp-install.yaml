@@ -255,7 +255,7 @@ Resources:
               runCommand:
                 - "chmod u+x /tmp/helmDeploy.sh"
                 - !Sub "/tmp/helmDeploy.sh\
-                  \ --helm-command \"helm install alfresco-incubator/alfresco-dbp \
+                  \ --helm-command 'helm install alfresco-incubator/alfresco-dbp \
                   \ --name ${ReleaseName}\
                   \ --set alfresco-infrastructure.alfresco-api-gateway.keycloakURL='https://${ExternalName}/auth/' \
                   \ --set alfresco-infrastructure.alfresco-identity-service.keycloak.postgresql.persistence.subPath='${K8sNamespace}/alfresco-identity-service/database-data' \
@@ -289,7 +289,7 @@ Resources:
                   \ --set alfresco-content-services.repository.image.repository='alfresco/alfresco-content-repository-aws' \
                   \ --set alfresco-content-services.repository.image.tag='0.1.3-repo-6.0.0.3' \
                   \ --set alfresco-content-services.repository.replicaCount=1 \
-                  \ --name dbp-deploy\"\
+                  \ --name dbp-deploy'\
                   \ --alfresco-password ${AlfrescoPassword}\
                   \ --namespace ${K8sNamespace}\
                   \ --registry-secret ${RegistryCredentials}"

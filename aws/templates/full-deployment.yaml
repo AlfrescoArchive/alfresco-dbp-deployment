@@ -402,6 +402,8 @@ Parameters:
 
 Conditions:
   isUseCrossRegionReplication: !Equals [!Ref UseCrossRegionReplication, "true"]
+  # deployInfrastructure: !Equals [!Ref deployInfrastructure, "true"]
+  # deployDBP: !Equals [!Ref deployDBP, "true"]
 
 Resources:
     VPCStack:

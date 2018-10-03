@@ -67,10 +67,11 @@ data:
 kubectl create -f secret.yaml
 
 ALFRESCO_PASSWORD=$(printf %s $ALFRESCO_PASSWORD | iconv -t utf16le | openssl md4| awk '{ print $2}')
-
+echo Adding additional permissions to helm
+kubectl create clusterrolebinding add-on-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:default
 echo Running Helm Command...
 $HELM_COMMAND \
---set registryPullSecrets=quay-registry-secret \
+--set alfresco-content-services.registryPullSecrets=quay-registry-secret \
 --set alfresco-content-services.repository.adminPassword="$ALFRESCO_PASSWORD" \
 --namespace $DESIREDNAMESPACE
 

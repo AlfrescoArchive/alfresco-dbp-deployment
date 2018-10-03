@@ -267,7 +267,6 @@ The extended install command configures the hostnames, URLs and memory requireme
 ```bash
 helm install alfresco-incubator/alfresco-dbp \
 --set alfresco-infrastructure.alfresco-api-gateway.keycloakURL="http://localhost-k8s/auth/" \
---set alfresco-infrastructure.rabbitmq-ha.enabled=false \
 --set alfresco-infrastructure.alfresco-activiti-cloud-registry.enabled=false \
 --set alfresco-infrastructure.alfresco-api-gateway.enabled=false \
 --set alfresco-content-services.externalHost="localhost-k8s" \

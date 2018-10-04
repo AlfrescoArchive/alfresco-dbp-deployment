@@ -226,7 +226,11 @@ In the 'Kubernetes' tab of the Docker preferences,  click the 'Enable Kubernetes
 
 ### 3. Increase Memory and CPUs
 
-In the Advanced tab of the Docker preferences, set 'CPUs' to 4 and 'Memory' to 8 GiB
+In the Advanced tab of the Docker preferences, set 'CPUs' to 4.
+
+While Alfresco Digital Business Platform installs and runs with only 8 GiB allocated to Docker, 
+for better performance we recommend that 'Memory' value be set slightly higher, to at least 10 - 12 GiB
+(depending on the size of RAM in your workstation). 
 
 ### 4. Change/Verify Context
 
@@ -265,7 +269,13 @@ sudo sh -c 'echo "`ipconfig getifaddr en0`       localhost-k8s" >> /etc/hosts'; 
 
 *Note:* If your IP address changes you will need to update the `/etc/hosts` entry for localhost-k8s.
 
-### 9. Deploy the DBP
+### 9. Docker Registry Pull Secrets
+
+See the Anaxes Shipyard documentation on [secrets](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/SECRETS.md).
+
+*Note*: You can reuse the secrets.yaml file from charts/incubator directory.  
+
+### 10. Deploy the DBP
 
 The extended install command configures the hostnames, URLs and memory requirements needed to run in Docker for Desktop.  It also configures the time for initiating the kubernetes probes to test if a service is available.
 
@@ -294,13 +304,7 @@ helm install alfresco-incubator/alfresco-dbp \
 --set alfresco-process-services.adminApp.resources.requests.memory="250Mi"
 ```
 
-If you want to use `https` you should update any reference to `http` above and include the following setting in your helm install command:
-
-```bash
---set alfresco-content-services.externalProtocol="https" \
-```
-
-### 10. Check Deployment Status of DBP
+### 11. Check Deployment Status of DBP
 
 ```bash
 kubectl get pods
@@ -308,7 +312,7 @@ kubectl get pods
 
 *Note:* When checking status, your pods should be `READY 1/1` and `STATUS Running`
 
-### 11. Check DBP Components
+### 12. Check DBP Components
 
 You can access DBP components at the following URLs:
 - http://localhost-k8s/alfresco
@@ -330,7 +334,7 @@ You can access DBP components at the following URLs:
 - The http://localhost-k8s/activiti-admin/solr endpoint is disabled by default.   
   - See https://github.com/Alfresco/acs-deployment/blob/master/docs/examples/search-external-access.md for more information.
 
-### 12. Teardown:
+### 13. Teardown:
 
 ```bash
 helm ls

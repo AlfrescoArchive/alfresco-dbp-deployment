@@ -63,5 +63,9 @@ alfresco-sync-service:
 
 alfresco-infrastructure:
   enabled: true
+  #DEPLOY-613 - Multiple ActiveMQ instances are deployed
+  #TODO Remove as part of DEPLOY-563
+  activemq:
+    enabled: false  
 
   

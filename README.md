@@ -148,6 +148,11 @@ Example: For disabling sync-service you will need to append the following subcom
 ```bash
 --set alfresco-sync-service.enabled=false 
 ```
+If you are using `https` you should include the following setting in your helm install command:
+
+```bash
+--set alfresco-content-services.externalProtocol="https" \
+```
 
 ### 5. Get the DBP release name from the previous command and set it as a variable:
 

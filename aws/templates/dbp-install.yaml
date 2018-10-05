@@ -1,0 +1,483 @@
+# Alfresco Enterprise Deployment AWS
+# Copyright (C) 2005 - 2018 Alfresco Software Limited
+# License rights for this program may be obtained from Alfresco Software, Ltd.
+# pursuant to a written agreement and any use of this program without such an
+# agreement is prohibited.
+
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Alfresco Digital Business Platform Deployment Stack."
+
+Metadata:
+    AWS::CloudFormation::Interface:
+      ParameterGroups:
+        - Label:
+            default: Stack Configuration
+          Parameters:
+            - TemplateBucketName
+            - TemplateBucketKeyPrefix
+            - EKSName
+            - EFSName
+            - S3BucketName
+            - S3BucketKMSAlias
+            - BastionAutoScalingGroup
+            - VPCID
+            - NodeSecurityGroup
+            - K8sNamespace
+            - ElbCertArn
+            - ElbCertPolicy
+            - ExternalName
+            - NginxIngressVersion
+            - IngressReleaseName
+            - ReleaseName
+            - AlfrescoPassword
+            - RDSEndpoint
+            - DatabasePassword
+            - RegistryCredentials
+            - Route53DnsZone
+
+      ParameterLabels:
+        TemplateBucketName:
+          default: The name of the S3 bucket that holds the templates
+        TemplateBucketKeyPrefix:
+          default: The Key prefix for the templates in the S3 template bucket
+        EKSName:
+          default: The EKS name
+        EFSName:
+          default: The EFS name
+        S3BucketName:
+          default: The bucket used for S3 connector
+        S3BucketKMSAlias:
+          default: The S3 bucket KMS alias used for S3 connector
+        BastionAutoScalingGroup:
+          default: BastionAutoScalingGroup Id
+        VPCID:
+          default: The ID of the VPC to deploy the Bastion and EKS Cluster into
+        NodeSecurityGroup:
+          default: The Security Group of EKS Worker nodes
+        K8sNamespace:
+          default: The namespace in EKS to deploy Helm charts
+        ElbCertArn:
+          default: The DBP SSL Certificate arn to use with ELB
+        ElbCertPolicy:
+          default: The DBP SSL Certificate policy to use with ELB
+        ExternalName:
+          default: The DBP external endpoint name
+        NginxIngressVersion:
+          default: The nginx-ingress chart version
+        AlfrescoPassword:
+          default: The Admin password for Alfresco
+        RDSEndpoint:
+          default: RDS Endpoint for Aurora MySql connection
+        DatabasePassword:
+          default: The Database password for Alfresco
+        RegistryCredentials:
+          default: Private Registry Credentials. Base64 encryption of dockerconfig json.
+        IngressReleaseName:
+          default: The helm chart release name of nginx-ingress
+        ReleaseName:
+          default: The helm chart release name of the Alfresco Digital Business Platform 
+        Route53DnsZone:
+          default: The hosted zone to create Route53 Record for the Alfresco Digital Business Platform 
+          
+Parameters:
+    TemplateBucketName:
+      AllowedPattern: "^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$"
+      ConstraintDescription: "Bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-)."
+      Description: "S3 bucket name that contains the CFN templates (VPC, Bastion etc). This string can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-)."
+      Type: "String"
+    TemplateBucketKeyPrefix:
+      AllowedPattern: "^[0-9a-zA-Z-/]*$"
+      ConstraintDescription: "Template bucket key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/)."
+      Type: "String"
+    EKSName:
+      Type: String
+      Description: The EKS name
+    EFSName:
+      Type: String
+      Description: The EFS name
+    S3BucketName:
+      Type: String
+      Description: The bucket used for S3 connector
+    S3BucketKMSAlias:
+      Type: String
+      Description: The S3 bucket KMS alias used for S3 connector
+    BastionAutoScalingGroup:
+      Type: String
+      Description: BastionAutoScalingGroup Id
+    VPCID:
+      Description: "ID for the VPC"
+      Type: "AWS::EC2::VPC::Id"
+    NodeSecurityGroup:
+      Type: String
+      Description: The Security Group of EKS Worker nodes
+    K8sNamespace:
+      Type: String
+      Description: The namespace in EKS to deploy Helm charts
+    ElbCertArn:
+      Type: String
+      Description: The DBP SSL Certificate arn to use with ELB
+    ElbCertPolicy:
+      Type: String
+      Description: The DBP SSL Certificate policy to use with ELB
+    ExternalName:
+      Type: String
+      Description: The DBP external endpoint name
+    NginxIngressVersion:
+      Type: String
+      Description: The nginx-ingress chart version
+    AlfrescoPassword:
+      Type: String
+      Description: The Admin password for Alfresco
+      NoEcho: True
+    RDSEndpoint:
+      Type: String
+      Description: RDS Endpoint for Aurora MySql connection
+    DatabasePassword:
+      Type: String
+      Description: The Database password for Alfresco
+      NoEcho: True
+    RegistryCredentials:
+      Type: String
+      Description: The private registry credentials base64
+      NoEcho: True
+      Default: false
+    IngressReleaseName:
+      Type: String
+      Description: The helm chart release name of nginx-ingress
+    ReleaseName:
+      Type: String
+      Description: The helm chart release name of the Alfresco Digital Business Platform 
+    Route53DnsZone:
+      Type: String
+      Description: The hosted zone to create Route53 Record for DBP
+
+Conditions:
+  PrivateRegistry: !Not [!Equals [!Ref RegistryCredentials, false]]
+
+Resources:
+  # SSM documents to run helm commands on the bastion
+  HelmInitDownloadScript:
+    Type: "AWS::SSM::Document"
+    Properties:
+      Content:
+        schemaVersion: "2.2"
+        description: Download helm init helper script
+        mainSteps:
+          - action: aws:downloadContent
+            name: downloadHelmInit
+            inputs:
+              sourceType: "S3"
+              sourceInfo: !Sub "{ \"path\": \"https://${TemplateBucketName}.s3.amazonaws.com/${TemplateBucketKeyPrefix}/scripts/helmInit.sh\" }"
+              destinationPath: "/tmp/helmInit.sh"
+      DocumentType: Command
+
+  HelmInitRunScript:
+    Type: "AWS::SSM::Document"
+    Properties:
+      Content:
+        schemaVersion: "2.2"
+        description: Execute helm init script to deploy tiller
+        mainSteps:
+          - action: aws:runShellScript
+            name: helmInit
+            inputs:
+              workingDirectory: "/root"
+              runCommand: 
+                - "chmod u+x /tmp/helmInit.sh"
+                - "/tmp/helmInit.sh"
+              timeoutSeconds: 60
+      DocumentType: Command
+
+  HelmInstallIngressDownloadScript:
+    Type: "AWS::SSM::Document"
+    Properties:
+      Content:
+        schemaVersion: "2.2"
+        description: Download helm nginx-ingress helper script
+        mainSteps:
+          - action: aws:downloadContent
+            name: downloadHelmIngress
+            inputs:
+              sourceType: "S3"
+              sourceInfo: !Sub "{ \"path\": \"https://${TemplateBucketName}.s3.amazonaws.com/${TemplateBucketKeyPrefix}/scripts/helmIngress.sh\" }"
+              destinationPath: "/tmp/helmIngress.sh"
+      DocumentType: Command
+
+  HelmInstallIngressRunScript:
+    Type: "AWS::SSM::Document"
+    Properties:
+      Content:
+        schemaVersion: "2.2"
+        description: Installs nginx-ingress helm chart
+        mainSteps:
+          - action: aws:runShellScript
+            name: helmInstallIngress
+            inputs:
+              workingDirectory: "/root"
+              runCommand:
+                - "chmod u+x /tmp/helmIngress.sh"
+                - !Sub "/tmp/helmIngress.sh\
+                  \ --ingress-release ${IngressReleaseName}\
+                  \ --ingress-version ${NginxIngressVersion}\
+                  \ --namespace ${K8sNamespace}\
+                  \ --aws-cert-arn ${ElbCertArn}\
+                  \ --aws-cert-policy ${ElbCertPolicy}\
+                  \ --external-name ${ExternalName}"
+              timeoutSeconds: 60
+      DocumentType: Command
+  
+  HelmInstallDownloadScript:
+    Type: "AWS::SSM::Document"
+    Properties:
+      Content:
+        schemaVersion: "2.2"
+        description: Download helm install helper script
+        mainSteps:
+          - action: aws:downloadContent
+            name: downloadHelm
+            inputs:
+              sourceType: "S3"
+              sourceInfo: !Sub "{ \"path\": \"https://${TemplateBucketName}.s3.amazonaws.com/${TemplateBucketKeyPrefix}/scripts/helmDeploy.sh\" }"
+              destinationPath: "/tmp/helmDeploy.sh"
+      DocumentType: Command
+      
+  HelmInstallRunScript:
+    Type: "AWS::SSM::Document"
+    Properties:
+      Content:
+        schemaVersion: "2.2"
+        description: Install the Digital Business Platform Helm chart
+        mainSteps:
+          - action: aws:runShellScript
+            name: helmInstall
+            inputs:
+              workingDirectory: "/root"
+              runCommand:
+                - "chmod u+x /tmp/helmDeploy.sh"
+                - !Sub "/tmp/helmDeploy.sh\
+                  \ --alfresco-password ${AlfrescoPassword}\
+                  \ --namespace ${K8sNamespace}\
+                  \ --registry-secret ${RegistryCredentials}\
+                  \ --release-name ${ReleaseName}\
+                  \ --efsname ${EFSName}\
+                  \ --rds-endpoint ${RDSEndpoint}\
+                  \ --database-password ${DatabasePassword}\
+                  \ --external-name ${ExternalName}\
+                  \ --s3bucket-name ${S3BucketName}\
+                  \ --s3bucket-location ${AWS::Region}\
+                  \ --s3bucket-alias ${S3BucketKMSAlias}\
+                  \ --chart-version 0.8.0\
+                  \ --install"
+              timeoutSeconds: 60
+      DocumentType: Command
+
+  HelmUpgradeDownloadScript:
+    Type: "AWS::SSM::Document"
+    Properties:
+      Content:
+        schemaVersion: "2.2"
+        description: Download helm upgrade helper script
+        mainSteps:
+          - action: aws:downloadContent
+            name: downloadHelmUpgrade
+            inputs:
+              sourceType: "S3"
+              sourceInfo: !Sub "{ \"path\": \"https://${TemplateBucketName}.s3.amazonaws.com/${TemplateBucketKeyPrefix}/scripts/helmDeploy.sh\" }"
+              destinationPath: "/tmp/helmDeploy.sh"
+      DocumentType: Command
+
+  HelmUpgradeRunScript:
+    Type: "AWS::SSM::Document"
+    Properties:
+      Content:
+        schemaVersion: "2.2"
+        description: Upgrade existing helm Deployment
+        mainSteps:
+          - action: aws:runShellScript
+            name: helmInstall
+            inputs:
+              workingDirectory: "/root"
+              runCommand:
+                - "chmod u+x /tmp/helmDeploy.sh"
+                - !Sub "/tmp/helmDeploy.sh --release-name ${ReleaseName} --chart-version 0.8.0"
+              timeoutSeconds: 60
+      DocumentType: Command
+  
+  GetElbEndpointDownloadScript:
+    Type: "AWS::SSM::Document"
+    Properties:
+      Content:
+        schemaVersion: "2.2"
+        description: Download helper script to obtain ELB adress of ingress controller
+        mainSteps:
+          - action: aws:downloadContent
+            name: downloadGetElb
+            inputs:
+              sourceType: "S3"
+              sourceInfo: !Sub "{ \"path\": \"https://${TemplateBucketName}.s3.amazonaws.com/${TemplateBucketKeyPrefix}/scripts/getElb.sh\" }"
+              destinationPath: "/tmp/getElb.sh"
+      DocumentType: Command
+
+  GetElbEndpointRunScript:
+    Type: "AWS::SSM::Document"
+    Properties:
+      Content:
+        schemaVersion: "2.2"
+        description: Get ELB Address of the deployed Ingress
+        mainSteps:
+          - action: aws:runShellScript
+            name: getElbEndpoint
+            inputs:
+              workingDirectory: "/root"
+              runCommand:
+                - "chmod u+x /tmp/getElb.sh"
+                - !Sub "/tmp/getElb.sh --ingress-release ${IngressReleaseName} --namespace ${K8sNamespace}"
+              timeoutSeconds: 60
+      DocumentType: Command
+  
+  HelmDeleteIngressDownloadScript:
+    Type: "AWS::SSM::Document"
+    Properties:
+      Content:
+        schemaVersion: "2.2"
+        description: Download helper script to delete nginx-ingress Helm Chart
+        mainSteps:
+          - action: aws:downloadContent
+            name: downloadDeleteIngress
+            inputs:
+              sourceType: "S3"
+              sourceInfo: !Sub "{ \"path\": \"https://${TemplateBucketName}.s3.amazonaws.com/${TemplateBucketKeyPrefix}/scripts/deleteIngress.sh\" }"
+              destinationPath: "/tmp/deleteIngress.sh"
+      DocumentType: Command
+
+  HelmDeleteIngressRunScript:
+    Type: "AWS::SSM::Document"
+    Properties:
+      Content:
+        schemaVersion: "2.2"
+        description: Delete Nginx Ingress Helm Chart
+        mainSteps:
+          - action: aws:runShellScript
+            name: helmDeleteIngress
+            inputs:
+              workingDirectory: "/root"
+              runCommand:
+                - "chmod u+x /tmp/deleteIngress.sh"
+                - !Sub "/tmp/deleteIngress.sh --ingress-release ${IngressReleaseName}"
+              timeoutSeconds: 60
+      DocumentType: Command
+
+  HelmHelperLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+                - events.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: HelmHelperLambdaRoleLoggingPolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource:
+                  - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+        - PolicyName: HelmHelperLambdaRoleEc2Policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ec2:DescribeInstances
+                  - ec2:DescribeSecurityGroups
+                  - ec2:RevokeSecurityGroupIngress
+                  - ec2:DeleteSecurityGroup
+                Resource: '*'
+        - PolicyName: HelmHelperLambdaRoleSsmPolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ssm:DescribeDocument
+                  - ssm:SendCommand
+                  - ssm:GetCommandInvocation
+                Resource: '*'
+        - PolicyName: s3GetObjectPolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                Resource:
+                  - !Sub "arn:aws:s3:::${TemplateBucketName}"
+                  - !Sub "arn:aws:s3:::${TemplateBucketName}/${TemplateBucketKeyPrefix}/lambdas/helm-helper-lambda.zip"
+
+  HelmHelperLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket: !Ref TemplateBucketName
+        S3Key: !Sub "${TemplateBucketKeyPrefix}/lambdas/helm-helper-lambda.zip"
+      Handler: helmHelperLambda.handler
+      Role: !GetAtt HelmHelperLambdaRole.Arn
+      Runtime: python2.7
+      Timeout: 90
+      Description: "A custom resource to manage Helm charts used for deploying Alfresco Applications"
+
+  HelmHelperLambdaCustomResource:
+    Type: Custom::HelmHelper
+    Properties:
+      ServiceToken: !GetAtt HelmHelperLambda.Arn
+      EKSName: !Ref EKSName
+      VPCID: !Ref VPCID
+      NodeSecurityGroup: !Ref NodeSecurityGroup
+      BastionAutoScalingGroup: !Ref BastionAutoScalingGroup
+      HelmInitDownloadScript: !Ref HelmInitDownloadScript
+      HelmInstallIngressDownloadScript: !Ref HelmInstallIngressDownloadScript
+      HelmInstallDownloadScript: !Ref HelmInstallDownloadScript
+      HelmUpgradeDownloadScript: !Ref HelmUpgradeDownloadScript
+      GetElbEndpointDownloadScript: !Ref GetElbEndpointDownloadScript
+      HelmInitRunScript: !Ref HelmInitRunScript
+      HelmInstallIngressRunScript: !Ref HelmInstallIngressRunScript
+      HelmInstallRunScript: !Ref HelmInstallRunScript
+      HelmUpgradeRunScript: !Ref HelmUpgradeRunScript
+      GetElbEndpointRunScript: !Ref GetElbEndpointRunScript
+      HelmDeleteIngressDownloadScript: !Ref HelmDeleteIngressDownloadScript
+      HelmDeleteIngressRunScript: !Ref HelmDeleteIngressRunScript
+
+  Route53DnsRecord:
+    Type: AWS::Route53::RecordSetGroup
+    DependsOn:
+      - HelmHelperLambdaCustomResource
+    Properties:
+      Comment: DNS Record for ELB
+      HostedZoneName: !Ref Route53DnsZone
+      RecordSets:
+        - Name: !Ref ExternalName
+          Type: CNAME
+          TTL: '300'
+          ResourceRecords:
+            - !GetAtt HelmHelperLambdaCustomResource.elb
+
+Outputs:
+  SubstackName:
+    Description: The DBP stack name
+    Value: !Sub "${AWS::StackName}"
+  DbpElbEndpoint:
+    Description: Alfresco Digital Business Platform  Elb Address
+    Value: !GetAtt HelmHelperLambdaCustomResource.elb
+  DbpDnsEndpoint:
+    Description: Alfresco DBP Root Elb Address
+    Value: !Join ["", ["https://", !Ref ExternalName, "/content-app/"] ]

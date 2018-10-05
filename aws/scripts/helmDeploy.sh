@@ -21,7 +21,7 @@ usage() {
   echo -e "--registry-secret \t Base64 dockerconfig.json string to private registry"
 }
 
-if [ $# -lt 12 ]; then
+if [ $# -lt 13 ]; then
   usage
 else
   # extract options and their arguments into variables.
@@ -31,12 +31,20 @@ else
               usage
               exit 1
               ;;
-          --helm-release)
-              HELM_RELEASE="$2";
+          --release-name)
+              RELEASENAME="$2";
               shift 2
               ;;
-          --helm-command)
-              HELM_COMMAND="$2";
+          --efsname)
+              EFSNAME="$2";
+              shift 2
+              ;;
+          --rds-endpoint)
+              RDSENDPOINT="$2";
+              shift 2
+              ;;
+          --database-password)
+              DATABASEPASSWORD="$2";
               shift 2
               ;;
           --alfresco-password)
@@ -50,6 +58,30 @@ else
           --registry-secret)
               REGISTRYCREDENTIALS="$2";
               shift 2
+              ;;
+          --external-name)
+              EXTERNALNAME="$2";
+              shift 2
+              ;;
+          --s3bucket-name)
+              S3BUCKETNAME="$2";
+              shift 2
+              ;;
+          --s3bucket-location)
+              S3BUCKETLOCATION="$2";
+              shift 2
+              ;;
+          --s3bucket-alias)
+              S3BUCKETALIAS="$2";
+              shift 2
+              ;;
+          --chart-version)
+              CHARTVERSION="$2";
+              shift 2
+              ;;
+          --install)
+              INSTALL="true";
+              shift
               ;;
           --)
               break
@@ -71,10 +103,56 @@ data:
 kubectl create -f secret.yaml
 
 ALFRESCO_PASSWORD=$(printf %s $ALFRESCO_PASSWORD | iconv -t utf16le | openssl md4| awk '{ print $2}')
+echo Adding additional permissions to helm
+kubectl create clusterrolebinding add-on-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:default
+helm repo update
 
+if [ "$INSTALL" = "true" ]; then
 echo Running Helm Command...
-$HELM_COMMAND \
---set registryPullSecrets=quay-registry-secret \
---set alfresco-content-services.repository.adminPassword="$ALFRESCO_PASSWORD"
+helm install alfresco-incubator/alfresco-dbp --version $CHARTVERSION \
+--name $RELEASENAME \
+--set postgresql.enabled=false \
+--set alfresco-infrastructure.alfresco-api-gateway.keycloakURL="https://$EXTERNALNAME/auth/" \
+--set alfresco-infrastructure.alfresco-identity-service.keycloak.postgresql.persistence.subPath="$DESIREDNAMESPACE/alfresco-identity-service/database-data" \
+--set alfresco-infrastructure.persistence.efs.enabled=true \
+--set alfresco-infrastructure.persistence.efs.dns="$EFSNAME" \
+--set alfresco-infrastructure.nginx-ingress.enabled=false \
+--set alfresco-infrastructure.activemq.enabled=false \
+--set alfresco-infrastructure.rabbitmq-ha.enabled=false \
+--set alfresco-process-services.postgresql.persistence.subPath="$DESIREDNAMESPACE/alfresco-process-services/database-data" \
+--set alfresco-process-services.postgresql.persistence.existingClaim="alfresco-volume-claim" \
+--set alfresco-process-services.persistence.subPath="$DESIREDNAMESPACE/alfresco-process-services/process-data" \
+--set alfresco-process-services.processEngine.environment.IDENTITY_SERVICE_AUTH="https://$EXTERNALNAME/auth/" \
+--set alfresco-content-services.repository.environment.IDENTITY_SERVICE_URI="https://$EXTERNALNAME/auth/" \
+--set alfresco-content-services.alfresco-search.persistence.search.data.subPath="$DESIREDNAMESPACE/alfresco-content-services/solr-data" \
+--set alfresco-content-services.networkpolicysetting.enabled=false \
+--set alfresco-content-services.alfresco-infrastructure.enabled=false \
+--set alfresco-content-services.externalHost="$EXTERNALNAME" \
+--set alfresco-content-services.externalProtocol="https" \
+--set alfresco-content-services.externalPort="443" \
+--set alfresco-content-services.registryPullSecrets="quay-registry-secret" \
+--set alfresco-content-services.repository.adminPassword="$ALFRESCO_PASSWORD" \
+--set alfresco-content-services.alfresco-search.environment.SOLR_JAVA_MEM="-Xms2000M -Xmx2000M" \
+--set alfresco-content-services.alfresco-search.resources.requests.memory="2500Mi" \
+--set alfresco-content-services.alfresco-search.resources.limits.memory="2500Mi" \
+--set alfresco-content-services.postgresql.enabled=false \
+--set alfresco-content-services.database.external=true \
+--set alfresco-content-services.database.driver="org.mariadb.jdbc.Driver" \
+--set alfresco-content-services.database.url="'jdbc:mariadb:aurora//$RDSENDPOINT:3306/alfresco?useUnicode=yes&characterEncoding=UTF-8'" \
+--set alfresco-content-services.database.user="alfresco" \
+--set alfresco-content-services.database.password="$DATABASEPASSWORD" \
+--set alfresco-content-services.persistence.repository.enabled=false \
+--set alfresco-content-services.s3connector.enabled=true \
+--set alfresco-content-services.s3connector.config.bucketName="$S3BUCKETNAME" \
+--set alfresco-content-services.s3connector.config.bucketLocation="$S3BUCKETLOCATION" \
+--set alfresco-content-services.s3connector.secrets.encryption=kms \
+--set alfresco-content-services.s3connector.secrets.awsKmsKeyId="$S3BUCKETALIAS" \
+--set alfresco-content-services.repository.image.repository="alfresco/alfresco-content-repository-aws" \
+--set alfresco-content-services.repository.image.tag="0.1.3-repo-6.0.0.3" \
+--set alfresco-content-services.repository.replicaCount=1 \
+--namespace $DESIREDNAMESPACE
+else
+helm upgrade $RELEASENAME alfresco-incubator/alfresco-dbp --version $CHARTVERSION --reuse-values
+fi
 
 fi

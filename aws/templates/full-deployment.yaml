@@ -134,7 +134,7 @@ Metadata:
       IngressReleaseName:
         default: The helm chart release name of nginx-ingress
       ReleaseName:
-        default: The helm chart release name of alfresco content services
+        default: The helm chart release name of the Alfresco Digital Business Platform  
       Route53DnsZone:
         default: The hosted zone to create Route53 Record for DBP
       UseCrossRegionReplication:
@@ -359,9 +359,9 @@ Parameters:
     Default: "alfresco"
   ReleaseName:
     AllowedPattern: ".+"
-    ConstraintDescription: The helm chart release name of alfresco content services can not be empty
+    ConstraintDescription: The helm chart release name of the Alfresco Digital Business Platform can not be empty
     Type: String
-    Description: The helm chart release name of alfresco content services
+    Description: The helm chart release name of the Alfresco Digital Business Platform  
     Default: "dbp-deploy"
   AlfrescoPassword:
     AllowedPattern: ".+"

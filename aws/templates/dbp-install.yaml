@@ -75,9 +75,9 @@ Metadata:
         IngressReleaseName:
           default: The helm chart release name of nginx-ingress
         ReleaseName:
-          default: The helm chart release name of alfresco content services
+          default: The helm chart release name of the Alfresco Digital Business Platform 
         Route53DnsZone:
-          default: The hosted zone to create Route53 Record for ACS
+          default: The hosted zone to create Route53 Record for the Alfresco Digital Business Platform 
           
 Parameters:
     TemplateBucketName:
@@ -146,7 +146,7 @@ Parameters:
       Description: The helm chart release name of nginx-ingress
     ReleaseName:
       Type: String
-      Description: The helm chart release name of alfresco content services
+      Description: The helm chart release name of the Alfresco Digital Business Platform 
     Route53DnsZone:
       Type: String
       Description: The hosted zone to create Route53 Record for DBP
@@ -246,7 +246,7 @@ Resources:
     Properties:
       Content:
         schemaVersion: "2.2"
-        description: Install Alfresco Content Services Helm chart
+        description: Install the Digital Business Platform Helm chart
         mainSteps:
           - action: aws:runShellScript
             name: helmInstall
@@ -476,7 +476,7 @@ Outputs:
     Description: The DBP stack name
     Value: !Sub "${AWS::StackName}"
   DbpElbEndpoint:
-    Description: Alfresco Content Services Elb Address
+    Description: Alfresco Digital Business Platform  Elb Address
     Value: !GetAtt HelmHelperLambdaCustomResource.elb
   DbpDnsEndpoint:
     Description: Alfresco DBP Root Elb Address

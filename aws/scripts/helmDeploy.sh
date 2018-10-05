@@ -111,14 +111,8 @@ if [ "$INSTALL" = "true" ]; then
 echo Running Helm Command...
 helm install alfresco-incubator/alfresco-dbp --version $CHARTVERSION \
 --name $RELEASENAME \
+--namespace $DESIREDNAMESPACE \
 --set postgresql.enabled=false \
---set alfresco-infrastructure.alfresco-api-gateway.keycloakURL="https://$EXTERNALNAME/auth/" \
---set alfresco-infrastructure.alfresco-identity-service.keycloak.postgresql.persistence.subPath="$DESIREDNAMESPACE/alfresco-identity-service/database-data" \
---set alfresco-infrastructure.persistence.efs.enabled=true \
---set alfresco-infrastructure.persistence.efs.dns="$EFSNAME" \
---set alfresco-infrastructure.nginx-ingress.enabled=false \
---set alfresco-infrastructure.activemq.enabled=false \
---set alfresco-infrastructure.rabbitmq-ha.enabled=false \
 --set alfresco-process-services.postgresql.persistence.subPath="$DESIREDNAMESPACE/alfresco-process-services/database-data" \
 --set alfresco-process-services.postgresql.persistence.existingClaim="alfresco-volume-claim" \
 --set alfresco-process-services.persistence.subPath="$DESIREDNAMESPACE/alfresco-process-services/process-data" \
@@ -150,7 +144,14 @@ helm install alfresco-incubator/alfresco-dbp --version $CHARTVERSION \
 --set alfresco-content-services.repository.image.repository="alfresco/alfresco-content-repository-aws" \
 --set alfresco-content-services.repository.image.tag="0.1.3-repo-6.0.0.3" \
 --set alfresco-content-services.repository.replicaCount=1 \
---namespace $DESIREDNAMESPACE
+--set alfresco-infrastructure.alfresco-api-gateway.keycloakURL="https://$EXTERNALNAME/auth/" \
+--set alfresco-infrastructure.persistence.efs.enabled=true \
+--set alfresco-infrastructure.persistence.efs.dns="$EFSNAME" \
+--set alfresco-infrastructure.nginx-ingress.enabled=false \
+--set alfresco-infrastructure.activemq.enabled=false \
+--set alfresco-infrastructure.rabbitmq-ha.enabled=false \
+--set alfresco-infrastructure.alfresco-identity-service.keycloak.postgresql.persistence.subPath="$DESIREDNAMESPACE/alfresco-identity-service/database-data" \
+--set alfresco-infrastructure.alfresco-identity-service.client.alfresco.redirectUris="[\"https://$EXTERNALNAME*\"]"
 else
 helm upgrade $RELEASENAME alfresco-incubator/alfresco-dbp --version $CHARTVERSION --reuse-values
 fi

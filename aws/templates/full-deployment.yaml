@@ -679,31 +679,43 @@ Outputs:
 
   # S3 Stack
   S3SubstackName:
+    Condition: deployDbp
     Value: !GetAtt S3Stack.Outputs.SubstackName
   S3BucketName:
+    Condition: deployDbp
     Value: !GetAtt S3Stack.Outputs.S3BucketName
   S3BucketKMSAlias:
+    Condition: deployDbp
     Value: !GetAtt S3Stack.Outputs.S3BucketKMSAlias
   S3EmptyBucketLambda:
+    Condition: deployDbp
     Value: !GetAtt S3Stack.Outputs.S3EmptyBucketLambda
   S3EmptyBucketLambdaRole:
+    Condition: deployDbp
     Value: !GetAtt S3Stack.Outputs.S3EmptyBucketLambdaRole
   S3ReplicationBucket:
+    Condition: deployDbp
     Value: !Ref ReplicationBucket
     Condition: isUseCrossRegionReplication
 
   # RDS Stack
   RDSSubstackName:
+    Condition: deployDbp
     Value: !GetAtt RDSStack.Outputs.SubstackName
   RDSEndPoint:
+    Condition: deployDbp
     Value: !GetAtt RDSStack.Outputs.Endpoint
 
   # DBP Stack
   DbpElbEndpoint:
+    Condition: deployDbp
     Value: !GetAtt DBPStack.Outputs.DbpElbEndpoint
   BaseDnsName: 
+    Condition: deployDbp
     Value: !Ref ExternalName
   DbpDnsEndpoint:
+    Condition: deployDbp
     Value: !GetAtt DBPStack.Outputs.DbpDnsEndpoint
   ReleaseName:
+    Condition: deployDbp
     Value: !Ref ReleaseName

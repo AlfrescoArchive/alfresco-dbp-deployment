@@ -284,7 +284,7 @@ kubectl create secret generic licenseaps --from-file=./activiti.lic --namespace=
 ```
 
 This step is optional. If you choose not to deploy the license this way,
-Alfresco Process Services will start up in read-only mode and you will need to apply it manually (see [Notes](#12.-check-dbp-components) below).
+Alfresco Process Services will start up in read-only mode and you will need to apply it manually (see [Notes](#12-check-dbp-components) below).
 
 ### 11. Deploy the DBP
 

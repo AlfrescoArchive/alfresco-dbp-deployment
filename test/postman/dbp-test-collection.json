@@ -819,7 +819,6 @@
 							"listen": "test",
 							"script": {
 								"id": "5cfef929-277b-4980-b44e-e787fa8560fe",
-								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -829,7 +828,8 @@
 									"    var jsonData = pm.response.json().edition;",
 									"    pm.expect(jsonData).to.eql(\"Alfresco Process Services (powered by Activiti)\");",
 									"});"
-								]
+								],
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -856,6 +856,51 @@
 								"app-version"
 							]
 						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create local user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "707cbbc8-69d5-4a7e-860e-ce75ef35fabb",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n\t\"tenantId\": {{apsTenantId}},\n\t\"firstName\": \"Test\", \n\t\"lastName\": \"User\", \n\t\"fullname\": \"Test User\", \n\t\"email\": \"{{testUserEmail}}\", \n\t\"password\": \"Fifi4567\"\n}"
+						},
+						"url": {
+							"raw": "{{apsUrl}}/api/enterprise/admin/users",
+							"host": [
+								"{{apsUrl}}"
+							],
+							"path": [
+								"api",
+								"enterprise",
+								"admin",
+								"users"
+							]
+						},
+						"description": "Creates local user with dummy password. Note there are password strenght requirements on dummy password."
 					},
 					"response": []
 				}
@@ -971,19 +1016,28 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "2e70f963-3867-4ced-9a7d-b64e75b8edc8",
-								"type": "text/javascript",
+								"id": "e9bd1f06-b857-41b7-ac9d-7b87082b0301",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"pm.test(\"Email in response is valid\", function () {",
+									"pm.test(\"Test user can access default apps\", function () {",
 									"    var jsonData = pm.response.json();",
-									"    var email= jsonData.email;",
-									"    pm.expect(email).to.be.eql(pm.variables.get(\"adminUserEmail\"));",
+									"    ",
+									"    // test user bootstrapped in alfresco-realm.json has access to \"kickstart\", \"tasks\", \"identity\" and",
+									"    // \"analytics\" apps",
+									"    pm.expect(\"size\" in jsonData).to.be.true;",
+									"    pm.expect(jsonData.size).to.be.eql(4);",
+									"    ",
+									"    pm.expect(\"data\" in jsonData).to.be.true;",
+									"    pm.expect(jsonData.data).to.have.lengthOf(4);",
+									"    ",
+									"    userapps = jsonData.data.map(t => t.defaultAppId);",
+									"    pm.expect(userapps).to.have.members([\"kickstart\", \"tasks\", \"identity\", \"analytics\"]);",
 									"});"
-								]
+								],
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -992,7 +1046,13 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{kcAdminAccessToken}}"
+								"value": "Bearer {{kcAccessToken}}",
+								"disabled": false
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"disabled": false
 							}
 						],
 						"body": {
@@ -1000,14 +1060,14 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{apsUrl}}/api/enterprise/profile",
+							"raw": "{{apsUrl}}/api/enterprise/runtime-app-definitions",
 							"host": [
 								"{{apsUrl}}"
 							],
 							"path": [
 								"api",
 								"enterprise",
-								"profile"
+								"runtime-app-definitions"
 							]
 						}
 					},
@@ -1122,103 +1182,103 @@
 	],
 	"variable": [
 		{
-			"id": "02ccfbf4-1e37-4e43-a7c8-b06949cc17fd",
+			"id": "6e47dc25-a70c-47e9-85a5-1b126712b172",
 			"key": "acsUrl",
 			"value": "{{dbpurl}}/alfresco",
 			"type": "string"
 		},
 		{
-			"id": "e565e16b-9096-4ede-ade4-850545c5e55c",
+			"id": "8a73cd16-d06e-4d69-aab4-878166c6c73d",
 			"key": "shareUrl",
 			"value": "{{dbpurl}}/share",
 			"type": "string"
 		},
 		{
-			"id": "aac2c845-8037-471f-b793-f73dd0e3b6ff",
+			"id": "7ee7a4c7-64ac-4c5e-b403-f2b7457112d8",
 			"key": "apsUrl",
 			"value": "{{dbpurl}}/activiti-app",
 			"type": "string"
 		},
 		{
-			"id": "705bb54c-e4c8-440e-b1e5-88e24651de3f",
+			"id": "1dcab56a-f369-4df5-ba39-ac3229918b93",
 			"key": "identityServiceUrl",
 			"value": "{{dbpurl}}/auth",
 			"type": "string"
 		},
 		{
-			"id": "a9cf8adf-a049-4396-9674-dd4fd5123216",
+			"id": "b23fa80d-4646-4a35-b349-fe7230b62b97",
 			"key": "contentAppUrl",
 			"value": "{{dbpurl}}/content-app",
 			"type": "string"
 		},
 		{
-			"id": "ec6e42cc-f816-42c9-80e9-a44af4becabb",
+			"id": "ffad6455-e638-47be-997f-11e5cd28ca5d",
 			"key": "identityServiceRealm",
 			"value": "alfresco",
 			"type": "string"
 		},
 		{
-			"id": "d314d603-b78e-4cd2-a11b-c268bb322bdb",
+			"id": "0a2b11ff-a3c0-4d0e-b4d2-76dd55bf94fb",
 			"key": "identityServiceClientId",
 			"value": "alfresco",
 			"type": "string"
 		},
 		{
-			"id": "cc94fb68-7336-47fb-87ee-14be521e9e76",
+			"id": "925b1936-8eab-4f07-9d8c-fe456272619e",
 			"key": "testUserUsername",
 			"value": "testuser",
 			"type": "string"
 		},
 		{
-			"id": "1bd3a6e3-6b73-463e-b149-97b160940c14",
+			"id": "4a2b8e99-6606-471f-8295-a8be59cfc023",
 			"key": "testUserPassword",
 			"value": "password",
 			"type": "string"
 		},
 		{
-			"id": "9d8bfb83-f916-410f-9d8f-ac5b19718843",
+			"id": "d60b434a-d528-4ac3-b8f4-ae6ddcfdb929",
 			"key": "testUserEmail",
 			"value": "test@test.com",
 			"type": "string"
 		},
 		{
-			"id": "11d81051-2d74-43b8-81d6-a2a89ec05f71",
+			"id": "81eb40eb-85eb-46fc-90f2-87981aefe72e",
 			"key": "adminUserUsername",
 			"value": "admin",
 			"type": "string"
 		},
 		{
-			"id": "7e1a53af-c7f4-4045-9b5f-6c1864658ddf",
+			"id": "6d4e8ac0-ad60-4e08-81cf-d03543674055",
 			"key": "adminUserPassword",
 			"value": "admin",
 			"type": "string"
 		},
 		{
-			"id": "b7e1a2e4-9091-4583-9103-20130c75bc5d",
+			"id": "5fed93c5-615a-4e03-a277-9f0084076181",
 			"key": "adminUserEmail",
 			"value": "admin@app.activiti.com",
 			"type": "string"
 		},
 		{
-			"id": "977d39dc-6f2e-40e2-9b61-8d36d582e7d1",
+			"id": "55e5bc50-33ee-43ba-a08b-cd36d3b55571",
 			"key": "apsLocalAdminUser",
 			"value": "admin@app.activiti.com",
 			"type": "string"
 		},
 		{
-			"id": "6c78de9f-931c-4c28-a9cd-879345c290fd",
+			"id": "798c1468-5498-44b9-88a6-6c72b0d08c4d",
 			"key": "apsLocalAdminPassword",
 			"value": "admin",
 			"type": "string"
 		},
 		{
-			"id": "a69419e0-df87-4d17-ae29-59d26941e5fc",
+			"id": "a6515a65-c802-416c-a931-7c0be4ec8395",
 			"key": "moduleVersions",
 			"value": "[{\"moduleName\":\"alfresco-aos-module\",\"moduleVersion\":\"1.2.0\"},{\"moduleName\":\"org.alfresco.integrations.google.docs\",\"moduleVersion\":\"3.1.0\"},{\"moduleName\":\"alfresco-share-services\",\"moduleVersion\":\"6.0.1\"}]",
 			"type": "string"
 		},
 		{
-			"id": "3f275471-784f-49e0-8e46-4877fdad252d",
+			"id": "346a499c-f13c-435a-ab49-fda8e312af49",
 			"key": "apsTenantId",
 			"value": "1",
 			"type": "string"

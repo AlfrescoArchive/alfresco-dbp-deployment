@@ -275,7 +275,18 @@ See the Anaxes Shipyard documentation on [secrets](https://github.com/Alfresco/a
 
 *Note*: You can reuse the secrets.yaml file from charts/incubator directory.  
 
-### 10. Deploy the DBP
+### 10. Apply Alfresco Process Services license
+
+If you have a valid Alfresco Process Services license, you can apply it at deployment time 
+by creating a secret called `licenseaps` from your license file:
+```bash
+kubectl create secret generic licenseaps --from-file=./activiti.lic --namespace=$DESIREDNAMESPACE
+```
+
+This step is optional. If you choose not to deploy the license this way,
+Alfresco Process Services will start up in read-only mode and you will need to apply it manually (see [Notes](#12-check-dbp-components) below).
+
+### 11. Deploy the DBP
 
 The extended install command configures the hostnames, URLs and memory requirements needed to run in Docker for Desktop.  It also configures the time for initiating the kubernetes probes to test if a service is available.
 
@@ -328,7 +339,7 @@ You can access DBP components at the following URLs:
   - Apply a license by uploading an Activiti license file after deployment.
 
 - As deployed, the activiti-admin app does not work because it is not configured with the correct server endpoint. 
-  - To fix that, click 'Edit endpoint configuration' and then in the form enter http://localhost-k8s for the server address.
+  - To fix that, click 'Edit Process Services REST Endpoint' and then in the form enter http://localhost-k8s for the server address.
   - Save the form and  click 'Check Process Services REST endpoint' to see if it is valid.
 
 - The http://localhost-k8s/activiti-admin/solr endpoint is disabled by default.   

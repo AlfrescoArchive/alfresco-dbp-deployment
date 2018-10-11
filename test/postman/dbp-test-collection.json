@@ -1025,16 +1025,15 @@
 									"pm.test(\"Test user can access default apps\", function () {",
 									"    var jsonData = pm.response.json();",
 									"    ",
-									"    // test user bootstrapped in alfresco-realm.json has access to \"kickstart\", \"tasks\", \"identity\" and",
-									"    // \"analytics\" apps",
+									"    // test user bootstrapped in alfresco-realm.json has access to \"tasks\" and \"identity\" apps",
 									"    pm.expect(\"size\" in jsonData).to.be.true;",
-									"    pm.expect(jsonData.size).to.be.eql(4);",
+									"    pm.expect(jsonData.size).to.be.eql(2);",
 									"    ",
 									"    pm.expect(\"data\" in jsonData).to.be.true;",
-									"    pm.expect(jsonData.data).to.have.lengthOf(4);",
+									"    pm.expect(jsonData.data).to.have.lengthOf(2);",
 									"    ",
 									"    userapps = jsonData.data.map(t => t.defaultAppId);",
-									"    pm.expect(userapps).to.have.members([\"kickstart\", \"tasks\", \"identity\", \"analytics\"]);",
+									"    pm.expect(userapps).to.have.members([\"tasks\", \"identity\"]);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1156,6 +1155,249 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "07 Expired Token Tests",
+			"item": [
+				{
+					"name": "Shorten realm's access token lifespan",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bcedf8cbe-1d10-4dce-991c-678762ee8103",
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{kcAdminAccessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"accessTokenLifespan\": 10\n}"
+						},
+						"url": {
+							"raw": "{{identityServiceUrl}}/admin/realms/{{identityServiceRealm}}",
+							"host": [
+								"{{identityServiceUrl}}"
+							],
+							"path": [
+								"admin",
+								"realms",
+								"{{identityServiceRealm}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Generate testuser access token and wait for expiry",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b74db1aa-4c4a-4e30-bd1e-6e1501c57216",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Token is bearer token\", function () {",
+									"    pm.expect(jsonData.token_type).to.eql(\"bearer\");",
+									"});",
+									"",
+									"pm.test(\"Response contains access token\", function () {",
+									"    pm.expect(\"access_token\" in jsonData).to.be.true;",
+									"});",
+									"",
+									"var tokens = JSON.parse(responseBody); ",
+									"pm.environment.set(\"kcAccessToken\", tokens.access_token);",
+									"",
+									"setTimeout(function(){}, 10 * 1.1 * 1000); // sleep for 1.1 * 10s",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_id",
+									"value": "{{identityServiceClientId}}",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "{{testUserUsername}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{testUserPassword}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{identityServiceUrl}}/realms/{{identityServiceRealm}}/protocol/openid-connect/token",
+							"host": [
+								"{{identityServiceUrl}}"
+							],
+							"path": [
+								"realms",
+								"{{identityServiceRealm}}",
+								"protocol",
+								"openid-connect",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve ACS test user profile using token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cf5678ae-cc22-4e8c-967a-25809a0a6a1c",
+								"exec": [
+									"pm.test(\"Response code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{kcAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{acsUrl}}/api/-default-/public/alfresco/versions/1/people/-me-",
+							"host": [
+								"{{acsUrl}}"
+							],
+							"path": [
+								"api",
+								"-default-",
+								"public",
+								"alfresco",
+								"versions",
+								"1",
+								"people",
+								"-me-"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve APS test user's own profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "34b4e7f0-d846-4ddc-92be-a2241b1fb0c2",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{kcAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{apsUrl}}/api/enterprise/profile?tenantId={{apsTenantId}}",
+							"host": [
+								"{{apsUrl}}"
+							],
+							"path": [
+								"api",
+								"enterprise",
+								"profile"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{apsTenantId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"event": [
@@ -1182,103 +1424,103 @@
 	],
 	"variable": [
 		{
-			"id": "6e47dc25-a70c-47e9-85a5-1b126712b172",
+			"id": "ce101dfb-e175-4f27-9704-19a2a0cf6112",
 			"key": "acsUrl",
 			"value": "{{dbpurl}}/alfresco",
 			"type": "string"
 		},
 		{
-			"id": "8a73cd16-d06e-4d69-aab4-878166c6c73d",
+			"id": "5da0a632-e994-4907-87e9-68f73bc3cd9a",
 			"key": "shareUrl",
 			"value": "{{dbpurl}}/share",
 			"type": "string"
 		},
 		{
-			"id": "7ee7a4c7-64ac-4c5e-b403-f2b7457112d8",
+			"id": "66172d54-dcb2-4deb-b741-d50a776786ec",
 			"key": "apsUrl",
 			"value": "{{dbpurl}}/activiti-app",
 			"type": "string"
 		},
 		{
-			"id": "1dcab56a-f369-4df5-ba39-ac3229918b93",
+			"id": "cc074ca5-1229-4545-9819-eb46c26f33b3",
 			"key": "identityServiceUrl",
 			"value": "{{dbpurl}}/auth",
 			"type": "string"
 		},
 		{
-			"id": "b23fa80d-4646-4a35-b349-fe7230b62b97",
+			"id": "af2cf161-5168-4034-875f-ce920f42c663",
 			"key": "contentAppUrl",
 			"value": "{{dbpurl}}/content-app",
 			"type": "string"
 		},
 		{
-			"id": "ffad6455-e638-47be-997f-11e5cd28ca5d",
+			"id": "8bc2c999-9331-45aa-aa82-54c1c8b2a8de",
 			"key": "identityServiceRealm",
 			"value": "alfresco",
 			"type": "string"
 		},
 		{
-			"id": "0a2b11ff-a3c0-4d0e-b4d2-76dd55bf94fb",
+			"id": "34c329d0-d59e-4558-a76f-a43c1ba77e68",
 			"key": "identityServiceClientId",
 			"value": "alfresco",
 			"type": "string"
 		},
 		{
-			"id": "925b1936-8eab-4f07-9d8c-fe456272619e",
+			"id": "22f86730-f9cc-4b71-b978-7e35ceb8cf60",
 			"key": "testUserUsername",
 			"value": "testuser",
 			"type": "string"
 		},
 		{
-			"id": "4a2b8e99-6606-471f-8295-a8be59cfc023",
+			"id": "69cf6d66-3414-4a70-a2ce-d8462b0badc5",
 			"key": "testUserPassword",
 			"value": "password",
 			"type": "string"
 		},
 		{
-			"id": "d60b434a-d528-4ac3-b8f4-ae6ddcfdb929",
+			"id": "1f10c623-b091-4349-b978-8d0fbc0fa872",
 			"key": "testUserEmail",
 			"value": "test@test.com",
 			"type": "string"
 		},
 		{
-			"id": "81eb40eb-85eb-46fc-90f2-87981aefe72e",
+			"id": "4f3cbfd4-2022-4565-8c57-ee32839a628f",
 			"key": "adminUserUsername",
 			"value": "admin",
 			"type": "string"
 		},
 		{
-			"id": "6d4e8ac0-ad60-4e08-81cf-d03543674055",
+			"id": "44cee70d-0049-45a0-a2c5-f691ded1a272",
 			"key": "adminUserPassword",
 			"value": "admin",
 			"type": "string"
 		},
 		{
-			"id": "5fed93c5-615a-4e03-a277-9f0084076181",
+			"id": "b1720c08-ce5c-41d3-bdf6-88f49386435e",
 			"key": "adminUserEmail",
 			"value": "admin@app.activiti.com",
 			"type": "string"
 		},
 		{
-			"id": "55e5bc50-33ee-43ba-a08b-cd36d3b55571",
+			"id": "1578c0fc-26ed-419b-90e0-c1f971231633",
 			"key": "apsLocalAdminUser",
 			"value": "admin@app.activiti.com",
 			"type": "string"
 		},
 		{
-			"id": "798c1468-5498-44b9-88a6-6c72b0d08c4d",
+			"id": "bf8b8c46-e445-4f23-83f6-86078460de29",
 			"key": "apsLocalAdminPassword",
 			"value": "admin",
 			"type": "string"
 		},
 		{
-			"id": "a6515a65-c802-416c-a931-7c0be4ec8395",
+			"id": "6102534c-3184-4b7b-82d9-fbdbd34e547a",
 			"key": "moduleVersions",
 			"value": "[{\"moduleName\":\"alfresco-aos-module\",\"moduleVersion\":\"1.2.0\"},{\"moduleName\":\"org.alfresco.integrations.google.docs\",\"moduleVersion\":\"3.1.0\"},{\"moduleName\":\"alfresco-share-services\",\"moduleVersion\":\"6.0.1\"}]",
 			"type": "string"
 		},
 		{
-			"id": "346a499c-f13c-435a-ab49-fda8e312af49",
+			"id": "9f0ad874-da00-4dd7-9fb6-0addacb64dbc",
 			"key": "apsTenantId",
 			"value": "1",
 			"type": "string"

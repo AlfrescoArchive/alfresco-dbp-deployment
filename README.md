@@ -148,6 +148,11 @@ Example: For disabling sync-service you will need to append the following subcom
 ```bash
 --set alfresco-sync-service.enabled=false 
 ```
+If you are using `https` you should include the following setting in your helm install command:
+
+```bash
+--set alfresco-content-services.externalProtocol="https" \
+```
 
 ### 5. Get the DBP release name from the previous command and set it as a variable:
 
@@ -221,27 +226,40 @@ In the 'Kubernetes' tab of the Docker preferences,  click the 'Enable Kubernetes
 
 ### 3. Increase Memory and CPUs
 
-In the Advanced tab of the Docker preferences, set 'CPUs' to 4 and 'Memory' to 8 GiB
+In the Advanced tab of the Docker preferences, set 'CPUs' to 4.
 
-### 4. Install Helm Client
+While Alfresco Digital Business Platform installs and runs with only 8 GiB allocated to Docker, 
+for better performance we recommend that 'Memory' value be set slightly higher, to at least 10 - 12 GiB
+(depending on the size of RAM in your workstation). 
+
+### 4. Change/Verify Context
+
+If you have previously deployed the DBP to AWS or minikube you will need to change/verify that the `docker-for-desktop` context is being used.
+
+```bash
+kubectl config current-context                 # Display the current context
+kubectl config use-context docker-for-desktop  # Set the default context if needed
+```
+
+### 5. Install Helm Client
 
 ```bash
 brew update; brew install kubernetes-helm
 ```
 
-### 5. Initialize Helm Tiller (Server Component)
+### 6. Initialize Helm Tiller (Server Component)
 
 ```bash
 helm init
 ```
 
-### 6. Add the Alfresco Incubator Helm Repository
+### 7. Add the Alfresco Incubator Helm Repository
 
 ```bash
 helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubator
 ```
 
-### 7. Add Local DNS
+### 8. Add Local DNS
 
 Add Local DNS Entry for Host Machine (needed for JWT issuer matching). Be sure to specify an active network interface.  It is not always `en0` as illustrated.  You can use the command `ifconfig -a` to find an active interface.
 
@@ -251,14 +269,30 @@ sudo sh -c 'echo "`ipconfig getifaddr en0`       localhost-k8s" >> /etc/hosts'; 
 
 *Note:* If your IP address changes you will need to update the `/etc/hosts` entry for localhost-k8s.
 
-### 8. Deploy the DBP
+### 9. Docker Registry Pull Secrets
 
-The extended install command configures the hostnames, URLs and memory requirements needed to run in Docker for Desktop.  It also configures the time for initiating the kubernetes probes to test if a serivce is available.
+See the Anaxes Shipyard documentation on [secrets](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/SECRETS.md).
+
+*Note*: You can reuse the secrets.yaml file from charts/incubator directory.  
+
+### 10. Apply Alfresco Process Services license
+
+If you have a valid Alfresco Process Services license, you can apply it at deployment time 
+by creating a secret called `licenseaps` from your license file:
+```bash
+kubectl create secret generic licenseaps --from-file=./activiti.lic --namespace=$DESIREDNAMESPACE
+```
+
+This step is optional. If you choose not to deploy the license this way,
+Alfresco Process Services will start up in read-only mode and you will need to apply it manually (see [Notes](#12-check-dbp-components) below).
+
+### 11. Deploy the DBP
+
+The extended install command configures the hostnames, URLs and memory requirements needed to run in Docker for Desktop.  It also configures the time for initiating the kubernetes probes to test if a service is available.
 
 ```bash
 helm install alfresco-incubator/alfresco-dbp \
 --set alfresco-infrastructure.alfresco-api-gateway.keycloakURL="http://localhost-k8s/auth/" \
---set alfresco-infrastructure.rabbitmq-ha.enabled=false \
 --set alfresco-infrastructure.alfresco-activiti-cloud-registry.enabled=false \
 --set alfresco-infrastructure.alfresco-api-gateway.enabled=false \
 --set alfresco-content-services.externalHost="localhost-k8s" \
@@ -281,7 +315,7 @@ helm install alfresco-incubator/alfresco-dbp \
 --set alfresco-process-services.adminApp.resources.requests.memory="250Mi"
 ```
 
-### 9. Check Deployment Status of DBP
+### 11. Check Deployment Status of DBP
 
 ```bash
 kubectl get pods
@@ -289,7 +323,7 @@ kubectl get pods
 
 *Note:* When checking status, your pods should be `READY 1/1` and `STATUS Running`
 
-### 10. Check DBP Components
+### 12. Check DBP Components
 
 You can access DBP components at the following URLs:
 - http://localhost-k8s/alfresco
@@ -305,13 +339,13 @@ You can access DBP components at the following URLs:
   - Apply a license by uploading an Activiti license file after deployment.
 
 - As deployed, the activiti-admin app does not work because it is not configured with the correct server endpoint. 
-  - To fix that, click 'Edit endpoint configuration' and then in the form enter http://localhost-k8s for the server address.
+  - To fix that, click 'Edit Process Services REST Endpoint' and then in the form enter http://localhost-k8s for the server address.
   - Save the form and  click 'Check Process Services REST endpoint' to see if it is valid.
 
 - The http://localhost-k8s/activiti-admin/solr endpoint is disabled by default.   
   - See https://github.com/Alfresco/acs-deployment/blob/master/docs/examples/search-external-access.md for more information.
 
-### 11. Teardown:
+### 13. Teardown:
 
 ```bash
 helm ls
@@ -322,6 +356,10 @@ helm delete --purge <DBPRELEASE>
 ```
 
 ### Notes
+
+#### kubectl not found
+
+In some cases, after installing Docker for Desktop and enabling Kubernetes, the `kubectl` command may not be found. Docker for Desktop also installs the command as `kubectl.docker`. We would recommend using this command over installing the kubernetes cli which may not match the version of kubernetes that Docker for Desktop is using. 
 
 #### K8s Cluster Namespace
 
@@ -340,3 +378,8 @@ You may also need to remove this namespace when you no longer need it.
 ```bash
 kubectl delete namespace $DESIREDNAMESPACE
 ```
+
+#### K8s Dashboard
+
+You may find it helpful to see the Kubernetes resources visually which can be achieved by installing the Kubernetes Dashboard: https://github.com/kubernetes/dashboard/wiki/Installation
+

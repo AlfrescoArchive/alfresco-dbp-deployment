@@ -1025,15 +1025,17 @@
 									"pm.test(\"Test user can access default apps\", function () {",
 									"    var jsonData = pm.response.json();",
 									"    ",
-									"    // test user bootstrapped in alfresco-realm.json has access to \"tasks\" and \"identity\" apps",
+									"    // test user bootstrapped in alfresco-realm.json is in the administrators group and ",
+									"    // as such has access to:",
+									"    // \"kickstart\", \"tasks\", \"identity\" and \"analytics\" apps",
 									"    pm.expect(\"size\" in jsonData).to.be.true;",
-									"    pm.expect(jsonData.size).to.be.eql(2);",
+									"    pm.expect(jsonData.size).to.be.eql(4);",
 									"    ",
 									"    pm.expect(\"data\" in jsonData).to.be.true;",
-									"    pm.expect(jsonData.data).to.have.lengthOf(2);",
+									"    pm.expect(jsonData.data).to.have.lengthOf(4);",
 									"    ",
 									"    userapps = jsonData.data.map(t => t.defaultAppId);",
-									"    pm.expect(userapps).to.have.members([\"tasks\", \"identity\"]);",
+									"    pm.expect(userapps).to.have.members([\"kickstart\", \"tasks\", \"identity\", \"analytics\"]);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1701,103 +1703,103 @@
 	],
 	"variable": [
 		{
-			"id": "e65be5af-3951-43b3-bdb2-fd945b5f1de6",
+			"id": "1450729d-5636-4a8a-b062-816497abeb60",
 			"key": "acsUrl",
 			"value": "{{dbpurl}}/alfresco",
 			"type": "string"
 		},
 		{
-			"id": "92c292ac-0453-494d-a04e-913e2936be7a",
+			"id": "93f946b8-ce1b-4587-a219-72986753c5f6",
 			"key": "shareUrl",
 			"value": "{{dbpurl}}/share",
 			"type": "string"
 		},
 		{
-			"id": "384ed100-db5c-4c29-ae63-20a86c5ef213",
+			"id": "4b93abbb-0d82-4907-9746-078ffa5eebcd",
 			"key": "apsUrl",
 			"value": "{{dbpurl}}/activiti-app",
 			"type": "string"
 		},
 		{
-			"id": "eb817d09-cb65-4150-81bf-fa478ded71a7",
+			"id": "174bfcd0-6548-4146-a1a1-960e26ffeb0e",
 			"key": "identityServiceUrl",
 			"value": "{{dbpurl}}/auth",
 			"type": "string"
 		},
 		{
-			"id": "f3f23e7f-20c6-401a-abef-5dd99a7a5a24",
+			"id": "2a23735c-3ed6-4aa7-a4c6-013e1d4cf498",
 			"key": "contentAppUrl",
 			"value": "{{dbpurl}}/content-app",
 			"type": "string"
 		},
 		{
-			"id": "4fccefd1-260b-460b-8848-16d2a9276a7f",
+			"id": "f1f792a7-a3bd-405e-8ade-3a25fb2a5522",
 			"key": "identityServiceRealm",
 			"value": "alfresco",
 			"type": "string"
 		},
 		{
-			"id": "bee49fb6-646d-443e-aea5-bcd3f7236f56",
+			"id": "a91fd7b0-8e16-4553-a3f0-789b8df5c0ce",
 			"key": "identityServiceClientId",
 			"value": "alfresco",
 			"type": "string"
 		},
 		{
-			"id": "b57bb0cd-f75c-4bd8-ad61-658ee02c967d",
+			"id": "245d6386-747b-441b-ae25-df8209fa5acf",
 			"key": "testUserUsername",
 			"value": "testuser",
 			"type": "string"
 		},
 		{
-			"id": "c5bbe659-9a27-461b-a7db-f6bc921f2f96",
+			"id": "1b0a0764-d445-4b2e-8cac-e12afe838d47",
 			"key": "testUserPassword",
 			"value": "password",
 			"type": "string"
 		},
 		{
-			"id": "7991592f-6478-4289-851a-c2a707c8048c",
+			"id": "eafa9b2a-571a-45c7-920a-b3802d121490",
 			"key": "testUserEmail",
 			"value": "test@test.com",
 			"type": "string"
 		},
 		{
-			"id": "f0b41961-4fd6-4d9b-8ffc-584dc60b6366",
+			"id": "9e54c992-f05a-414f-8317-2f601841614f",
 			"key": "adminUserUsername",
 			"value": "admin",
 			"type": "string"
 		},
 		{
-			"id": "f8742ce4-64fd-4a28-a094-a3957c46c787",
+			"id": "fc7c2d8a-c9ae-4bdc-a89d-dc00cb0b5bc8",
 			"key": "adminUserPassword",
 			"value": "admin",
 			"type": "string"
 		},
 		{
-			"id": "16fe11e2-3e63-42e6-86a5-6b368e279d3c",
+			"id": "b649d55c-7d0a-495b-8aa5-b8d9f4ac972e",
 			"key": "adminUserEmail",
 			"value": "admin@app.activiti.com",
 			"type": "string"
 		},
 		{
-			"id": "235c43ad-bbd6-4abd-8570-d8ae911a5f06",
+			"id": "56c88ace-2fed-4155-9078-2b20725b4b45",
 			"key": "apsLocalAdminUser",
 			"value": "admin@app.activiti.com",
 			"type": "string"
 		},
 		{
-			"id": "1df0c64d-4cec-4e5f-9990-4d583c9268d7",
+			"id": "b0a73658-9827-43a2-8561-44582552f64d",
 			"key": "apsLocalAdminPassword",
 			"value": "admin",
 			"type": "string"
 		},
 		{
-			"id": "812ac393-5d3f-4ca8-962c-c36d962b6362",
+			"id": "c90b841e-7717-4135-a005-8b022966ad81",
 			"key": "moduleVersions",
 			"value": "[{\"moduleName\":\"alfresco-aos-module\",\"moduleVersion\":\"1.2.0\"},{\"moduleName\":\"org.alfresco.integrations.google.docs\",\"moduleVersion\":\"3.1.0\"},{\"moduleName\":\"alfresco-share-services\",\"moduleVersion\":\"6.0.1\"}]",
 			"type": "string"
 		},
 		{
-			"id": "74f7b572-e29e-43c1-af31-40e05577491f",
+			"id": "cd58f8e6-1e2a-4544-909b-2b3ce6871353",
 			"key": "apsTenantId",
 			"value": "1",
 			"type": "string"

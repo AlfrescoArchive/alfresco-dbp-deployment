@@ -154,6 +154,13 @@ If you are using `https` you should include the following setting in your helm i
 --set alfresco-content-services.externalProtocol="https" \
 ```
 
+In order to change the default alfresco client redirect uri check this [guide](https://github.com/Alfresco/alfresco-identity-service#changing-alfresco-client-redirecturis).
+
+Example:
+```bash
+--set alfresco-infrastructure.alfresco-identity-service.client.alfresco.redirectUris=['\"'http://$ELB_CNAME*'"\'] \
+```
+
 ### 5. Get the DBP release name from the previous command and set it as a variable:
 
 ```bash

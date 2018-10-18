@@ -157,7 +157,6 @@ If you are using `https` you should include the following setting in your helm i
 
 In you want to include multiple uris for alfresco client redirect uris check this [guide](https://github.com/Alfresco/alfresco-identity-service#changing-alfresco-client-redirecturis).
 
-
 ### 5. Get the DBP release name from the previous command and set it as a variable:
 
 ```bash

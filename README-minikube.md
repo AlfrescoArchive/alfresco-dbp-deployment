@@ -165,7 +165,6 @@ export ELBADDRESS=$(minikube ip)
 
 ```bash
 helm install alfresco-incubator/alfresco-dbp \
---set alfresco-infrastructure.alfresco-api-gateway.keycloakURL="http://$ELBADDRESS:$INFRAPORT/auth/" \
 --set alfresco-infrastructure.alfresco-identity-service.ingressHostName="$ELBADDRESS:$INFRAPORT" \
 --set alfresco-content-services.repository.environment.IDENTITY_SERVICE_URI="http://$ELBADDRESS:$INFRAPORT/auth" \
 --set alfresco-process-services.processEngine.environment.IDENTITY_SERVICE_AUTH="http://$ELBADDRESS:$INFRAPORT/auth" \

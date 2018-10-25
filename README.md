@@ -123,7 +123,6 @@ export ELB_CNAME="YourDesiredCname.YourRoute53DnsZone"
 ```bash
 # Remember to use https here if you have a trusted certificate set on the ingress
 helm install alfresco-incubator/alfresco-dbp \
---set alfresco-infrastructure.alfresco-api-gateway.keycloakURL="http://$ELB_CNAME/auth/" \
 --set alfresco-infrastructure.persistence.efs.enabled=true \
 --set alfresco-infrastructure.persistence.efs.dns="$NFSSERVER" \
 --set alfresco-infrastructure.alfresco-identity-service.client.alfresco.redirectUris=['\"'http://$ELB_CNAME*'"\'] \
@@ -295,9 +294,6 @@ The extended install command configures the hostnames, URLs and memory requireme
 
 ```bash
 helm install alfresco-incubator/alfresco-dbp \
---set alfresco-infrastructure.alfresco-api-gateway.keycloakURL="http://localhost-k8s/auth/" \
---set alfresco-infrastructure.alfresco-activiti-cloud-registry.enabled=false \
---set alfresco-infrastructure.alfresco-api-gateway.enabled=false \
 --set alfresco-content-services.externalHost="localhost-k8s" \
 --set alfresco-content-services.networkpolicysetting.enabled=false \
 --set alfresco-content-services.repository.environment.IDENTITY_SERVICE_URI="http://localhost-k8s/auth" \

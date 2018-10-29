@@ -20,8 +20,6 @@ else
     exit 1
   fi
 
-  git clone https://github.com/Alfresco/acs-deployment-aws.git
-
   # Copy all templates to S3 bucket
   echo "Copying templates"
   aws s3 cp ./aws/templates s3://$S3_BUCKET/$S3_KEY_PREFIX/templates --recursive

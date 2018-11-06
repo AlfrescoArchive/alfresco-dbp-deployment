@@ -5,8 +5,8 @@
 This project contains the code for the AWS-based DBP product on AWS Cloud using an AWS CloudFormation template.  It's built with a main CloudFormation (CFN) template that also spins up sub-stacks for a VPC, Bastion Host, EKS Cluster and Worker Nodes (including registering them with the EKS Master) in an auto-scaling group.
 
 **Note:** You need to clone the following repositories to deploy the DBP:
-1)[Alfresco DBP Deployment](https://github.com/Alfresco/alfresco-dbp-deployment)
-2)[ACS Deployment AWS](https://github.com/Alfresco/acs-deployment-aws)
+* [Alfresco DBP Deployment](https://github.com/Alfresco/alfresco-dbp-deployment)
+* [ACS Deployment AWS](https://github.com/Alfresco/acs-deployment-aws)
 
 ## Limitations
 

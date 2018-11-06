@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project contains the code for the AWS-based BDP product on AWS Cloud using an AWS CloudFormation template.  It's built with a main CloudFormation (CFN) template that also spins up sub-stacks for a VPC, Bastion Host, EKS Cluster and Worker Nodes (including registering them with the EKS Master) in an auto-scaling group.
+This project contains the code for the AWS-based DBP product on AWS Cloud using an AWS CloudFormation template.  It's built with a main CloudFormation (CFN) template that also spins up sub-stacks for a VPC, Bastion Host, EKS Cluster and Worker Nodes (including registering them with the EKS Master) in an auto-scaling group.
 
 **Note:** You need to clone the following repositories to deploy the DBP:
 1)[Alfresco DBP Deployment](https://github.com/Alfresco/alfresco-dbp-deployment)
@@ -113,7 +113,7 @@ we will provide some additional information.
 ```The domain name``` : Choose the subdomain which will be used for the url e.g. **my-dbp-eks.example.com**. For more information about how to create a hosted zone and its subdomains visit the AWS documentation on [Creating a Subdomain](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/CreatingNewSubdomain.html).
 
 ```Private Registry Credentials. Base64 encryption of dockerconfig json``` : \
-**Notice:** The credentials are only needed if the DBP images is pulled from quay.io which is currently not the case.
+**Notice:** The credentials are needed for different DBP images that are pulled from quay.io.
 1) Login to quay.io with ```docker login quay.io```.
 2) Validate that you can see the credentials with ```cat ~/.docker/config.json``` for Quay.io.
 3) Get the encoded credentials with ```cat ~/.docker/config.json | base64```.

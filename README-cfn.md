@@ -1,24 +1,26 @@
-# DBP Deployment on AWS Cloud
+# DBP Deployment on AWS EKS
 
 ## Overview
 
 This project contains the code for the AWS-based DBP product on AWS Cloud using an AWS CloudFormation template.  It's built with a main CloudFormation (CFN) template that also spins up sub-stacks for a VPC, Bastion Host, EKS Cluster and Worker Nodes (including registering them with the EKS Master) in an auto-scaling group.
 
 **Note:** You need to clone the following repositories to deploy the DBP:
-* [Alfresco DBP Deployment](https://github.com/Alfresco/alfresco-dbp-deployment)
-* [ACS Deployment AWS](https://github.com/Alfresco/acs-deployment-aws)
+1)[Alfresco DBP Deployment](https://github.com/Alfresco/alfresco-dbp-deployment)
+2)[ACS Deployment AWS](https://github.com/Alfresco/acs-deployment-aws)
 
 ## Limitations
 
 Currently, this setup will only work in AWS US East (N.Virginia) and West (Oregon) regions due to current EKS support. For an overview of which regions EKS is currently available, see [Regional Product Services](https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/).
 
 
-## How to deploy DBP Cluster on AWS
+## How to deploy DBP on AWS EKS
 ### Prerequisites
+* You need to create an IAM user that has the following [permissions](#Permissions) 
 * You need a hosted zone e.g. example.com. See [Creating a Public Hosted Zone](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/CreatingHostedZone.html)
 * An SSL certificate for the Elastic Load Balancer and the domains in the hosted zone [Creating SSL Cert](https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/ssl-server-cert.html)
+* Also consider reading [Getting Started/Amazon EKS Prerequisites](https://docs.aws.amazon.com/eks/latest/userguide/eks-ug.pdf) 
 
-### Permissions
+# Permissions
 Ensure that the IAM role or IAM user that creates the stack allows the following permissions:
 
 ```
@@ -87,6 +89,9 @@ s3://<bucket_name> e.g. my-s3-bucket
           |       |      +-- rds.yaml
           |       |      +-- s3-bucket.yaml
 ```
+## Choose the preferred method
+ 1. [Deploy DBP using AWS Console](##deploying-dbp-eks-with-aws-console)
+ 2. [Deploy DBP using AWS CLI](##deploying-dbp-eks-with-aws-cli)
 
 ## Deploying DBP EKS with AWS Console
 **Note:** To use the AWS Console, make sure that you've uploaded the required files to S3 as described in [Preparing the S3 bucket for CFN template deployment](#preparing-the-s3-bucket-for-cfn-template-deployment).
@@ -95,8 +100,7 @@ s3://<bucket_name> e.g. my-s3-bucket
 * Click ```Create Stack```
 * In ```Upload a template to Amazon S3``` choose `/alfresco-dbp-deployment/aws/templates/full-deployment.yaml`
 * Choose a stack name, like `my-dbp-eks`
-* Fill out the parameters. In many cases you can use the default parameters. For some parameter sections
-we will provide some additional information.
+* Fill out the parameters. In many cases you can use the default parameters. For some parameter sections we will provide some additional information.
 
 **S3 Cross Replication Bucket for storing DBP content store**
 
@@ -126,8 +130,7 @@ After the CFN stack creation has finished, you can find the Alfresco URL in the 
 ### Deleting DBP EKS with AWS Console
 Go to CloudFormation and delete the master DBP EKS stack. The nested stacks will be deleted first, followed by the master stack.
 
-
-## Deploying DBP EKS with AWS Cli
+## Deploying DBP EKS with AWS CLI
 **Note:** To use the Cli, make sure that you've uploaded the required files to S3 as described in [Preparing the S3 bucket for CFN template deployment](#preparing-the-s3-bucket-for-cfn-template-deployment).
 
 ### Prerequisites
@@ -138,9 +141,21 @@ To run the DBP deployment on AWS provided Kubernetes cluster requires:
 | ------------| --------------------- |
 | AWS Cli     | https://github.com/aws/aws-cli#installation |
 
-
-Create DBP EKS by using the [cloudformation command](https://docs.aws.amazon.com/cli/latest/reference/cloudformation/index.html). Make sure that you use the same bucket name and key prefix in the Cli command as you provided in [Prepare the S3 bucket for CFN template deployment](#prepare-the-s3-bucket-for-cfn-template-deployment).
-
+1. Create a new keypair in EC2 using 
+    ```bash
+    aws ec2 create-key-pair --keyname $DESIREDKEYNAME
+    ```
+2. Make sure that you use the same bucket name and key prefix in the Cli command as you provided in [Prepare the S3 bucket for CFN template deployment](#prepare-the-s3-bucket-for-cfn-template-deployment).
+    * you can also use the following command to create the bucket in the CLI
+        ```bash
+        aws s3api create-bucket --bucket $DESIREDKEYNAME-$DESIREDBUCKETNAME
+        ```
+    * after that use the uploadHelper.sh script to add all the required resources as specified in [here](#preparing-the-s3-bucket-for-cfn-template-deployment)
+3. Get the external user ARN you will be using in the below command
+    ```bash
+        aws sts get-caller-identity
+    ```
+4. Create DBP EKS by using the [cloudformation command](https://docs.aws.amazon.com/cli/latest/reference/cloudformation/index.html).
 ```bash
 aws cloudformation create-stack \
   --stack-name my-dbp-eks \
@@ -152,8 +167,17 @@ aws cloudformation create-stack \
                ParameterKey=EksExternalUserArn,ParameterValue=arn:aws:iam::<AccountId>:user/<IamUser>
 
 ```
+5. Update the kubeconfig with the new EKS cluster
+    ```bash
+        aws eks update-kubeconfig --name $CLUSTERNAME
+    ```
 
-### Deleting DBP EKS with AWS Cli
+6. Verify the created stack
+    ```bash
+        aws cloudformation describe-stacks --stack-name $STACKNAME
+    ```
+
+## Deleting DBP EKS with AWS Cli
 Open a terminal and enter:
 ```
 aws cloudformation delete-stack --stack-name <master-dbp-eks-stack>
@@ -173,7 +197,3 @@ To access the DBP deployment on AWS provided Kubernetes cluster requires:
 | IAM User    | https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html |
 
 Follow the detailed instructions in [EKS cluster remote access](https://github.com/Alfresco/acs-deployment-aws/blob/master/docs/eks_cluster_remote_access.md).
-
-### Install the DBP on the EKS cluster
-
-To install the DBP on the EKS cluster please follow the steps provided here: [Install DBP](https://github.com/Alfresco/alfresco-dbp-deployment/blob/master/README.md)

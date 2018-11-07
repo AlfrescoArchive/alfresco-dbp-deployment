@@ -89,9 +89,9 @@ s3://<bucket_name> e.g. my-s3-bucket
           |       |      +-- rds.yaml
           |       |      +-- s3-bucket.yaml
 ```
-## Choose the preferred method
- 1. [Deploy DBP using AWS Console](##deploying-dbp-eks-with-aws-console)
- 2. [Deploy DBP using AWS CLI](##deploying-dbp-eks-with-aws-cli)
+## Choose the preferred method of creating the stack and deploying the DBP
+ 1. [Deploy DBP using AWS Console](#deploying-dbp-eks-with-aws-console)
+ 2. [Deploy DBP using AWS CLI](#deploying-dbp-eks-with-aws-cli)
 
 ## Deploying DBP EKS with AWS Console
 **Note:** To use the AWS Console, make sure that you've uploaded the required files to S3 as described in [Preparing the S3 bucket for CFN template deployment](#preparing-the-s3-bucket-for-cfn-template-deployment).

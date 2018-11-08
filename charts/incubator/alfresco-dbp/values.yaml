@@ -62,5 +62,3 @@ alfresco-sync-service:
 
 alfresco-infrastructure:
   enabled: true
-  activemq:
-    enabled: true

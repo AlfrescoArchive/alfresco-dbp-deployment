@@ -143,7 +143,7 @@ To run the DBP deployment on AWS provided Kubernetes cluster requires:
 
 1. Create a new keypair in EC2 using 
     ```bash
-    aws ec2 create-key-pair --keyname $DESIREDKEYNAME
+    aws ec2 create-key-pair --key-name $DESIREDKEYNAME
     ```
 2. Make sure that you use the same bucket name and key prefix in the Cli command as you provided in [Prepare the S3 bucket for CFN template deployment](#prepare-the-s3-bucket-for-cfn-template-deployment).
     * you can also use the following command to create the bucket in the CLI

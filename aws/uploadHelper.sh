@@ -22,11 +22,11 @@ else
 
   # Copy all templates to S3 bucket
   echo "Copying templates"
-  aws s3 cp ./aws/templates s3://$S3_BUCKET/$S3_KEY_PREFIX/templates --recursive
-  aws s3 cp ./aws/scripts s3://$S3_BUCKET/$S3_KEY_PREFIX/scripts --recursive
-  aws s3 cp ../acs-deployment-aws/templates s3://$S3_BUCKET/$S3_KEY_PREFIX/templates --recursive
-  aws s3 cp ../acs-deployment-aws/scripts s3://$S3_BUCKET/$S3_KEY_PREFIX/scripts --recursive
-  aws s3 cp ../acs-deployment-aws/lambdas/eks-helper-lambda/eks-helper-lambda.zip s3://$S3_BUCKET/$S3_KEY_PREFIX/lambdas/
-  aws s3 cp ../acs-deployment-aws/lambdas/helm-helper-lambda/helm-helper-lambda.zip s3://$S3_BUCKET/$S3_KEY_PREFIX/lambdas/
-  aws s3 cp ../acs-deployment-aws/lambdas/empty-s3-bucket/alfresco-lambda-empty-s3-bucket.jar s3://$S3_BUCKET/$S3_KEY_PREFIX/lambdas/
+  aws s3 cp ./templates s3://$S3_BUCKET/$S3_KEY_PREFIX/templates --recursive
+  aws s3 cp ./scripts s3://$S3_BUCKET/$S3_KEY_PREFIX/scripts --recursive
+  aws s3 cp ../../acs-deployment-aws/templates s3://$S3_BUCKET/$S3_KEY_PREFIX/templates --recursive
+  aws s3 cp ../../acs-deployment-aws/scripts s3://$S3_BUCKET/$S3_KEY_PREFIX/scripts --recursive
+  aws s3 cp ../../acs-deployment-aws/lambdas/eks-helper-lambda/eks-helper-lambda.zip s3://$S3_BUCKET/$S3_KEY_PREFIX/lambdas/
+  aws s3 cp ../../acs-deployment-aws/lambdas/helm-helper-lambda/helm-helper-lambda.zip s3://$S3_BUCKET/$S3_KEY_PREFIX/lambdas/
+  aws s3 cp ../../acs-deployment-aws/lambdas/empty-s3-bucket/alfresco-lambda-empty-s3-bucket.jar s3://$S3_BUCKET/$S3_KEY_PREFIX/lambdas/
 fi

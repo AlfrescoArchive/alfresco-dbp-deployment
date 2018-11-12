@@ -421,6 +421,8 @@ Resources:
           Value: !Sub "${AWS::StackName}"
         - Key: Component
           Value: DBP-VPC
+        - Key: KubernetesCluster
+          Value: !Sub "${AWS::StackName}-eks"
       TemplateURL: !Sub "https://s3.amazonaws.com/${QSS3BucketName}/${QSS3KeyPrefix}/templates/aws-vpc.template"
       Parameters:
         AvailabilityZones: !Join [",", !Ref AvailabilityZones]
@@ -490,6 +492,8 @@ Resources:
           Value: DBP-NodeSG
         - Key: !Sub "kubernetes.io/cluster/${AWS::StackName}-cluster"
           Value: 'owned'
+        - Key: KubernetesCluster
+          Value: !Sub "${AWS::StackName}-eks"
 
   EFSStack:
     Type: AWS::CloudFormation::Stack
@@ -502,6 +506,8 @@ Resources:
           Value: !Sub "${AWS::StackName}" 
         - Key: Component
           Value: DBP-EFS 
+        - Key: KubernetesCluster
+          Value: !Sub "${AWS::StackName}-eks" 
       TemplateURL: !Sub "https://${TemplateBucketName}.s3.amazonaws.com/${TemplateBucketKeyPrefix}/templates/efs.yaml"
       Parameters:
         PrivateSubnet1ID: !GetAtt VPCStack.Outputs.PrivateSubnet1AID
@@ -519,6 +525,8 @@ Resources:
           Value: !Sub "${AWS::StackName}"
         - Key: Component
           Value: DBP-Bastion 
+        - Key: KubernetesCluster
+          Value: !Sub "${AWS::StackName}-eks"
       TemplateURL: !Sub "https://${TemplateBucketName}.s3.amazonaws.com/${TemplateBucketKeyPrefix}/templates/bastion-and-eks-cluster.yaml"
       Parameters:
         # Bastion stack params
@@ -559,6 +567,8 @@ Resources:
           Value: !Sub "${AWS::StackName}"
         - Key: Component
           Value: DBP-RDS
+        - Key: KubernetesCluster
+          Value: !Sub "${AWS::StackName}-eks"
       TemplateURL: !Sub "https://${TemplateBucketName}.s3.amazonaws.com/${TemplateBucketKeyPrefix}/templates/rds.yaml"
       Parameters:
         PrivateSubnet1: !GetAtt VPCStack.Outputs.PrivateSubnet1AID
@@ -579,6 +589,8 @@ Resources:
           Value: !Sub "${AWS::StackName}" 
         - Key: Component
           Value: DBP-S3
+        - Key: KubernetesCluster
+          Value: !Sub "${AWS::StackName}-eks"
       TemplateURL: !Sub "https://${TemplateBucketName}.s3.amazonaws.com/${TemplateBucketKeyPrefix}/templates/s3-bucket.yaml"
       Parameters:
         TemplateBucketName: !Ref TemplateBucketName
@@ -604,6 +616,8 @@ Resources:
           Value: !Sub "${AWS::StackName}"
         - Key: Component
           Value: DBP-Main 
+        - Key: KubernetesCluster
+          Value: !Sub "${AWS::StackName}-eks"
       TemplateURL: !Sub "https://${TemplateBucketName}.s3.amazonaws.com/${TemplateBucketKeyPrefix}/templates/dbp-install.yaml"
       Parameters:
         TemplateBucketName: !Ref TemplateBucketName

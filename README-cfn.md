@@ -170,11 +170,16 @@ To run the DBP deployment on AWS provided Kubernetes cluster requires:
     ``` 
         export RDS_PASSWORD=$DESIRED_PASSWORD
     ```
-8. Replace placeholders in the full-deployment-parameters.json
+8. Get the external user ARN and export the "Arn" value result from the below command into EXTERNAL_ARN_VALUE
+    ```
+        aws sts get-caller-identity
+    ```
+9. Replace placeholders in the full-deployment-parameters.json
     ```
     export CIDR="0.0.0.0/0"
     export REPLICATION_BUCKET_REGION="eu-west-1"
     export ALF_PASS="alfresco"
+    export AVAILABILITY_ZONES="us-east-1a,us-east-1b"
     ```
     ```
       sed -i'.bak' "
@@ -194,11 +199,10 @@ To run the DBP deployment on AWS provided Kubernetes cluster requires:
       s#@@ReplicationBucketKMSEncryptionKeyValue@@#${REPLICATION_KMS_ENCRYPTION_KEY}#g;
       s#@@RegistryCredentialsValue@@#${REGISTRY_SECRET}#g;
       s#@@DeployInfrastructureOnlyValue@@#false#g;
+      s#@@KeyPairNameValue@@#${DESIRED_KEY_NAME}#g;
+      s#@@AvailabilityZonesValue@@#${AVAILABILITY_ZONES}#g;
+      s#@@EksExternalUserArnValue@@#${EXTERNAL_ARN_VALUE}#g;
     " alfresco-dbp-deployment/aws/templates/full-deployment-parameters.json
-    ```
-9. Get the external user ARN you will be using in the below command
-    ```
-        aws sts get-caller-identity
     ```
 10. Create DBP EKS by using the [cloudformation command](https://docs.aws.amazon.com/cli/latest/reference/cloudformation/index.html).
     ```
@@ -207,9 +211,8 @@ To run the DBP deployment on AWS provided Kubernetes cluster requires:
       --template-body file://alfresco-dbp-deployment/aws/templates/full-deployment.yaml \
       --capabilities CAPABILITY_IAM \
       --parameters file://alfresco-dbp-deployment/aws/templates/full-deployment-parameters.json \
-      --parameters ParameterKey=KeyPairName,ParameterValue=<MyKey.pem> \
-                   ParameterKey=AvailabilityZones,ParameterValue=us-east-1a\\,us-east-1b \
-                   ParameterKey=EksExternalUserArn,ParameterValue=arn:aws:iam::<AccountId>:user/<IamUser>
+      --region=us-east-1 \
+      --disable-rollback
     
     ```
 11. Update the kubeconfig with the new EKS cluster

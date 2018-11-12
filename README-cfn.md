@@ -131,8 +131,6 @@ After the CFN stack creation has finished, you can find the Alfresco URL in the 
 Go to CloudFormation and delete the master DBP EKS stack. The nested stacks will be deleted first, followed by the master stack.
 
 ## Deploying DBP EKS with AWS CLI
-**Note:** To use the Cli, make sure that you've uploaded the required files to S3 as described in [Preparing the S3 bucket for CFN template deployment](#preparing-the-s3-bucket-for-cfn-template-deployment).
-
 ### Prerequisites
 
 To run the DBP deployment on AWS provided Kubernetes cluster requires:
@@ -142,38 +140,85 @@ To run the DBP deployment on AWS provided Kubernetes cluster requires:
 | AWS Cli     | https://github.com/aws/aws-cli#installation |
 
 1. Create a new keypair in EC2 using 
-    ```bash
-    aws ec2 create-key-pair --key-name $DESIREDKEYNAME
     ```
-2. Make sure that you use the same bucket name and key prefix in the Cli command as you provided in [Prepare the S3 bucket for CFN template deployment](#prepare-the-s3-bucket-for-cfn-template-deployment).
+    aws ec2 create-key-pair --key-name $DESIRED_KEY_NAME
+    ```
+2. Make sure that you use the same bucket name and key prefix in the Cli command as you provided in [Prepare the S3 bucket for CFN template deployment](#preparing-the-s3-bucket-for-cfn-template-deployment).
     * you can also use the following command to create the bucket in the CLI
-        ```bash
-        aws s3api create-bucket --bucket $DESIREDKEYNAME-$DESIREDBUCKETNAME
         ```
-    * after that use the uploadHelper.sh script to add all the required resources as specified in [here](#preparing-the-s3-bucket-for-cfn-template-deployment)
-3. Get the external user ARN you will be using in the below command
-    ```bash
+        aws s3api create-bucket --bucket $DESIRED_BUCKET_NAME
+        ```
+    * export the bucket key prefix in a variable
+        ```
+         export $DESIRED_KEY_PREFIX=<key_prefix>
+        ```
+    * after that use the uploadHelper.sh script to upload all the required resources to S3
+         ```
+         uploadHelper.sh $DESIRED_BUCKET_NAME $DESIRED_KEY_PREFIX
+         ```
+3. Set a variable with your quay registry secret to be able to pull docker images
+    ```
+    export REGISTRY_SECRET=$(cat ~/.docker/config.json | base64 -w 0)
+    ```
+4. Set up the external name for the DBP using a Route53 ZONE and a DOMAIN
+    ```
+        export EXTERNAL_NAME="$ROUTE_53_ZONE.$DOMAIN"
+    ```
+5. Get your ELB certificate ARN from Certificate Manager in AWS console and export it into EBC_CERT_ARN. This should be the one matching your created domain name.
+6. Create a replication bucket into the eu-west-1 region and then export the bucket name into REPLICATION_BUCKET and the kms encryption key of it into REPLICATION_KMS_ENCRYPTION_KEY.
+7. Set an RDS password
+    ``` 
+        export RDS_PASSWORD=$DESIRED_PASSWORD
+    ```
+8. Replace placeholders in the full-deployment-parameters.json
+    ```
+    export CIDR="0.0.0.0/0"
+    export REPLICATION_BUCKET_REGION="eu-west-1"
+    export ALF_PASS="alfresco"
+    ```
+    ```
+      sed -i'.bak' "
+      s#@@RemoteAccessCIDRValue@@#${CIDR}#g;
+      s/@@TemplateBucketNameValue@@/${DESIRED_BUCKET_NAME}/g;
+      s#@@TemplateBucketKeyPrefixValue@@#${DESIRED_KEY_PREFIX}#g;
+      s/@@RDSPasswordValue@@/${RDS_PASSWORD}/g;
+      s/@@RDSCreateSnapshotWhenDeleted@@/true/g;
+      s/@@AlfrescoPasswordValue@@/${ALF_PASS}/g;
+      s#@@UseCrossRegionReplicationValue@@#true#g;
+      s#@@ReplicationBucketRegionValue@@#${REPLICATION_BUCKET_REGION}#g;
+      s#@@ExternalNameValue@@#$EXTERNAL_NAME#g;
+      s#@@Route53DnsZoneValue@@#${ROUTE_53_ZONE}#g;
+      s#@@ElbCertArnValue@@#${ELB_CERT_ARN}#g;
+      s#@@ReplicationBucketValue@@#${REPLICATION_BUCKET}#g;
+      s#@@NodesMetricsEnabledValue@@#true#g;
+      s#@@ReplicationBucketKMSEncryptionKeyValue@@#${REPLICATION_KMS_ENCRYPTION_KEY}#g;
+      s#@@RegistryCredentialsValue@@#${REGISTRY_SECRET}#g;
+      s#@@DeployInfrastructureOnlyValue@@#false#g;
+    " alfresco-dbp-deployment/aws/templates/full-deployment-parameters.json
+    ```
+9. Get the external user ARN you will be using in the below command
+    ```
         aws sts get-caller-identity
     ```
-4. Create DBP EKS by using the [cloudformation command](https://docs.aws.amazon.com/cli/latest/reference/cloudformation/index.html).
-```bash
-aws cloudformation create-stack \
-  --stack-name my-dbp-eks \
-  --template-body file://alfresco-dbp-deployment/aws/templates/full-deployment.yaml \
-  --capabilities CAPABILITY_IAM \
-  --parameters file://alfresco-dbp-deployment/aws/templates/full-deployment-parameters.json \
-  --parameters ParameterKey=KeyPairName,ParameterValue=<MyKey.pem> \
-               ParameterKey=AvailabilityZones,ParameterValue=us-east-1a\\,us-east-1b \
-               ParameterKey=EksExternalUserArn,ParameterValue=arn:aws:iam::<AccountId>:user/<IamUser>
-
-```
-5. Update the kubeconfig with the new EKS cluster
-    ```bash
+10. Create DBP EKS by using the [cloudformation command](https://docs.aws.amazon.com/cli/latest/reference/cloudformation/index.html).
+    ```
+    aws cloudformation create-stack \
+      --stack-name my-dbp-eks \
+      --template-body file://alfresco-dbp-deployment/aws/templates/full-deployment.yaml \
+      --capabilities CAPABILITY_IAM \
+      --parameters file://alfresco-dbp-deployment/aws/templates/full-deployment-parameters.json \
+      --parameters ParameterKey=KeyPairName,ParameterValue=<MyKey.pem> \
+                   ParameterKey=AvailabilityZones,ParameterValue=us-east-1a\\,us-east-1b \
+                   ParameterKey=EksExternalUserArn,ParameterValue=arn:aws:iam::<AccountId>:user/<IamUser>
+    
+    ```
+11. Update the kubeconfig with the new EKS cluster
+    ```
         aws eks update-kubeconfig --name $CLUSTERNAME
     ```
 
-6. Verify the created stack
-    ```bash
+12. Verify the created stack
+    ```
         aws cloudformation describe-stacks --stack-name $STACKNAME
     ```
 

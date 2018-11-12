@@ -20,12 +20,14 @@ alfresco-process-services:
 alfresco-content-services:
   enabled: true
   registryPullSecrets: quay-registry-secret
+  messageBroker:
+    url:
+    user: admin
+    password: admin
   alfresco-infrastructure:
     enabled: false
     activemq:
-      adminUser: 
-        username: admin
-        password: admin
+      enabled: false
   repository:
 # DEPLOY-466 / DEPLOY-467 - Remove image pin as we are using the ACS provided images
 #    image:

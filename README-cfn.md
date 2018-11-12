@@ -164,13 +164,13 @@ To run the DBP deployment on AWS provided Kubernetes cluster requires:
     ```
         export EXTERNAL_NAME="$DESIRED_DEPLOYMENT_NAME.$DOMAIN"
     ```
-5. Get your ELB certificate ARN from Certificate Manager in AWS console and export it into EBC_CERT_ARN. This should be the one matching your created domain name.
+5. Get your ELB certificate ARN from Certificate Manager in AWS console and export it into ELB_CERT_ARN. This should be the one matching your created domain name.
 6. Create a replication bucket into the eu-west-1 region and then export the bucket name into REPLICATION_BUCKET and the kms encryption key of it into REPLICATION_KMS_ENCRYPTION_KEY.
 7. Set an RDS password
     ``` 
         export RDS_PASSWORD=$DESIRED_PASSWORD
     ```
-8. Get the external user ARN and export the "Arn" value result from the below command into EXTERNAL_ARN_VALUE
+8. Get the external user ARN and export the "Arn" value result from the below command into EXTERNAL_USER_ARN
     ```
         aws sts get-caller-identity
     ```
@@ -201,7 +201,7 @@ To run the DBP deployment on AWS provided Kubernetes cluster requires:
       s#@@DeployInfrastructureOnlyValue@@#false#g;
       s#@@KeyPairNameValue@@#${DESIRED_KEY_NAME}#g;
       s#@@AvailabilityZonesValue@@#${AVAILABILITY_ZONES}#g;
-      s#@@EksExternalUserArnValue@@#${EXTERNAL_ARN_VALUE}#g;
+      s#@@EksExternalUserArnValue@@#${EXTERNAL_USER_ARN}#g;
     " alfresco-dbp-deployment/aws/templates/full-deployment-parameters.json
     ```
 10. Create DBP EKS by using the [cloudformation command](https://docs.aws.amazon.com/cli/latest/reference/cloudformation/index.html).
@@ -215,15 +215,15 @@ To run the DBP deployment on AWS provided Kubernetes cluster requires:
       --disable-rollback
     
     ```
-11. Update the kubeconfig with the new EKS cluster
+11. Verify the created stack
+    ```
+        aws cloudformation describe-stacks --stack-name $STACKNAME
+    ```
+12. Update the kubeconfig with the new EKS cluster
     ```
         aws eks update-kubeconfig --name $CLUSTERNAME
     ```
 
-12. Verify the created stack
-    ```
-        aws cloudformation describe-stacks --stack-name $STACKNAME
-    ```
 
 ## Deleting DBP EKS with AWS Cli
 Open a terminal and enter:

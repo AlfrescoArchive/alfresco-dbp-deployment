@@ -158,11 +158,11 @@ To run the DBP deployment on AWS provided Kubernetes cluster requires:
          ```
 3. Set a variable with your quay registry secret to be able to pull docker images
     ```
-    export REGISTRY_SECRET=$(cat ~/.docker/config.json | base64 -w 0)
+    export REGISTRY_SECRET=$(cat ~/.docker/config.json | base64)
     ```
-4. Set up the external name for the DBP using a Route53 ZONE and a DOMAIN
+4. Set up the external name for the DBP using a desired deployment name and a DOMAIN
     ```
-        export EXTERNAL_NAME="$ROUTE_53_ZONE.$DOMAIN"
+        export EXTERNAL_NAME="$DESIRED_DEPLOYMENT_NAME.$DOMAIN"
     ```
 5. Get your ELB certificate ARN from Certificate Manager in AWS console and export it into EBC_CERT_ARN. This should be the one matching your created domain name.
 6. Create a replication bucket into the eu-west-1 region and then export the bucket name into REPLICATION_BUCKET and the kms encryption key of it into REPLICATION_KMS_ENCRYPTION_KEY.

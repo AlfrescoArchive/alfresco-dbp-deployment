@@ -535,6 +535,7 @@ Resources:
         PublicSubnet2ID: !GetAtt VPCStack.Outputs.PublicSubnet2ID
         PrivateSubnet1ID: !GetAtt VPCStack.Outputs.PrivateSubnet1AID
         PrivateSubnet2ID: !GetAtt VPCStack.Outputs.PrivateSubnet2AID
+        EKSClusterName: !Sub "${AWS::StackName}-eks"
         RemoteAccessCIDR: !Ref RemoteAccessCIDR
         VPCID: !GetAtt VPCStack.Outputs.VPCID
         BastionInstanceType: !Ref BastionInstanceType
@@ -617,7 +618,7 @@ Resources:
         - Key: Component
           Value: DBP-Main 
         - Key: KubernetesCluster
-          Value: !Sub "${AWS::StackName}-eks"
+                  Value: !Sub "${AWS::StackName}-eks"
       TemplateURL: !Sub "https://${TemplateBucketName}.s3.amazonaws.com/${TemplateBucketKeyPrefix}/templates/dbp-install.yaml"
       Parameters:
         TemplateBucketName: !Ref TemplateBucketName

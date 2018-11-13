@@ -99,8 +99,21 @@ metadata:
   namespace: $DESIREDNAMESPACE
 type: kubernetes.io/dockerconfigjson
 data:
-  .dockerconfigjson: $REGISTRYCREDENTIALS" >> secret.yaml
+  .dockerconfigjson: $REGISTRYCREDENTIALS" > secret.yaml
 kubectl create -f secret.yaml
+
+echo "kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: gp2
+provisioner: kubernetes.io/aws-ebs
+parameters:
+  type: gp2
+reclaimPolicy: Retain
+mountOptions:
+  - debug" > storage.yaml
+kubectl create -f storage.yaml
+kubectl patch storageclass gp2 -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 
 ALFRESCO_PASSWORD=$(printf %s $ALFRESCO_PASSWORD | iconv -t utf16le | openssl md4| awk '{ print $2}')
 echo Adding additional permissions to helm

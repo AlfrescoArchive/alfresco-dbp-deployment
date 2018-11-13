@@ -5,22 +5,20 @@
 This project contains the code for the AWS-based DBP product on AWS Cloud using an AWS CloudFormation template.  It's built with a main CloudFormation (CFN) template that also spins up sub-stacks for a VPC, Bastion Host, EKS Cluster and Worker Nodes (including registering them with the EKS Master) in an auto-scaling group.
 
 **Note:** You need to clone the following repositories to deploy the DBP:
-1)[Alfresco DBP Deployment](https://github.com/Alfresco/alfresco-dbp-deployment)
-2)[ACS Deployment AWS](https://github.com/Alfresco/acs-deployment-aws)
+1. [Alfresco DBP Deployment](https://github.com/Alfresco/alfresco-dbp-deployment)
+2. [ACS Deployment AWS](https://github.com/Alfresco/acs-deployment-aws)
 
-## Limitations
+#### Limitations
 
 Currently, this setup will only work in AWS US East (N.Virginia) and West (Oregon) regions due to current EKS support. For an overview of which regions EKS is currently available, see [Regional Product Services](https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/).
 
-
-## How to deploy DBP on AWS EKS
 ### Prerequisites
 * You need to create an IAM user that has the following [permissions](#Permissions) 
 * You need a hosted zone e.g. example.com. See [Creating a Public Hosted Zone](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/CreatingHostedZone.html)
 * An SSL certificate for the Elastic Load Balancer and the domains in the hosted zone [Creating SSL Cert](https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/ssl-server-cert.html)
 * Also consider reading [Getting Started/Amazon EKS Prerequisites](https://docs.aws.amazon.com/eks/latest/userguide/eks-ug.pdf) 
 
-# Permissions
+### Permissions
 Ensure that the IAM role or IAM user that creates the stack allows the following permissions:
 
 ```
@@ -55,8 +53,8 @@ s3:ReplicateObject
 sts:AssumeRole
 ```
 
-### Preparing the S3 bucket for CFN template deployment
-The master template (`aws/templates/full-deployment.yaml`) requires a few supporting files hosted in S3, like lambdas, scripts and CFN templates. To do this, create or use an S3 bucket in the same region as you intend to deploy DBP. Also, the S3 bucket needs to have a key prefix in it:
+## Preparing the S3 bucket for CFN template deployment
+The master template (`alfresco-dbp-deployment/aws/templates/full-deployment.yaml`) requires a few supporting files hosted in S3, like lambdas, scripts and CFN templates. To do this, create or use an S3 bucket in the same region as you intend to deploy DBP. Also, the S3 bucket needs to have a key prefix in it:
 ```s3://<bucket_name>/<key_prefix>``` (e.g. ```s3://my-s3-bucket/development```)
 
 **Note:** With S3 in AWS Console you can create the `<key_prefix>` when creating a folder.
@@ -89,7 +87,7 @@ s3://<bucket_name> e.g. my-s3-bucket
           |       |      +-- rds.yaml
           |       |      +-- s3-bucket.yaml
 ```
-## Choose the preferred method of creating the stack and deploying the DBP
+## To create the stack and deploy the DBP you can use one of the following options
  1. [Deploy DBP using AWS Console](#deploying-dbp-eks-with-aws-console)
  2. [Deploy DBP using AWS CLI](#deploying-dbp-eks-with-aws-cli)
 
@@ -217,18 +215,17 @@ To run the DBP deployment on AWS provided Kubernetes cluster requires:
     ```
 11. Verify the created stack
     ```
-        aws cloudformation describe-stacks --stack-name $STACKNAME
+        aws cloudformation describe-stacks --stack-name $STACK_NAME
     ```
 12. Update the kubeconfig with the new EKS cluster
     ```
-        aws eks update-kubeconfig --name $CLUSTERNAME
+        aws eks update-kubeconfig --name $CLUSTER_NAME
     ```
 
-
-## Deleting DBP EKS with AWS Cli
+### Deleting DBP EKS with AWS Cli
 Open a terminal and enter:
 ```
-aws cloudformation delete-stack --stack-name <master-dbp-eks-stack>
+aws cloudformation delete-stack --stack-name $STACK_NAME
 ```
 
 ## Cluster bastion access

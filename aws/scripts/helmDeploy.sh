@@ -155,19 +155,16 @@ helm install alfresco-incubator/alfresco-dbp --version $CHARTVERSION \
 --set alfresco-content-services.s3connector.secrets.encryption=kms \
 --set alfresco-content-services.s3connector.secrets.awsKmsKeyId="$S3BUCKETALIAS" \
 --set alfresco-content-services.repository.image.repository="alfresco/alfresco-content-repository-aws" \
---set alfresco-content-services.repository.image.tag="0.1.3-repo-6.0.0.3" \
+--set alfresco-content-services.repository.image.tag="6.1.0-EA3" \
 --set alfresco-content-services.repository.replicaCount=1 \
 --set alfresco-content-services.repository.livenessProbe.initialDelaySeconds=420 \
 --set alfresco-content-services.pdfrenderer.livenessProbe.initialDelaySeconds=300 \
 --set alfresco-content-services.libreoffice.livenessProbe.initialDelaySeconds=300 \
 --set alfresco-content-services.imagemagick.livenessProbe.initialDelaySeconds=300 \
 --set alfresco-content-services.share.livenessProbe.initialDelaySeconds=420 \
---set alfresco-infrastructure.alfresco-api-gateway.keycloakURL="https://$EXTERNALNAME/auth/" \
 --set alfresco-infrastructure.persistence.efs.enabled=true \
 --set alfresco-infrastructure.persistence.efs.dns="$EFSNAME" \
 --set alfresco-infrastructure.nginx-ingress.enabled=false \
---set alfresco-infrastructure.activemq.enabled=false \
---set alfresco-infrastructure.rabbitmq-ha.enabled=false \
 --set alfresco-infrastructure.alfresco-identity-service.keycloak.postgresql.persistence.subPath="$DESIREDNAMESPACE/alfresco-identity-service/database-data" \
 --set alfresco-infrastructure.alfresco-identity-service.client.alfresco.redirectUris="[\"https://$EXTERNALNAME*\"]"
 else

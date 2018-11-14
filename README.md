@@ -2,7 +2,8 @@
 
 The Alfresco Digital Business Platform can be deployed to different environments such as AWS or locally.
 
-- [Deploy to AWS](#aws)
+- [Deploy to AWS using KOPS](#aws)
+- [Deploy to AWS using EKS](README-cfn.md)
 - [Deploy to Docker for Desktop - Mac](#docker-for-desktop---mac)
 
 # AWS

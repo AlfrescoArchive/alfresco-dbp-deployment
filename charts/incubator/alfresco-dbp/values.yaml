@@ -20,19 +20,20 @@ alfresco-process-services:
 alfresco-content-services:
   enabled: true
   registryPullSecrets: quay-registry-secret
+  messageBroker:
+    url:
+    user: admin
+    password: admin
   alfresco-infrastructure:
     enabled: false
+    activemq:
+      enabled: false
   repository:
 # DEPLOY-466 / DEPLOY-467 - Remove image pin as we are using the ACS provided images
 #    image:
 #      repository: quay.io/alfresco/alfresco-dbp-repository
 #      tag: "0.3-SNAPSHOT"
     environment:
-      # The ACTIVEMQ_HOST is the DNS name of the ActiveMQ Broker. If deployed 
-      # from the Alfresco ActiveMQ Chart it will be
-      # <Infrastructure Release Name>-activemq-broker
-      ACTIVEMQ_HOST: "<infrastructure-releasename>-activemq-broker"
-      # FIXME: Port 61616 is hard-coded here, but is configurable elsewhere
       # The SYNC_SERVICE_URI should contain the details of the ingress host and port.
       SYNC_SERVICE_URI: "<ingresscontrollerurl>/syncservice"
       # The IDENTITY_SERVICE_URI should contain the details of the ingress host and port.
@@ -44,7 +45,6 @@ alfresco-content-services:
         -Ddeployment.method=HELM_CHART
         -Xms2000M -Xmx2000M
         -Ddsync.service.uris=\"$SYNC_SERVICE_URI\"
-        -Dmessaging.broker.url=\"failover:(tcp://${ACTIVEMQ_HOST}:61616)?timeout=3000\"
         -Dauthentication.chain=identity-service1:identity-service,alfrescoNtlm1:alfrescoNtlm
         -Didentity-service.enable-basic-auth=true
         -Didentity-service.authentication.validation.failure.silent=false
@@ -56,6 +56,7 @@ alfresco-content-services:
 #    image:
 #      repository: quay.io/alfresco/alfresco-dbp-share
 #      tag: "0.3-SNAPSHOT"
+  
 alfresco-sync-service:
   enabled: false
   alfresco-infrastructure:
@@ -63,9 +64,3 @@ alfresco-sync-service:
 
 alfresco-infrastructure:
   enabled: true
-  #DEPLOY-613 - Multiple ActiveMQ instances are deployed
-  #TODO Remove as part of DEPLOY-563
-  activemq:
-    enabled: false  
-
-  

@@ -8,7 +8,7 @@ dependencies:
     condition: alfresco-content-application.enabled
     repository: https://kubernetes-charts.alfresco.com/incubator
   - name: alfresco-content-services
-    version: 1.1.4
+    version: 1.1.5
     condition: alfresco-content-services.enabled
     repository: https://kubernetes-charts.alfresco.com/incubator
   - name: alfresco-sync-service
@@ -16,6 +16,6 @@ dependencies:
     condition: alfresco-sync-service.enabled
     repository: https://kubernetes-charts.alfresco.com/incubator
   - name: alfresco-infrastructure
-    version: 2.0.5-SNAPSHOT
+    version: 3.0.0-SNAPSHOT
     condition: alfresco-infrastructure.enabled
     repository: https://kubernetes-charts.alfresco.com/incubator

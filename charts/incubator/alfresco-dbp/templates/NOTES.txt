@@ -19,7 +19,7 @@ helm upgrade --reuse-values {{ .Release.Name }} --set dnsaddress="Your DNS addre
 The chart path can either be local "." on in the helm repo "alfresco/alfresco-dbp".
 
 If you are using the default dbp setup you can access all components as follows:
-  Alfresco Digital Workspace: {{ index .Values "alfresco-content-services" "repository" "environment" "IDENTITY_SERVICE_URI" | trimSuffix "/" | trimSuffix "/auth" }}/content-app/#/login
+  Alfresco Digital Workspace: {{ index .Values "alfresco-content-services" "repository" "environment" "IDENTITY_SERVICE_URI" | trimSuffix "/" | trimSuffix "/auth" }}/digital-workspace/#/login
   Content: {{ index .Values "alfresco-content-services" "repository" "environment" "IDENTITY_SERVICE_URI" | trimSuffix "/" | trimSuffix "/auth" }}/alfresco
   Share: {{ index .Values "alfresco-content-services" "repository" "environment" "IDENTITY_SERVICE_URI" | trimSuffix "/" | trimSuffix "/auth" }}/share
   Solr: {{ index .Values "alfresco-content-services" "repository" "environment" "IDENTITY_SERVICE_URI" | trimSuffix "/" | trimSuffix "/auth" }}/solr

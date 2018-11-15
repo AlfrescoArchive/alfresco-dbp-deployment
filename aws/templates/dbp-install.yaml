@@ -402,4 +402,4 @@ Outputs:
     Value: !GetAtt HelmHelperLambdaCustomResource.elb
   DbpDnsEndpoint:
     Description: Alfresco DBP Root Elb Address
-    Value: !Join ["", ["https://", !Ref ExternalName, "/content-app/"] ]
+    Value: !Join ["", ["https://", !Ref ExternalName, "/digital-workspace/"] ]

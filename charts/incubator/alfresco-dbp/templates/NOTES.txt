@@ -2,7 +2,7 @@
   {{ if contains "http" .Values.dnsaddress }}
 You can access all components of the dbp using the same root address, but different paths as follows:
 
-  Alfresco Digital Workspace: {{ .Values.dnsaddress }}/content-app/#/login
+  Alfresco Digital Workspace: {{ .Values.dnsaddress }}/digital-workspace/#/login
   Content: {{ .Values.dnsaddress }}/alfresco
   Share: {{ .Values.dnsaddress }}/share
   Solr: {{ .Values.dnsaddress }}/solr

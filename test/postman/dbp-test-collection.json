@@ -1729,7 +1729,7 @@
 		{
 			"id": "2a23735c-3ed6-4aa7-a4c6-013e1d4cf498",
 			"key": "contentAppUrl",
-			"value": "{{dbpurl}}/content-app",
+			"value": "{{dbpurl}}/digital-workspace",
 			"type": "string"
 		},
 		{

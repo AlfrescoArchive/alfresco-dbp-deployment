@@ -383,3 +383,8 @@ kubectl delete namespace $DESIREDNAMESPACE
 
 You may find it helpful to see the Kubernetes resources visually which can be achieved by installing the Kubernetes Dashboard: https://github.com/kubernetes/dashboard/wiki/Installation
 
+## Troubleshooting
+
+**Error: Invalid parameter: redirect_uri**
+
+After deploying the DBP, when accesing one of the application deployed, for example the activiti-app url, if you receive the error message *Were sorry Invalid parameter: redirect_uri*, the redirect uris parameter provided for alfresco identity is invalid. Make sure the `alfresco-infrastructure.alfresco-identity-service.client.alfresco.redirectUris` parameter has a valid value when installing the chart. For more details on how to configure it, check this [guide](https://github.com/Alfresco/alfresco-identity-service#changing-alfresco-client-redirecturis).

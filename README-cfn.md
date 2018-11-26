@@ -10,7 +10,7 @@ This project contains the code for the AWS-based DBP product on AWS Cloud using 
 
 #### Limitations
 
-Currently, this setup will only work in AWS US East (N.Virginia) and West (Oregon) regions due to current EKS support. For an overview of which regions EKS is currently available, see [Regional Product Services](https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/).
+Within this project we rely on [ACS Deployment AWS](https://github.com/Alfresco/acs-deployment-aws) to set the EKS cluster trough a set of defined cloudformation templates. Infrastructure limitations are set by the before mentioned project.
 
 ### Prerequisites
 * You need to create an IAM user that has the following [permissions](#Permissions) 

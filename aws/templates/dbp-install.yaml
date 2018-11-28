@@ -236,7 +236,7 @@ Resources:
                   \ --s3bucket-name ${S3BucketName}\
                   \ --s3bucket-location ${AWS::Region}\
                   \ --s3bucket-alias ${S3BucketKMSAlias}\
-                  \ --chart-version 0.8.0\
+                  \ --chart-version 0.8.1\
                   \ --install"
               timeoutSeconds: 60
       DocumentType: Command
@@ -254,7 +254,7 @@ Resources:
               workingDirectory: "/root"
               runCommand:
                 - "chmod u+x /tmp/helmDeploy.sh"
-                - !Sub "/tmp/helmDeploy.sh --release-name ${ReleaseName} --chart-version 0.8.0"
+                - !Sub "/tmp/helmDeploy.sh --release-name ${ReleaseName} --chart-version 0.8.1"
               timeoutSeconds: 60
       DocumentType: Command
 

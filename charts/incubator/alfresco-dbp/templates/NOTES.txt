@@ -7,7 +7,7 @@ You can access all components of the dbp using the same root address, but differ
   Share: {{ .Values.dnsaddress }}/share
   Solr: {{ .Values.dnsaddress }}/solr
   Process: {{ .Values.dnsaddress }}/activiti-app
-  Keycloak: {{ .Values.dnsaddress }}/auth/
+  Alfresco Identity Service: {{ .Values.dnsaddress }}/auth/
   {{ end }}
 
 {{ else if contains "http" (index .Values "alfresco-content-services" "repository" "environment" "IDENTITY_SERVICE_URI" ) }}
@@ -25,6 +25,6 @@ If you are using the default dbp setup you can access all components as follows:
   Solr: {{ index .Values "alfresco-content-services" "repository" "environment" "IDENTITY_SERVICE_URI" | trimSuffix "/" | trimSuffix "/auth" }}/solr
   APS: {{ index .Values "alfresco-content-services" "repository" "environment" "IDENTITY_SERVICE_URI" | trimSuffix "/" | trimSuffix "/auth" }}/activiti-app
   APS Admin: {{ index .Values "alfresco-content-services" "repository" "environment" "IDENTITY_SERVICE_URI" | trimSuffix "/" | trimSuffix "/auth" }}/activiti-admin
-  Keycloak: {{ index .Values "alfresco-content-services" "repository" "environment" "IDENTITY_SERVICE_URI" | trimSuffix "/" | trimSuffix "/auth" }}/auth/
+  Alfresco Identity Service: {{ index .Values "alfresco-content-services" "repository" "environment" "IDENTITY_SERVICE_URI" | trimSuffix "/" | trimSuffix "/auth" }}/auth/
 
 {{ end }}

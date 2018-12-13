@@ -75,6 +75,10 @@ else
               S3BUCKETALIAS="$2";
               shift 2
               ;;
+          --repo-pods)
+              REPO_PODS="$2";
+              shift 2
+              ;;
           --chart-version)
               CHARTVERSION="$2";
               shift 2
@@ -115,58 +119,142 @@ mountOptions:
 kubectl create -f storage.yaml
 kubectl patch storageclass gp2 -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 
+# We get Bastion AZ and Region to get a valid right region and query for volumes
+INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+BASTION_AZ=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone)
+REGION=${BASTION_AZ%?}
+# We use this tag below to find the proper EKS cluster name and figure out the unique volume
+TAG_NAME="KubernetesCluster"
+TAG_VALUE=$(aws ec2 describe-tags --filters "Name=resource-id,Values=$INSTANCE_ID" "Name=key,Values=$TAG_NAME" --region $REGION --output=text | cut -f5)
+# EKSname is not unique if we have multiple ACS deployments in the same cluster
+# It must be a name unique per Alfresco deployment, not per EKS cluster.
+SOLR_VOLUME1_NAME_TAG="$TAG_VALUE-SolrVolume1"
+SOLR_VOLUME1_ID=$(aws ec2 describe-volumes --region $REGION --filters "Name=tag:Name,Values=$SOLR_VOLUME1_NAME_TAG" --query "Volumes[?State=='available'].{Volume:VolumeId}" --output text)
+
 ALFRESCO_PASSWORD=$(printf %s $ALFRESCO_PASSWORD | iconv -t utf16le | openssl md4| awk '{ print $2}')
 echo Adding additional permissions to helm
 kubectl create clusterrolebinding add-on-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:default
 helm repo update
 
 if [ "$INSTALL" = "true" ]; then
+
+echo "alfresco-infrastructure:
+  persistence:
+    efs:
+      enabled: true
+      dns: \"$EFSNAME\"
+  nginx-ingress:
+    enabled: false
+  alfresco-identity-service:
+    keycloak:
+      postgresql:
+        persistence:
+          subPath: \"$DESIREDNAMESPACE/alfresco-identity-service/database-data\"
+    client:
+      alfresco:
+        redirectUris: \"[\\\"https://$EXTERNALNAME*\\\"]\"
+alfresco-content-services:
+  networkpolicysetting:
+    enabled: false
+  alfresco-infrastructure:
+    enabled: false
+  externalHost: \"$EXTERNALNAME\"
+  externalProtocol: \"https\"
+  externalPort: 443
+  registryPullSecrets: \"quay-registry-secret\"
+  postgresql:
+    enabled: false
+  database:
+    external: true
+    driver: \"org.mariadb.jdbc.Driver\"
+    url: \"'jdbc:mariadb:aurora//$RDSENDPOINT:3306/alfresco?useUnicode=yes&characterEncoding=UTF-8'\"
+    user: \"alfresco\"
+    password: \"$DATABASEPASSWORD\"
+  repository:
+    image:
+      repository: \"alfresco/alfresco-content-repository-aws\"
+      tag: \"6.1.0-EA3\"
+    replicaCount: $REPO_PODS
+    adminPassword: \"$ALFRESCO_PASSWORD\"
+    environment:
+      IDENTITY_SERVICE_URI: \"https://$EXTERNALNAME/auth/\"
+    livenessProbe:
+      initialDelaySeconds: 420
+  persistence:
+    repository:
+      enabled: false
+  s3connector:
+    enabled: true
+    config:
+      bucketName: \"$S3BUCKETNAME\"
+      bucketLocation: \"$S3BUCKETLOCATION\"
+    secrets:
+      encryption: kms
+      awsKmsKeyId: \"$S3BUCKETALIAS\"
+  transformrouter:
+    livenessProbe:
+      initialDelaySeconds: 300
+  pdfrenderer:
+    livenessProbe:
+      initialDelaySeconds: 300
+  libreoffice:
+    livenessProbe:
+      initialDelaySeconds: 300
+  imagemagick:
+    livenessProbe:
+      initialDelaySeconds: 300
+  share:
+    livenessProbe:
+      initialDelaySeconds: 420
+  alfresco-search:
+    resources:
+      requests:
+        memory: \"2500Mi\"
+      limits:
+        memory: \"2500Mi\"
+    environment:
+      SOLR_JAVA_MEM: \"-Xms2000M -Xmx2000M\"
+    persistence:
+      VolumeSizeRequest: \"100Gi\"
+      EbsPvConfiguration:
+        volumeID: \"$SOLR_VOLUME1_ID\"
+    affinity: |
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+              - key: \"SolrMasterOnly\"
+                operator: In
+                values:
+                - \"true\"
+    tolerations:
+    - key: \"SolrMasterOnly\"
+      operator: \"Equal\"
+      value: \"true\"
+      effect: \"NoSchedule\"
+    PvNodeAffinity:
+      required:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: \"SolrMasterOnly\"
+            operator: In
+            values:
+            - \"true\"
+alfresco-process-services:
+  postgresql:
+    persistence:
+      subPath: \"$DESIREDNAMESPACE/alfresco-process-services/database-data\"
+      existingClaim: \"alfresco-volume-claim\"
+  persistence:
+    subPath: \"$DESIREDNAMESPACE/alfresco-process-services/process-data\"
+  processEngine:
+    environment:
+      IDENTITY_SERVICE_AUTH: \"https://$EXTERNALNAME/auth/\"
+postgres:
+  enabled: false" > dbp_install_values.yaml
+
 echo Running Helm Command...
-helm install alfresco-incubator/alfresco-dbp --version $CHARTVERSION \
---name $RELEASENAME \
---namespace $DESIREDNAMESPACE \
---set postgresql.enabled=false \
---set alfresco-process-services.postgresql.persistence.subPath="$DESIREDNAMESPACE/alfresco-process-services/database-data" \
---set alfresco-process-services.postgresql.persistence.existingClaim="alfresco-volume-claim" \
---set alfresco-process-services.persistence.subPath="$DESIREDNAMESPACE/alfresco-process-services/process-data" \
---set alfresco-process-services.processEngine.environment.IDENTITY_SERVICE_AUTH="https://$EXTERNALNAME/auth/" \
---set alfresco-content-services.repository.environment.IDENTITY_SERVICE_URI="https://$EXTERNALNAME/auth/" \
---set alfresco-content-services.alfresco-search.persistence.search.data.subPath="$DESIREDNAMESPACE/alfresco-content-services/solr-data" \
---set alfresco-content-services.networkpolicysetting.enabled=false \
---set alfresco-content-services.alfresco-infrastructure.enabled=false \
---set alfresco-content-services.externalHost="$EXTERNALNAME" \
---set alfresco-content-services.externalProtocol="https" \
---set alfresco-content-services.externalPort="443" \
---set alfresco-content-services.registryPullSecrets="quay-registry-secret" \
---set alfresco-content-services.repository.adminPassword="$ALFRESCO_PASSWORD" \
---set alfresco-content-services.alfresco-search.environment.SOLR_JAVA_MEM="-Xms2000M -Xmx2000M" \
---set alfresco-content-services.alfresco-search.resources.requests.memory="2500Mi" \
---set alfresco-content-services.alfresco-search.resources.limits.memory="2500Mi" \
---set alfresco-content-services.postgresql.enabled=false \
---set alfresco-content-services.database.external=true \
---set alfresco-content-services.database.driver="org.mariadb.jdbc.Driver" \
---set alfresco-content-services.database.url="'jdbc:mariadb:aurora//$RDSENDPOINT:3306/alfresco?useUnicode=yes&characterEncoding=UTF-8'" \
---set alfresco-content-services.database.user="alfresco" \
---set alfresco-content-services.database.password="$DATABASEPASSWORD" \
---set alfresco-content-services.persistence.repository.enabled=false \
---set alfresco-content-services.s3connector.enabled=true \
---set alfresco-content-services.s3connector.config.bucketName="$S3BUCKETNAME" \
---set alfresco-content-services.s3connector.config.bucketLocation="$S3BUCKETLOCATION" \
---set alfresco-content-services.s3connector.secrets.encryption=kms \
---set alfresco-content-services.s3connector.secrets.awsKmsKeyId="$S3BUCKETALIAS" \
---set alfresco-content-services.repository.image.repository="alfresco/alfresco-content-repository-aws" \
---set alfresco-content-services.repository.image.tag="6.1.0-EA3" \
---set alfresco-content-services.repository.replicaCount=1 \
---set alfresco-content-services.repository.livenessProbe.initialDelaySeconds=420 \
---set alfresco-content-services.pdfrenderer.livenessProbe.initialDelaySeconds=300 \
---set alfresco-content-services.libreoffice.livenessProbe.initialDelaySeconds=300 \
---set alfresco-content-services.imagemagick.livenessProbe.initialDelaySeconds=300 \
---set alfresco-content-services.share.livenessProbe.initialDelaySeconds=420 \
---set alfresco-infrastructure.persistence.efs.enabled=true \
---set alfresco-infrastructure.persistence.efs.dns="$EFSNAME" \
---set alfresco-infrastructure.nginx-ingress.enabled=false \
---set alfresco-infrastructure.alfresco-identity-service.keycloak.postgresql.persistence.subPath="$DESIREDNAMESPACE/alfresco-identity-service/database-data" \
---set alfresco-infrastructure.alfresco-identity-service.client.alfresco.redirectUris="[\"https://$EXTERNALNAME*\"]"
+helm install alfresco-incubator/alfresco-dbp --version $CHARTVERSION -f dbp_install_values.yaml --name $RELEASENAME --namespace $DESIREDNAMESPACE
 else
 helm upgrade $RELEASENAME alfresco-incubator/alfresco-dbp --version $CHARTVERSION --reuse-values
 fi

@@ -32,6 +32,8 @@ Metadata:
           - NodesMetricsEnabled
           - K8sNamespace
           - DeployInfrastructureOnly
+          - IndexEBSVolumeSize
+          - IndexEBSIops
       - Label:
           default: S3 Cross Replication Bucket for storing ACS content store
         Parameters:
@@ -63,6 +65,7 @@ Metadata:
           - AlfrescoPassword
           - RegistryCredentials
           - Route53DnsZone
+          - RepoPods
 
     ParameterLabels:
       AvailabilityZones:
@@ -145,8 +148,14 @@ Metadata:
         default: Destination Replication Bucket
       ReplicationBucketKMSEncryptionKey:
         default: Destination Bucket KMS Encryption Key
+      RepoPods:
+        default: The number of repository pods in the cluster
       DeployInfrastructureOnly:
         default: Deploys only eks cluster and worker nodes
+      IndexEBSVolumeSize:
+        default: Size in GB for the Index EBS volume
+      IndexEBSIops:
+        default: IOPS for the Index EBS volume (300 to 20000)
 
 Parameters:
   AvailabilityZones:
@@ -230,7 +239,7 @@ Parameters:
   RDSCreateSnapshotWhenDeleted:
     Description: Creates a snapshot when the stack gets deleted
     Type: String
-    Default: true
+    Default: "true"
     AllowedValues:
     - "true"
     - "false"
@@ -248,17 +257,17 @@ Parameters:
     Type: String
     MinLength: 1
     Description: "The desired number of Bastion instance to run"
-    Default: 1
+    Default: "1"
   MaxNumberOfBastionNodes:
     Type: String
     MinLength: 1
     Description: "The maximum number of Bastion instances to run"
-    Default: 1
+    Default: "1"
   MinNumberOfBastionNodes:
     Type: String
     MinLength: 1
     Description: "The minimum number of Bastion instances to run"
-    Default: 1
+    Default: "1"
   NodeInstanceType:
     Type: "String"
     Default: "m4.xlarge"
@@ -278,21 +287,21 @@ Parameters:
     Type: String
     MinLength: 1
     Description: "The desired number of EKS Worker Nodes to run"
-    Default: 2
+    Default: "2"
   MaxNumberOfNodes:
     Type: String
     MinLength: 1
     Description: "The maximum number of EKS Worker Nodes to run"
-    Default: 3
+    Default: "3"
   MinNumberOfNodes:
     Type: String
     MinLength: 1
     Description: "The minimum number of EKS Worker Nodes to run"
-    Default: 2
+    Default: "2"
   NodesMetricsEnabled:
     Description: Enables all CloudWatch metrics for the nodes auto scaling group
     Type: String
-    Default: false
+    Default: "false"
     AllowedValues:
     - "true"
     - "false"
@@ -383,7 +392,7 @@ Parameters:
   UseCrossRegionReplication:
     Description: "Set to true if you want to add an S3 Bucket for replication"
     Type: String
-    Default: false
+    Default: "false"
     AllowedValues: 
       - "true"
       - "false"
@@ -399,16 +408,27 @@ Parameters:
     Description: "The KMS encryption key for the destination bucket"
     Type: "String"
     Default: ""
+  RepoPods:
+    Type: String
+    Description: The number of repository pods in the cluster
+    Default: "2"
   DeployInfrastructureOnly:
     Description: "Set to true if you only want the eks cluster deployed"
     Type: String
-    Default: false
+    Default: "false"
     AllowedValues: 
       - "true"
       - "false"
+  IndexEBSVolumeSize:
+    Type: String
+    Description: Size in GB for the Index EBS volume
+    Default: "100"
+  IndexEBSIops:
+    Type: String
+    Description: IOPS for the Index EBS volume (300 to 20000)
+    Default: "300"
 
 Conditions:
-  isUseCrossRegionReplication: !Equals [!Ref UseCrossRegionReplication, "true"]
   isDeployInfrastructureOnly: !Equals [!Ref DeployInfrastructureOnly, "true"]
   deployDbp: !Not [Condition: isDeployInfrastructureOnly]
 
@@ -431,7 +451,7 @@ Resources:
         PrivateSubnet2ACIDR: !Ref PrivateSubnet2CIDR
         PublicSubnet1CIDR: !Ref PublicSubnet1CIDR
         PublicSubnet2CIDR: !Ref PublicSubnet2CIDR
-        CreatePrivateSubnets: true
+        CreatePrivateSubnets: "true"
         VPCCIDR: !Ref VPCCIDR
 
   EC2LogGroup:
@@ -463,6 +483,15 @@ Resources:
                   - logs:PutMetricFilter
                   - logs:CreateLogGroup
                 Resource: !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:${EC2LogGroup}:*"
+                Effect: Allow
+        - PolicyName: ebs-volume-policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Action:
+                  - ec2:AttachVolume
+                  - ec2:DetachVolume
+                Resource: !Sub "arn:aws:ec2:*:*:volume/*"
                 Effect: Allow
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
@@ -497,9 +526,6 @@ Resources:
 
   EFSStack:
     Type: AWS::CloudFormation::Stack
-    DependsOn:
-      - VPCStack
-      - NodeSecurityGroup
     Properties:
       Tags:
         - Key: Name
@@ -514,11 +540,10 @@ Resources:
         PrivateSubnet2ID: !GetAtt VPCStack.Outputs.PrivateSubnet2AID
         SecurityGroup: !Ref NodeSecurityGroup
 
-  BastionAndEksClusterStack:
+  EKSStack:
     Type: AWS::CloudFormation::Stack
     DependsOn:
-      - VPCStack
-      - NodeInstanceRole
+      - SolrVolume1
     Properties:
       Tags:
         - Key: Name
@@ -555,13 +580,10 @@ Resources:
         DesiredNumberOfNodes: !Ref DesiredNumberOfNodes
         NodesMetricsEnabled: !Ref NodesMetricsEnabled
         EksExternalUserArn: !Ref EksExternalUserArn
-        K8sNamespace: !Ref K8sNamespace
 
   RDSStack:
     Type: AWS::CloudFormation::Stack
     Condition: deployDbp
-    DependsOn:
-      - VPCStack
     Properties:
       Tags:
         - Key: Name
@@ -576,14 +598,16 @@ Resources:
         PrivateSubnet2: !GetAtt VPCStack.Outputs.PrivateSubnet2AID
         NodeSecurityGroup: !Ref NodeSecurityGroup
         VPCID: !GetAtt VPCStack.Outputs.VPCID
+        RDSInstanceType: !Ref RDSInstanceType
+        RDSAllocatedStorage: !Ref RDSAllocatedStorage
+        RDSDBName: !Ref RDSDBName
+        RDSUsername: !Ref RDSUsername
         RDSPassword: !Ref RDSPassword
         RDSCreateSnapshotWhenDeleted: !Ref RDSCreateSnapshotWhenDeleted
 
   S3Stack:
     Type: AWS::CloudFormation::Stack
     Condition: deployDbp
-    DependsOn:
-      - NodeInstanceRole
     Properties:
       Tags:
         - Key: Name
@@ -606,11 +630,6 @@ Resources:
   DBPStack:
     Type: AWS::CloudFormation::Stack
     Condition: deployDbp
-    DependsOn:
-      - EFSStack
-      - BastionAndEksClusterStack
-      - RDSStack
-      - S3Stack
     Properties:
       Tags:
         - Key: Name
@@ -626,8 +645,8 @@ Resources:
         EFSName: !GetAtt EFSStack.Outputs.EFSName
         S3BucketName: !GetAtt S3Stack.Outputs.S3BucketName
         S3BucketKMSAlias: !GetAtt S3Stack.Outputs.S3BucketKMSAlias
-        EKSName: !GetAtt BastionAndEksClusterStack.Outputs.EksClusterName
-        BastionAutoScalingGroup: !GetAtt BastionAndEksClusterStack.Outputs.BastionAutoScalingGroup
+        EKSName: !GetAtt EKSStack.Outputs.EksClusterName
+        BastionAutoScalingGroup: !GetAtt EKSStack.Outputs.BastionAutoScalingGroup
         VPCID: !GetAtt VPCStack.Outputs.VPCID
         NodeSecurityGroup: !Ref NodeSecurityGroup
         K8sNamespace: !Ref K8sNamespace
@@ -641,7 +660,23 @@ Resources:
         RegistryCredentials: !Ref RegistryCredentials
         IngressReleaseName: !Ref IngressReleaseName
         ReleaseName: !Ref ReleaseName
+        RepoPods: !Ref RepoPods
         Route53DnsZone: !Ref Route53DnsZone
+        NodeInstanceRoleArn: !GetAtt NodeInstanceRole.Arn
+        EC2LogGroup: !Ref EC2LogGroup
+
+  SolrVolume1:
+    Type: AWS::EC2::Volume
+    Properties:
+      AutoEnableIO: false
+      AvailabilityZone: !Select [ 0, !Ref AvailabilityZones ]
+      Encrypted: false
+      Iops: !Ref IndexEBSIops
+      Size: !Ref IndexEBSVolumeSize
+      VolumeType: io1
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-eks-SolrVolume1"
 
 Outputs:
   # VPC stack
@@ -652,33 +687,33 @@ Outputs:
 
   # Bastion stack
   BastionSubstackName:
-    Value: !GetAtt BastionAndEksClusterStack.Outputs.SubstackName
+    Value: !GetAtt EKSStack.Outputs.SubstackName
   BastionSecurityGroup:
-    Value: !GetAtt BastionAndEksClusterStack.Outputs.BastionSecurityGroup
+    Value: !GetAtt EKSStack.Outputs.BastionSecurityGroup
   BastionLaunchConfiguration:
-    Value: !GetAtt BastionAndEksClusterStack.Outputs.BastionLaunchConfiguration
+    Value: !GetAtt EKSStack.Outputs.BastionLaunchConfiguration
   BastionAutoScalingGroup:
-    Value: !GetAtt BastionAndEksClusterStack.Outputs.BastionAutoScalingGroup
+    Value: !GetAtt EKSStack.Outputs.BastionAutoScalingGroup
   BastionEIP:
-    Value: !GetAtt BastionAndEksClusterStack.Outputs.BastionEIP
+    Value: !GetAtt EKSStack.Outputs.BastionEIP
   BastionInstanceProfile:
-    Value: !GetAtt BastionAndEksClusterStack.Outputs.BastionInstanceProfile
+    Value: !GetAtt EKSStack.Outputs.BastionInstanceProfile
   BastionInstanceRole:
-    Value: !GetAtt BastionAndEksClusterStack.Outputs.BastionInstanceRole
+    Value: !GetAtt EKSStack.Outputs.BastionInstanceRole
   EC2LogGroup:
     Value: !Ref EC2LogGroup
 
   # EKS Cluster
   ControlPlaneSecurityGroup:
-    Value: !GetAtt BastionAndEksClusterStack.Outputs.ControlPlaneSecurityGroup
+    Value: !GetAtt EKSStack.Outputs.ControlPlaneSecurityGroup
   EksClusterName:
-    Value: !GetAtt BastionAndEksClusterStack.Outputs.EksClusterName
+    Value: !GetAtt EKSStack.Outputs.EksClusterName
   EksEndpoint:
-    Value: !GetAtt BastionAndEksClusterStack.Outputs.EksEndpoint
+    Value: !GetAtt EKSStack.Outputs.EksEndpoint
   EksCertAuthority:
-    Value: !GetAtt BastionAndEksClusterStack.Outputs.EksCertAuthority
+    Value: !GetAtt EKSStack.Outputs.EksCertAuthority
   EksServiceRoleArn:
-    Value: !GetAtt BastionAndEksClusterStack.Outputs.EksServiceRoleArn
+    Value: !GetAtt EKSStack.Outputs.EksServiceRoleArn
   NodeInstanceRoleArn:
     Value: !GetAtt NodeInstanceRole.Arn
   NodeSecurityGroupId:
@@ -711,7 +746,6 @@ Outputs:
   S3ReplicationBucket:
     Condition: deployDbp
     Value: !Ref ReplicationBucket
-    Condition: isUseCrossRegionReplication
 
   # RDS Stack
   RDSSubstackName:

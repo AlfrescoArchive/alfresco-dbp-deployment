@@ -13,7 +13,6 @@ In addition, since it can be deployed to different environments, check the requi
 - [KOPS deployment](#kops)
 - [EKS deployment](#eks)
 - [Docker for Desktop deployment](##docker-for-desktop---mac)
-- [Minikube deployment (officially not supported anymore)](#minikube)
 
 # KOPS
 For KOPS deployment you will also need:
@@ -36,10 +35,5 @@ For Docker for desktop on mac deployment you will also need:
 | -------------------| :--------------: | ----------------------   |
 | Homebrew           |  1.7.7           | https://brew.sh/         |
 | Docker for Desktop |  2.0.0.0         | https://docs.docker.com/ |
-
-# Minikube
-| Component   | Recommended version | Getting Started Guide |
-| ------------|:-----------: | ---------------------- |
-| Minikube    | 0.25.0       | https://kubernetes.io/docs/getting-started-guides/minikube/ |
 
 Any variation from these technologies and versions may affect the end result. If you do experience any issues please let us know through our [Gitter channel](https://gitter.im/Alfresco/platform-services?utm_source=share-link&utm_medium=link&utm_campaign=share-link).

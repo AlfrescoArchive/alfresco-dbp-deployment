@@ -8,12 +8,12 @@ The Alfresco Digital Business Platform Deployment requires:
 | Kubernetes  | 1.10.3       | https://kubernetes.io/docs/tutorials/kubernetes-basics/ |
 | Kubectl     | 1.10.3       | https://kubernetes.io/docs/tasks/tools/install-kubectl/ |
 | Helm        | 2.9.1        | https://docs.helm.sh/using_helm/#quickstart-guide |
-| Homebrew    | 1.7.7        | https://brew.sh/            |
 
 In addition, since it can be deployed to different environments, check the requirements for:
 - [KOPS deployment](#kops)
 - [EKS deployment](#eks)
 - [Docker for Desktop deployment](##docker-for-desktop---mac)
+- [Minikube deployment (officially not supported anymore)](#minikube)
 
 # KOPS
 For KOPS deployment you will also need:
@@ -32,8 +32,14 @@ For EKS deployment you will also need:
 # Docker for desktop - mac
 For Docker for desktop on mac deployment you will also need:
 
+| Component          | Recommended version | Getting Started Guide |
+| -------------------| :--------------: | ----------------------   |
+| Homebrew           |  1.7.7           | https://brew.sh/         |
+| Docker for Desktop |  2.0.0.0         | https://docs.docker.com/ |
+
+# Minikube
 | Component   | Recommended version | Getting Started Guide |
-| ------------| :-----------: | ----------------------      |
-| Homebrew    | 1.7.7         | https://brew.sh/            |
+| ------------|:-----------: | ---------------------- |
+| Minikube    | 0.25.0       | https://kubernetes.io/docs/getting-started-guides/minikube/ |
 
 Any variation from these technologies and versions may affect the end result. If you do experience any issues please let us know through our [Gitter channel](https://gitter.im/Alfresco/platform-services?utm_source=share-link&utm_medium=link&utm_campaign=share-link).

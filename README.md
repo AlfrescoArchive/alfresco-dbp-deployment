@@ -199,17 +199,11 @@ We also enable the CORS header for the applications that need it through the Ing
 
 # Docker for Desktop - Mac
 
-## Prerequisites
-
-| Component   | Recommended version | Getting Started Guide |
-| ------------|:-----------: | ----------------------   |
-| Homebrew           | 1.7.6        | https://brew.sh/         |
-
 ## Deployment
 
 ### 1. Install Docker for Desktop
 
-You can download the installer from: https://www.docker.com/products/docker-desktop
+Check recommended version [here](https://github.com/Alfresco/alfresco-dbp-deployment/blob/master/README-prerequisite.md#docker-for-desktop---mac).
 
 ### 2. Enable Kubernetes
 

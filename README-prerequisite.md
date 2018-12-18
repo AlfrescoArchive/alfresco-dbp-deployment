@@ -10,9 +10,9 @@ The Alfresco Digital Business Platform Deployment requires:
 | Helm        | 2.9.1        | https://docs.helm.sh/using_helm/#quickstart-guide |
 
 In addition, since it can be deployed to different environments, check the requirements for:
-- [KOPS deployment](#kops)
-- [EKS deployment](#eks)
-- [Docker for Desktop deployment](##docker-for-desktop---mac)
+- [KOPS deployment](#KOPS)
+- [EKS deployment](#EKS)
+- [Docker for Desktop deployment](#Docker-for-desktop---mac)
 
 # KOPS
 For KOPS deployment you will also need:

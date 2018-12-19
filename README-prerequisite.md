@@ -12,7 +12,7 @@ The Alfresco Digital Business Platform Deployment requires:
 In addition, since it can be deployed to different environments, check the requirements for:
 - [KOPS deployment](#KOPS)
 - [EKS deployment](#EKS)
-- [Docker Desktop deployment](#Docker-Desktop-(Mac))
+- [Docker Desktop deployment](#Docker-Desktop)
 
 # KOPS
 For KOPS deployment you will also need:
@@ -28,7 +28,7 @@ For EKS deployment you will also need:
 | ------------|:-----------: | ---------------------- |
 | AWS Cli     | 1.16.33      | https://github.com/aws/aws-cli#installation |
 
-# Docker Desktop (Mac)
+# Docker Desktop
 For Docker Desktop deployment you will also need:
 
 | Component          | Recommended version | Getting Started Guide |

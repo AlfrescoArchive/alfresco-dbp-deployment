@@ -203,7 +203,7 @@ We also enable the CORS header for the applications that need it through the Ing
 
 ### 1. Install Docker for Desktop
 
-Check recommended version [here](https://github.com/Alfresco/alfresco-dbp-deployment/blob/master/README-prerequisite.md#docker-for-desktop---mac).
+Check recommended version [here](https://github.com/Alfresco/alfresco-dbp-deployment/blob/master/README-prerequisite.md#docker-desktop).
 
 ### 2. Enable Kubernetes
 

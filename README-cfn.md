@@ -10,7 +10,7 @@ This project contains the code for the AWS-based DBP product on AWS Cloud using 
 
 #### Limitations
 
-Within this project we rely on [ACS Deployment AWS](https://github.com/Alfresco/acs-deployment-aws) to set the EKS cluster trough a set of defined cloudformation templates. Infrastructure limitations are set by the before mentioned project.
+Within this project we rely on [ACS Deployment AWS](https://github.com/Alfresco/acs-deployment-aws) to set the EKS cluster through a set of defined cloudformation templates. Infrastructure limitations are set by the before mentioned project.
 
 ### Prerequisites
 * You need to create an IAM user that has the following [permissions](#Permissions) 
@@ -70,20 +70,28 @@ s3://<bucket_name> e.g. my-s3-bucket
           |-- <key_prefix> e.g. development
           |       |-- lambdas
           |       |      |-- eks-helper-lambda.zip
+          |       |      +-- cluster-init-helper-lambda.zip
           |       |      +-- alfresco-lambda-empty-s3-bucket.jar
           |       |      +-- helm-helper-lambda.zip
           |       |-- scripts
-          |       |      |-- deleteIngress.sh
+          |       |      |-- deleteAcs.sh
+          |       |      +-- deleteIngress.sh
           |       |      +-- getElb.sh
+          |       |      +-- hardening_bootstrap.sh
+          |       |      +-- helmAcs.sh
           |       |      +-- helmDeploy.sh
+          |       |      +-- helmFluentd.sh
           |       |      +-- helmIngress.sh
           |       |      +-- helmInit.sh
           |       |-- templates
-          |       |      |-- acs.yaml
-          |       |      +-- full-deployment.yaml
-          |       |      +-- full-master-parameters.json
+          |       |      |-- acs-deployment-master.yaml
+          |       |      +-- acs-master-parameters.json
+          |       |      +-- acs.yaml
           |       |      +-- bastion-and-eks-cluster.yaml
+          |       |      +-- dbp-install.yaml
           |       |      +-- efs.yaml
+          |       |      +-- full-deployment-parameters.json
+          |       |      +-- full-deployment.yaml
           |       |      +-- rds.yaml
           |       |      +-- s3-bucket.yaml
 ```

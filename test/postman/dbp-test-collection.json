@@ -1309,7 +1309,7 @@
 									"});",
 									"",
 									"pm.test(\"Verify Page Body Contains Alfresco Content App\", function () {",
-									"    pm.expect(pm.response.text()).to.include(\"Alfresco Content App\");",
+									"    pm.expect(pm.response.text()).to.include(\"Alfresco Digital Workspace\");",
 									"});"
 								]
 							}

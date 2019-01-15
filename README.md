@@ -1,5 +1,7 @@
 # Alfresco Digital Business Platform Deployment
 
+Check [prerequisites section](https://github.com/Alfresco/alfresco-dbp-deployment/blob/master/README-prerequisite.md) before you start.
+
 The Alfresco Digital Business Platform can be deployed to different environments such as AWS or locally.
 
 - [Deploy to AWS using KOPS](#aws)
@@ -7,20 +9,6 @@ The Alfresco Digital Business Platform can be deployed to different environments
 - [Deploy to Docker for Desktop - Mac](#docker-for-desktop---mac)
 
 # AWS
-
-## Prerequisites
-
-The Alfresco Digital Business Platform Deployment requires:
-
-| Component   | Recommended version | Getting Started Guide |
-| ------------|:-----------: | ---------------------- |
-| Docker      | 17.0.9.1     | https://docs.docker.com/ |
-| Kubernetes  | 1.8.4        | https://kubernetes.io/docs/tutorials/kubernetes-basics/ |
-| Kubectl     | 1.8.4        | https://kubernetes.io/docs/tasks/tools/install-kubectl/ |
-| Helm        | 2.8.2        | https://docs.helm.sh/using_helm/#quickstart-guide |
-| Kops        | 1.8.1        | https://github.com/kubernetes/kops/blob/master/docs/aws.md |
-
-Any variation from these technologies and versions may affect the end result. If you do experience any issues please let us know through our [Gitter channel](https://gitter.im/Alfresco/platform-services?utm_source=share-link&utm_medium=link&utm_campaign=share-link).
 
 *Note:* You do not need to clone this repo to deploy the dbp.
 
@@ -211,17 +199,11 @@ We also enable the CORS header for the applications that need it through the Ing
 
 # Docker for Desktop - Mac
 
-## Prerequisites
-
-| Component   | Recommended version | Getting Started Guide |
-| ------------|:-----------: | ----------------------   |
-| Homebrew           | 1.7.6        | https://brew.sh/         |
-
 ## Deployment
 
 ### 1. Install Docker for Desktop
 
-You can download the installer from: https://www.docker.com/products/docker-desktop
+Check recommended version [here](https://github.com/Alfresco/alfresco-dbp-deployment/blob/master/README-prerequisite.md#docker-desktop).
 
 ### 2. Enable Kubernetes
 

@@ -137,13 +137,8 @@ After the CFN stack creation has finished, you can find the Alfresco URL in the 
 Go to CloudFormation and delete the master DBP EKS stack. The nested stacks will be deleted first, followed by the master stack.
 
 ## Deploying DBP EKS with AWS CLI
-### Prerequisites
 
-To run the DBP deployment on AWS provided Kubernetes cluster requires:
-
-| Component   | Getting Started Guide |
-| ------------| --------------------- |
-| AWS Cli     | https://github.com/aws/aws-cli#installation |
+Check [prerequisites section](https://github.com/Alfresco/alfresco-dbp-deployment/blob/master/README-prerequisite.md) before you start.
 
 1. Create a new keypair in EC2 using 
     ```

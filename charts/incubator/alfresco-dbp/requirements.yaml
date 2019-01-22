@@ -15,3 +15,15 @@ dependencies:
     version: 4.0.0-SNAPSHOT
     condition: alfresco-infrastructure.enabled
     repository: https://kubernetes-charts.alfresco.com/incubator
+  - name: acs-events-consolidator
+    version: 0.1
+    condition: acs-events-consolidator.enabled
+    repository: https://kubernetes-charts.alfresco.com/incubator
+  - name: alfresco-event-gateway
+    version: 0.1.1
+    condition: alfresco-event-gateway.enabled
+    repository: https://kubernetes-charts.alfresco.com/incubator
+  - name: activiti-cloud-full-example
+    version: 0.6.1
+    condition: activiti-cloud-full-example.enabled
+    repository: https://activiti.github.io/activiti-cloud-charts/

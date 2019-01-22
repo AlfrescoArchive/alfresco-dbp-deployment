@@ -64,3 +64,12 @@ alfresco-sync-service:
 
 alfresco-infrastructure:
   enabled: true
+
+acs-events-consolidator:
+  enabled: false
+
+alfresco-event-gateway:
+  enabled: true
+
+activiti-cloud-full-example:
+  enabled: true

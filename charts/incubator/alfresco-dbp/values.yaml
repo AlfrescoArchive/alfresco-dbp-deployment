@@ -72,4 +72,4 @@ alfresco-event-gateway:
   enabled: true
 
 activiti-cloud-full-example:
-  enabled: true
+  enabled: false

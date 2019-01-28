@@ -1677,6 +1677,53 @@
 					}
 				}
 			]
+		},
+		{
+			"name": "08 Activiti-token-auth",
+			"item": [
+				{
+					"name": "getProcessInstances",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1fcaf9d8-243d-44c5-92f1-681cfaedba35",
+								"exec": [
+									"pm.test(\"Response code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{kcAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{gatewayUrl}}/rb-my-app/v1/process-instances",
+							"host": [
+								"{{gatewayUrl}}"
+							],
+							"path": [
+								"rb-my-app",
+								"v1",
+								"process-instances"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"event": [

@@ -1852,9 +1852,9 @@
 			"type": "string"
 		},
 		{
-			"id": "53a38dc0-9679-402f-b8e4-37aae695c35f",
-			"key": "elbip",
-			"value": "127.0.0.1",
+			"id": "443f4f1f-3475-404a-8cb3-822fa95649ba",
+			"key": "activitiUrl",
+			"value": "activiti-cloud-gateway.{{elbip}}.nip.io",
 			"type": "string"
 		}
 	]

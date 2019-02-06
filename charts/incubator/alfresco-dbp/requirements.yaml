@@ -1,8 +1,4 @@
 dependencies:
-  - name: alfresco-process-services
-    version: 0.1.5
-    condition: alfresco-process-services.enabled
-    repository: https://kubernetes-charts.alfresco.com/incubator
   - name: alfresco-content-services
     version: 1.1.8
     condition: alfresco-content-services.enabled
@@ -12,16 +8,12 @@ dependencies:
     condition: alfresco-sync-service.enabled
     repository: https://kubernetes-charts.alfresco.com/incubator
   - name: alfresco-infrastructure
-    version: 4.0.0-SNAPSHOT
+    version: 5.0.0-with-Event-Gateway
     condition: alfresco-infrastructure.enabled
     repository: https://kubernetes-charts.alfresco.com/incubator
   - name: acs-events-consolidator
     version: 0.2
     condition: acs-events-consolidator.enabled
-    repository: https://kubernetes-charts.alfresco.com/incubator
-  - name: alfresco-event-gateway
-    version: 0.1.2
-    condition: alfresco-event-gateway.enabled
     repository: https://kubernetes-charts.alfresco.com/incubator
   - name: activiti-cloud-full-example
     version: 0.7.2

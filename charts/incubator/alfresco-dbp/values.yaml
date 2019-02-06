@@ -3,20 +3,6 @@
 # Declare variables to be passed into your templates.
 replicaCount: 1
 
-alfresco-process-services:
-  enabled: true
-  alfresco-infrastructure:
-    enabled: false
-  processEngine:
-    environment:
-      IDENTITY_SERVICE_ENABLED: true
-      IDENTITY_SERVICE_AUTH: "<ingresscontrollerurl>/auth"
-  resources:
-    requests:
-      memory: "2000Mi"
-    limits:
-      memory: "3000Mi"
-
 alfresco-content-services:
   enabled: true
   registryPullSecrets: quay-registry-secret
@@ -67,9 +53,6 @@ alfresco-infrastructure:
 
 acs-events-consolidator:
   enabled: false
-
-alfresco-event-gateway:
-  enabled: true
 
 activiti-cloud-full-example:
   enabled: true

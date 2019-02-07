@@ -1194,10 +1194,10 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "https://{{gatewayUrl}}/rb-my-app/v1/process-instances",
+							"raw": "https://{{activitiUrl}}/rb-my-app/v1/process-instances",
 							"protocol": "https",
 							"host": [
-								"{{gatewayUrl}}"
+								"{{activitiUrl}}"
 							],
 							"path": [
 								"rb-my-app",

@@ -8,7 +8,7 @@ dependencies:
     condition: alfresco-sync-service.enabled
     repository: https://kubernetes-charts.alfresco.com/incubator
   - name: alfresco-infrastructure
-    version: 5.0.0-with-Event-Gateway
+    version: 5.0.0
     condition: alfresco-infrastructure.enabled
     repository: https://kubernetes-charts.alfresco.com/incubator
   - name: acs-events-consolidator

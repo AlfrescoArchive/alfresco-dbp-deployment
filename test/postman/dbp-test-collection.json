@@ -97,8 +97,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "https://{{acsUrl}}/api/discovery",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{acsUrl}}/api/discovery",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{acsUrl}}"
 							],
@@ -165,8 +165,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "https://{{shareUrl}}/page/modules/deploy",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{shareUrl}}/page/modules/deploy",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{shareUrl}}"
 							],
@@ -229,8 +229,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://{{shareUrl}}/res/components/documentlibrary/actions/google-edit-flat-16.png",
-							"protocol": "http",
+							"raw": "{{protocol}}://{{shareUrl}}/res/components/documentlibrary/actions/google-edit-flat-16.png",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{shareUrl}}"
 							],
@@ -305,8 +305,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "https://{{acsUrl}}/s/api/solrstats",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{acsUrl}}/s/api/solrstats",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{acsUrl}}"
 							],
@@ -388,8 +388,8 @@
 							]
 						},
 						"url": {
-							"raw": "https://{{identityServiceUrl}}/realms/{{identityServiceRealm}}/protocol/openid-connect/token",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{identityServiceUrl}}/realms/{{identityServiceRealm}}/protocol/openid-connect/token",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{identityServiceUrl}}"
 							],
@@ -468,8 +468,8 @@
 							]
 						},
 						"url": {
-							"raw": "https://{{identityServiceUrl}}/realms/{{identityServiceRealm}}/protocol/openid-connect/token",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{identityServiceUrl}}/realms/{{identityServiceRealm}}/protocol/openid-connect/token",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{identityServiceUrl}}"
 							],
@@ -530,8 +530,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "https://{{acsUrl}}/api/-default-/public/alfresco/versions/1/people/-me-",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{acsUrl}}/api/-default-/public/alfresco/versions/1/people/-me-",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{acsUrl}}"
 							],
@@ -603,8 +603,8 @@
 							"raw": "{{contentCreateBody}}"
 						},
 						"url": {
-							"raw": "https://{{acsUrl}}/api/-default-/public/alfresco/versions/1/nodes/-my-/children",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{acsUrl}}/api/-default-/public/alfresco/versions/1/nodes/-my-/children",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{acsUrl}}"
 							],
@@ -672,8 +672,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "https://{{acsUrl}}/api/-default-/public/alfresco/versions/1/nodes/-my-/children?includeSource=true",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{acsUrl}}/api/-default-/public/alfresco/versions/1/nodes/-my-/children?includeSource=true",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{acsUrl}}"
 							],
@@ -731,8 +731,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "https://{{acsUrl}}/api/-default-/public/cmis/versions/1.1/browser",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{acsUrl}}/api/-default-/public/cmis/versions/1.1/browser",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{acsUrl}}"
 							],
@@ -782,8 +782,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "https://{{acsUrl}}/service/api/sites",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{acsUrl}}/service/api/sites",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{acsUrl}}"
 							],
@@ -864,8 +864,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "https://{{contentAppUrl}}/#/login",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{contentAppUrl}}/#/login",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{contentAppUrl}}"
 							],
@@ -930,8 +930,8 @@
 							"raw": "{\n\t\"accessTokenLifespan\": 10\n}"
 						},
 						"url": {
-							"raw": "https://{{identityServiceUrl}}/admin/realms/{{identityServiceRealm}}",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{identityServiceUrl}}/admin/realms/{{identityServiceRealm}}",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{identityServiceUrl}}"
 							],
@@ -1011,8 +1011,8 @@
 							]
 						},
 						"url": {
-							"raw": "https://{{identityServiceUrl}}/realms/{{identityServiceRealm}}/protocol/openid-connect/token",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{identityServiceUrl}}/realms/{{identityServiceRealm}}/protocol/openid-connect/token",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{identityServiceUrl}}"
 							],
@@ -1057,8 +1057,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "https://{{acsUrl}}/api/-default-/public/alfresco/versions/1/people/-me-",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{acsUrl}}/api/-default-/public/alfresco/versions/1/people/-me-",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{acsUrl}}"
 							],
@@ -1194,8 +1194,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "https://{{activitiUrl}}/rb-my-app/v1/process-instances",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{activitiUrl}}/rb-my-app/v1/process-instances",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{activitiUrl}}"
 							],
@@ -1237,25 +1237,25 @@
 		{
 			"id": "1450729d-5636-4a8a-b062-816497abeb60",
 			"key": "acsUrl",
-			"value": "alfresco-cs-repository.{{dbpurl}}/alfresco",
+			"value": "alfresco-cs-repository.{{dbpHostName}}/alfresco",
 			"type": "string"
 		},
 		{
 			"id": "93f946b8-ce1b-4587-a219-72986753c5f6",
 			"key": "shareUrl",
-			"value": "alfresco-cs-repository.{{dbpurl}}/share",
+			"value": "alfresco-cs-repository.{{dbpHostName}}/share",
 			"type": "string"
 		},
 		{
 			"id": "174bfcd0-6548-4146-a1a1-960e26ffeb0e",
 			"key": "identityServiceUrl",
-			"value": "alfresco-identity-service.{{dbpurl}}/auth",
+			"value": "alfresco-identity-service.{{dbpHostName}}/auth",
 			"type": "string"
 		},
 		{
 			"id": "2a23735c-3ed6-4aa7-a4c6-013e1d4cf498",
 			"key": "contentAppUrl",
-			"value": "alfresco-cs-repository.{{dbpurl}}/digital-workspace",
+			"value": "alfresco-cs-repository.{{dbpHostName}}/digital-workspace",
 			"type": "string"
 		},
 		{
@@ -1301,12 +1301,6 @@
 			"type": "string"
 		},
 		{
-			"id": "b649d55c-7d0a-495b-8aa5-b8d9f4ac972e",
-			"key": "adminUserEmail",
-			"value": "admin@app.activiti.com",
-			"type": "string"
-		},
-		{
 			"id": "c90b841e-7717-4135-a005-8b022966ad81",
 			"key": "moduleVersions",
 			"value": "[{\"moduleName\":\"alfresco-aos-module\",\"moduleVersion\":\"1.2.2\"},{\"moduleName\":\"org.alfresco.integrations.google.docs\",\"moduleVersion\":\"3.1.0\"},{\"moduleName\":\"alfresco-share-services\",\"moduleVersion\":\"6.1.0\"}]",
@@ -1315,7 +1309,13 @@
 		{
 			"id": "443f4f1f-3475-404a-8cb3-822fa95649ba",
 			"key": "activitiUrl",
-			"value": "activiti-cloud-gateway.{{dbpurl}}",
+			"value": "activiti-cloud-gateway.{{dbpHostName}}",
+			"type": "string"
+		},
+		{
+			"id": "383f9895-2954-4e04-9bdb-cf80eda212d5",
+			"key": "protocol",
+			"value": "https",
 			"type": "string"
 		}
 	]

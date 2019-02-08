@@ -11,10 +11,6 @@ dependencies:
     version: 5.0.0
     condition: alfresco-infrastructure.enabled
     repository: https://kubernetes-charts.alfresco.com/incubator
-  - name: acs-events-consolidator
-    version: 0.2
-    condition: acs-events-consolidator.enabled
-    repository: https://kubernetes-charts.alfresco.com/incubator
   - name: activiti-cloud-full-example
     version: 0.7.2
     condition: activiti-cloud-full-example.enabled

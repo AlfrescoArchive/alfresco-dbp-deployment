@@ -3,6 +3,31 @@
 # Declare variables to be passed into your templates.
 replicaCount: 1
 
+
+alfresco-infrastructure:
+  enabled: true
+  alfresco-identity-service:
+    realm:
+      alfresco:
+        client:
+          redirectUris:
+            - "*"
+          webOrigins:
+            - "*"
+  persistence:
+    efs:
+      enabled: true
+      dns: "$NFSSERVER"
+  nginx-ingress:
+    controller:
+      service:
+        annotations:
+          external-dns.alpha.kubernetes.io/hostname: "*.$ELB_CNAME"
+          service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "https"
+          service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: '3600'
+          service.beta.kubernetes.io/aws-load-balancer-ssl-cert: $ELB_CERTIFICATE_ARN
+          service.beta.kubernetes.io/aws-load-balancer-ssl-ports: https
+
 alfresco-content-services:
   enabled: true
   registryPullSecrets: quay-registry-secret
@@ -12,8 +37,6 @@ alfresco-content-services:
     password: admin
   alfresco-infrastructure:
     enabled: false
-    activemq:
-      enabled: false
   repository:
 # DEPLOY-466 / DEPLOY-467 - Remove image pin as we are using the ACS provided images
 #    image:
@@ -23,7 +46,7 @@ alfresco-content-services:
       # The SYNC_SERVICE_URI should contain the details of the ingress host and port.
       SYNC_SERVICE_URI: "<ingresscontrollerurl>/syncservice"
       # The IDENTITY_SERVICE_URI should contain the details of the ingress host and port.
-      IDENTITY_SERVICE_URI: "<ingresscontrollerurl>/auth"
+      IDENTITY_SERVICE_URI: "https://alfresco-identity-service.$ELB_CNAME/auth"
       JAVA_OPTS: " -Dsolr.base.url=/solr
         -Dsolr.secureComms=none
         -Dindex.subsystem.name=solr6
@@ -42,17 +65,44 @@ alfresco-content-services:
 #    image:
 #      repository: quay.io/alfresco/alfresco-dbp-share
 #      tag: "0.3-SNAPSHOT"
-  
+  externalHost: "alfresco-cs-repository.$ELB_CNAME"
+  networkpolicysetting:
+    enabled: false
+  alfresco-digital-workspace:
+    APP_CONFIG_AUTH_TYPE: "OAUTH"
+    APP_CONFIG_OAUTH2_HOST: "https://alfresco-identity-service.$ELB_CNAME/auth/realms/alfresco"
+    APP_CONFIG_OAUTH2_CLIENTID: "alfresco"
+    APP_CONFIG_OAUTH2_IMPLICIT_FLOW: true
+    APP_CONFIG_OAUTH2_SILENT_LOGIN: false
+    APP_CONFIG_OAUTH2_REDIRECT_LOGIN: "/digital-workspace/"
+    APP_CONFIG_OAUTH2_REDIRECT_LOGOUT: "/digital-workspace/logout"
+
 alfresco-sync-service:
   enabled: false
   alfresco-infrastructure:
     enabled: false
 
-alfresco-infrastructure:
-  enabled: true
-
-acs-events-consolidator:
-  enabled: false
 
 activiti-cloud-full-example:
+  enabled: true
+  global:
+    keycloak:
+      url: "https://alfresco-identity-service.$ELB_CNAME/auth"
+    gateway:
+      host: &gatewayhost "activiti-cloud-gateway.$ELB_CNAME"
+  infrastructure:
+    activiti-cloud-gateway:
+      ingress:
+        enabled: true
+        hostName: *gatewayhost
+        annotations:
+          kubernetes.io/ingress.class: nginx
+          nginx.ingress.kubernetes.io/rewrite-target: /
+          nginx.ingress.kubernetes.io/enable-cors: true
+          nginx.ingress.kubernetes.io/cors-allow-headers: "*"
+          nginx.ingress.kubernetes.io/x-forwarded-prefix: true
+infrastructure:
+  activiti-keycloak:
+    enabled: false
+activiti-cloud-modeling:
   enabled: true

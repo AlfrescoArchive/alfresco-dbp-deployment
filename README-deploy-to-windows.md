@@ -127,7 +127,7 @@ Note: If any pods are failing, you can use each of the three following commands 
 ```bash
 kubectl logs <the part of the pod name that all the pods have in common> --namespace <your namespace name>
 kubectl describe pod <the part of the pod name that all the pods have in common> --namespace <your namespace name>
-helm status <your release name>
+helm status <name that all the pods have in common>
 ```
 Once all the pods are ready, go to 
 
@@ -143,7 +143,10 @@ in that bamboo build folder on desktop, look for scripts/activiti.lic
 you should find the license in here to use at http://localhost-k8s/activiti-app/#/
 
 
-
+note: After restarting your computer, there will be some errors in the pods. You will have to run the following command then install the pods again. while making sure that your IP address hasn't changed. If it has then do the IP section again:
+```bash
+helm delete --purge <name that all the pods have in common>
+```
 
 
 -------------------------------------------------

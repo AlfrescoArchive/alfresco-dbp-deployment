@@ -129,8 +129,6 @@ kubectl logs <the part of the pod name that all the pods have in common> --names
 kubectl describe pod <the part of the pod name that all the pods have in common> --namespace <your namespace name>
 helm status <name that all the pods have in common>
 ```
-Once all the pods are ready, go to 
-
 
 Clone the following file to your desired location. in the following example, it is cloned to the desktop.
 open your git command line, here we used bash.
@@ -139,22 +137,11 @@ cd "C:\Users\<your user name>\Desktop"
 git clone https://git.alfresco.com/platform-services/bamboo-build-dbp.git
 ```
 
-in that bamboo build folder on desktop, look for scripts/activiti.lic
-you should find the license in here to use at http://localhost-k8s/activiti-app/#/
+Once all the pods are ready, go to http://localhost-k8s/activiti-app/#/ and you will see that all works well but that your license is in valid. Click on "upload license". Then browse to the folder that you cloned and locate scripts/activiti.lic inside it. 
 
+### That's it! :) 
 
-note: After restarting your computer, there will be some errors in the pods. You will have to run the following command then install the pods again. while making sure that your IP address hasn't changed. If it has then do the IP section again:
+note: After restarting your computer, there will be some errors in the pods. You will have to run the following command then install the pods again, while making sure that your IP address hasn't changed. If it has then do the IP section again:
 ```bash
 helm delete --purge <name that all the pods have in common>
 ```
-
-
--------------------------------------------------
-
-
-
-helm list
-
-helm delete --purge elevated-marmot incendiary-platypus
-
-docker pull alfresco/alfresco-base-java:11

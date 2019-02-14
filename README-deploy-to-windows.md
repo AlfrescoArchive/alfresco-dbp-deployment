@@ -23,7 +23,11 @@ Docker can be faulty on its first start. So it is always safer to restart it bef
 
 
 ### Pull secrets
-
+Log in to quay.io
+```bash
+docker login quay.io
+```
+Give username and password if prompted.
 
 Do the following command then copy the string output.
 ```bash
@@ -49,11 +53,7 @@ kubectl create -f secrets.yaml --namespace <yourNamespace>
 ### Add the alfresco-incubator chart repository
 helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubator
 
-### Log in to quay.io
-```bash
-docker login quay.io
-```
-Give username and password if prompted.
+
 
 ### Test to make sure that the token exists
 ```bash

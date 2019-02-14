@@ -54,30 +54,37 @@ kubectl create -f secrets.yaml --namespace <yourNamespace>
 ### Add the alfresco-incubator chart repository
 helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubator
 
+### Log in to quay.io
+```bash
+docker login quay.io
+```
+Give username and password if prompted.
 
+### Test to make sure that the token exists
+```bash
+docker pull alfresco/alfresco-base-java:11
+```
+Check the config.json file in C:\Users\<YourUserName>\.docker has a string after the word "auth".
 
-
-
-
-log in
-    docker login quay.io
-    give username and password if prompted
-try docker pull for the tika image just to test
-    docker pull alfresco/alfresco-base-java:11
-if it all works, see if the token exits in auth ie, is there a string there, in config.json in C:\Users\Ayman Harake\.docker?
-if so do the following
-
-%%%
+### ???
+```bash
  --set alfresco-content-services.pdfrenderer.resources.requests.memory="500Mi" ^
-
+```
+### Do the following command to find your ipv4 address and copy it to your clipboard. ???
+```bash
 ipconfig
-then copy the ip address (piv4 not 6)
-then you pasted that at the end off C:\Windows\System32\drivers\etc\hosts
-make sure you press enter to leave one new line at the end
+```
+### Paste the ipv4 address at the end of the hosts file in C:\Windows\System32\drivers\etc, then add localhost-k8s to the line so that it looks like the following example. ???
+```bash
+10.244.50.193 localhost-k8s
+```
+note: Make sure to leave a new line at the end before saving it. 
 
-paste the following block all as one
-----------------------------------------------------------------------------------------------------------
+### Install alfresco-dbp
 
+Copy and paste the following block into your command line, making sure to change <yournamespace> to the namespace that you are using. 
+  
+```bash
 helm install alfresco-incubator/alfresco-dbp ^
 --set alfresco-content-services.externalHost="localhost-k8s" ^
 --set alfresco-content-services.networkpolicysetting.enabled=false ^
@@ -97,12 +104,29 @@ helm install alfresco-incubator/alfresco-dbp ^
 --set alfresco-process-services.processEngine.environment.IDENTITY_SERVICE_AUTH="http://localhost-k8s/auth" ^
 --set alfresco-process-services.processEngine.resources.requests.memory="1000Mi" ^
 --set alfresco-process-services.adminApp.resources.requests.memory="250Mi" ^
---namespace ayman
+--namespace <yourNameSpace>
+```
+repeatadly run the following command until you can see that all the pods are successfuly installed. This can take up to one hour. 
 
---------------------------------------------------------------------------------------
+```bash
 kubectl get pods --namespace ayman
--make note of the ways to display errors on a particular pod
+```
 
+Note: If any pods are failing, you can use each of the three following commands to see more about their errors:
+```bash
+kubectl logs <the part of the pod name that all the pods have in common> --namespace <your namespace name>
+kubectl describe pod <the part of the pod name that all the pods have in common> --namespace <your namespace name>
+helm status <your release name>
+```
+Once all the pods are ready, go to 
+
+
+Clone the following file to your desired location. in the following example, it is cloned to the desktop.
+open your git command line, here we used bash.
+```bash
+cd "C:\Users\<your user name>\Desktop"
+git clone https://git.alfresco.com/platform-services/bamboo-build-dbp.git
+```
 
 in that bamboo build folder on desktop, look for scripts/activiti.lic
 you should find the license in here to use at http://localhost-k8s/activiti-app/#/

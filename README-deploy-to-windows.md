@@ -29,23 +29,34 @@ docker login quay.io
 ```
 Give username and password if prompted.
 
-Do the following command then copy the string output.
+Generate a base64 value for your dockercfg, this will allow Kubernetes to access quay.io
 ```bash
 certutil -encode "%USERPROFILE%\.docker\config.json" tmp.b64 && findstr /v /c:- tmp.b64
 ```
+Copy the string output.
 
-### Create the file secrets.yaml. And insert the following into the file
+Create the file secrets.yaml. And insert the copied string into the file where specified:
 ```bash
 apiVersion: v1
 kind: Secret
 metadata:
   name: quay-registry-secret
 type: kubernetes.io/dockerconfigjson
-data: # add the string here
+data: <replace this with the string>
 ```
-Note that when you paste the string output in the data section, it may be pasted with new lines in it. So make sure to take out the new lines. 
+Note that when you paste the string output in the data section, it may be pasted with new lines in it. If so, make sure you take out the new lines. 
+>>>
+If you haven't already created one, then create a namespace.
+```bash
+kubectl create -f secrets.yaml --namespace <yourNamespace>
+```
+You should see the output below.
+```bash
+secret "quay-registry-secret" created
+```
 
-### Attach the secrets.yaml file to your namespace
+
+Attach the secrets.yaml file to your namespace.
 ```bash
 kubectl create -f secrets.yaml --namespace <yourNamespace>
 ```
@@ -69,11 +80,11 @@ try docker pull for the tika image just to test
 if it all works, see if the token exits in auth ie, is there a string there, in config.json in C:\Users\Ayman Harake\.docker?
 if so do the following
 
-%%%
-### ???
+###???
 ```bash
  --set alfresco-content-services.pdfrenderer.resources.requests.memory="500Mi" ^
 ```
+
 ### Do the following command to find your ipv4 address and copy it to your clipboard. ???
 ```bash
 ipconfig

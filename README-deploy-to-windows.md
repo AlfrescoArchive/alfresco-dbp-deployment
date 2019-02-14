@@ -1,5 +1,3 @@
-# dbp-deployment
-
 # Deploy to Docker for Desktop - Windows
 
 ## Deployment
@@ -21,13 +19,10 @@ for better performance we recommend that 'Memory' value be set slightly higher, 
 (depending on the size of RAM in your workstation). 
 
 ### Restart docker  
-Docker can be buggy on its first start. So once windows is running, it is always safer to restart it before proceeding. 
-```bash
-restart docker
-```
+Docker can be faulty on its first start. So it is always safer to restart it before proceeding. So right click on the docker icon in the system tray, then left click "restart...". 
 
-### Docker Registry Pull Secrets
-??? mention all of this https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/SECRETS.md
+
+### Pull secrets
 
 
 Do the following command then copy the string output.
@@ -53,9 +48,6 @@ kubectl create -f secrets.yaml --namespace <yourNamespace>
 
 ### Add the alfresco-incubator chart repository
 helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubator
-
-
-
 
 
 

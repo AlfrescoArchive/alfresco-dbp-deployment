@@ -74,6 +74,17 @@ Check the config.json file in C:\Users\<YourUserName>\.docker has a string after
 ```bash
 ipconfig
 ```
+note: if there are many ipv4 addresses, make sure to use the one that looks most similar to this:
+```bash
+Wireless LAN adapter Wi-Fi 2:
+
+   Connection-specific DNS Suffix  . : internal.alfresco.com
+   Link-local IPv6 Address . . . . . : fe80::c4e7:80c8:7609:42ae%13
+   IPv4 Address. . . . . . . . . . . : 10.244.50.193
+   Subnet Mask . . . . . . . . . . . : 255.255.254.0
+   Default Gateway . . . . . . . . . : 10.244.50.1
+```
+
 ### Paste the ipv4 address at the end of the hosts file in C:\Windows\System32\drivers\etc, then add localhost-k8s to the line so that it looks like the following example. ???
 ```bash
 10.244.50.193 localhost-k8s

@@ -21,6 +21,35 @@ for better performance we recommend that 'Memory' value be set slightly higher, 
 ### Restart docker  
 Docker can be faulty on its first start. So, it is always safer to restart it before proceeding. Right click on the docker icon in the system tray, then left click "restart...". 
 
+### This part needs documentation -- start
+how to install helm
+install chocolatery using cmd as admin. run the following
+@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+then do choco install kubernetes-helm
+
+
+kubectl create namespace ayman
+kubectl get namespace
+helm install alfresco-stable/alfresco-infrastructure --set alfresco-infrastructure.activemq.enabled=false --set alfresco-infrastructure.nginx-ingress.enabled=true --set alfresco-infrastructure.alfresco-identity-service.enabled=true --namespace ayman
+kubectl get pods --namespace ayman
+
+if the postgres pod won't start and you are getting the following error:
+    kubectl logs exacerbated-narwhal-postgresql-id-574d59dd4c-jzngz --namespace ayman
+    2019-02-08 10:27:04.358 UTC [1] FATAL:  data directory "/var/lib/postgresql/data/pgdata" has wrong ownership
+    2019-02-08 10:27:04.358 UTC [1] HINT:  The server must be started by the user that owns the data directory.
+do this:
+    kubectl delete storageclass hostpath
+    # Setting up hostpath provisioner.
+    kubectl create -f https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/rbac.yaml
+    kubectl create -f https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/deployment.yaml
+    kubectl create -f https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/storageclass.yaml
+
+
+
+### This part needs documentation -- end
+
+
+
 ### Pull secrets
 Log in to quay.io
 ```bash

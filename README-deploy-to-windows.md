@@ -67,30 +67,30 @@ Log in
 ```bash
 docker login quay.io
 ```
-give username and password if prompted
+Give username and password if prompted
 
-???
+??? Should I include this ???
 Test connection
 ```bash
 docker pull alfresco/alfresco-base-java:11
 ```
-If succesful, a token will exist in auth ie, is there a string there,
 
 Go to the config.json file in "C:\Users\Ayman Harake\.docker", and check that there is a string after auth, such as in the following example.
+
 ```bash
 "auth": "YWhhcmFrZTpQYXNjcnQxMlBhc2NydDEy"
 ```
 
-###???
+###??? What does this command do ???
 ```bash
  --set alfresco-content-services.pdfrenderer.resources.requests.memory="500Mi" ^
 ```
 
-### Do the following command to find your ipv4 address and copy it to your clipboard. ???
+Do the following command to find your ipv4 address and copy it to your clipboard.
 ```bash
 ipconfig
 ```
-note: if there are many ipv4 addresses, make sure to use the one that looks most similar to this:
+Note: If there are many ipv4 addresses, use the one that looks most similar to this:
 ```bash
 Wireless LAN adapter Wi-Fi 2:
 
@@ -101,7 +101,7 @@ Wireless LAN adapter Wi-Fi 2:
    Default Gateway . . . . . . . . . : 10.244.50.1
 ```
 
-### Paste the ipv4 address at the end of the hosts file in C:\Windows\System32\drivers\etc, then add localhost-k8s to the line so that it looks like the following example. ???
+Paste the ipv4 address at the end of the hosts file in C:\Windows\System32\drivers\etc, then add "localhost-k8s" to the line so that it looks like the following example. 
 ```bash
 10.244.50.193 localhost-k8s
 ```
@@ -139,25 +139,18 @@ repeatadly run the following command until you can see that all the pods are suc
 kubectl get pods --namespace ayman
 ```
 
-Note: If any pods are failing, you can use each of the three following commands to see more about their errors:
+Note: If any pods are failing, you can use each of the following commands to see more about their errors:
 ```bash
 kubectl logs <the part of the pod name that all the pods have in common> --namespace <your namespace name>
 kubectl describe pod <the part of the pod name that all the pods have in common> --namespace <your namespace name>
-helm status <name that all the pods have in common>
 ```
 
-Clone the following file to your desired location. in the following example, it is cloned to the desktop.
-open your git command line, here we used bash.
+Clone the following file to your desired location. in the following example, it is cloned to the desktop. To do so, open your command line for git (we used bash), and run the following comands remembering to replace <your user name>.
 ```bash
 cd "C:\Users\<your user name>\Desktop"
 git clone https://git.alfresco.com/platform-services/bamboo-build-dbp.git
 ```
 
-Once all the pods are ready, go to http://localhost-k8s/activiti-app/#/ and you will see that all works well but that your license is in valid. Click on "upload license". Then browse to the folder that you cloned and locate scripts/activiti.lic inside it. 
+Once all the pods are ready, go to http://localhost-k8s/activiti-app/#/ and you will see that all works well but that your license is invalid. Click on "upload license". Then browse to the folder that you cloned and locate scripts/activiti.lic inside it. 
 
 ### That's it! :) 
-
-note: After restarting your computer, there will be some errors in the pods. You will have to run the following command then install the pods again, while making sure that your IP address hasn't changed. If it has then do the IP section again:
-```bash
-helm delete --purge <name that all the pods have in common>
-```

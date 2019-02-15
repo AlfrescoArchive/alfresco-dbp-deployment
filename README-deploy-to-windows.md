@@ -21,7 +21,6 @@ for better performance we recommend that 'Memory' value be set slightly higher, 
 ### Restart docker  
 Docker can be faulty on its first start. So it is always safer to restart it before proceeding. So right click on the docker icon in the system tray, then left click "restart...". 
 
-
 ### Pull secrets
 Log in to quay.io
 ```bash
@@ -43,7 +42,7 @@ metadata:
 type: kubernetes.io/dockerconfigjson
 data: # add the string here
 ```
-Note that when you paste the string output in the data section, it may be pasted with new lines in it. So make sure to take out the new lines. 
+Note that when you paste the string output in the data section, it may be pasted with new lines in it. So make sure to take out the new lines. And leave a single space between "data:" and the string. 
 
 ### Attach the secrets.yaml file to your namespace
 ```bash
@@ -52,7 +51,6 @@ kubectl create -f secrets.yaml --namespace <yourNamespace>
 
 ### Add the alfresco-incubator chart repository
 helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubator
-
 
 
 ### Test to make sure that the token exists
@@ -97,7 +95,7 @@ note: Make sure to leave a new line at the end before saving it.
 
 ### Install alfresco-dbp
 
-Copy and paste the following block into your command line, making sure to change <yournamespace> to the namespace that you are using. 
+Copy and paste the following block into your command line, making sure to replace <yournamespace> accordingly. 
   
 ```bash
 helm install alfresco-incubator/alfresco-dbp ^

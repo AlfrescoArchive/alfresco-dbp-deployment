@@ -41,7 +41,8 @@ kind: Secret
 metadata:
   name: quay-registry-secret
 type: kubernetes.io/dockerconfigjson
-data: <replace this with the string>
+data:
+  .dockerconfigjson: <replace this with the string>
 ```
 Note that when you paste the string output in the data section, it may be pasted with new lines in it. So make sure to take out the new lines. And leave a single space between "data:" and the string. 
 
@@ -50,23 +51,35 @@ Attach the secrets.yaml file to your namespace.
 kubectl create -f secrets.yaml --namespace <yourNamespace>
 ```
 
-### Add the alfresco-incubator chart repository
+### Download the necessary conponents
+```bash
 helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubator
+```
 
-
-### Test to make sure that the token exists
 ```bash
 docker pull alfresco/alfresco-base-java:11
 ```
-Check the config.json file in C:\Users\<YourUserName>\.docker has a string after the word "auth".
 
-log in
-    docker login quay.io
-    give username and password if prompted
-try docker pull for the tika image just to test
-    docker pull alfresco/alfresco-base-java:11
-if it all works, see if the token exits in auth ie, is there a string there, in config.json in C:\Users\Ayman Harake\.docker?
-if so do the following
+### Authorize conections
+Check that the config.json file in C:\Users\<YourUserName>\.docker has a string after the word "auth".
+
+Log in
+```bash
+docker login quay.io
+```
+give username and password if prompted
+
+???
+Test connection
+```bash
+docker pull alfresco/alfresco-base-java:11
+```
+If succesful, a token will exist in auth ie, is there a string there,
+
+Go to the config.json file in "C:\Users\Ayman Harake\.docker", and check that there is a string after auth, such as in the following example.
+```bash
+"auth": "YWhhcmFrZTpQYXNjcnQxMlBhc2NydDEy"
+```
 
 ###???
 ```bash

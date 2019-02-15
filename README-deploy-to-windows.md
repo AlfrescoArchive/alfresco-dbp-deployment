@@ -19,7 +19,7 @@ for better performance we recommend that 'Memory' value be set slightly higher, 
 (depending on the size of RAM in your workstation). 
 
 ### Restart docker  
-Docker can be faulty on its first start. So it is always safer to restart it before proceeding. So right click on the docker icon in the system tray, then left click "restart...". 
+Docker can be faulty on its first start. So, it is always safer to restart it before proceeding. Right click on the docker icon in the system tray, then left click "restart...". 
 
 ### Pull secrets
 Log in to quay.io
@@ -44,7 +44,7 @@ type: kubernetes.io/dockerconfigjson
 data:
   .dockerconfigjson: <replace this with the string>
 ```
-Note that when you paste the string output in the data section, it may be pasted with new lines in it. So make sure to take out the new lines. And leave a single space between "data:" and the string. 
+Note that when you paste the string output in the data section, it may be pasted with new lines in it. So, make sure to take out the new lines. And leave a single space between "data:" and the string. 
 
 Attach the secrets.yaml file to your namespace.
 ```bash
@@ -90,7 +90,7 @@ Do the following command to find your ipv4 address and copy it to your clipboard
 ```bash
 ipconfig
 ```
-Note: If there are many ipv4 addresses, use the one that looks most similar to this:
+Note: If there are many ipv4 addresses, use the one that looks the most similar to this:
 ```bash
 Wireless LAN adapter Wi-Fi 2:
 
@@ -133,7 +133,7 @@ helm install alfresco-incubator/alfresco-dbp ^
 --set alfresco-process-services.adminApp.resources.requests.memory="250Mi" ^
 --namespace <yourNameSpace>
 ```
-repeatadly run the following command until you can see that all the pods are successfuly installed. This can take up to one hour. 
+Repeatedly  run the following command until you can see that all the pods are successfully installed. This can take up to one hour. 
 
 ```bash
 kubectl get pods --namespace ayman
@@ -145,7 +145,7 @@ kubectl logs <the part of the pod name that all the pods have in common> --names
 kubectl describe pod <the part of the pod name that all the pods have in common> --namespace <your namespace name>
 ```
 
-Clone the following file to your desired location. in the following example, it is cloned to the desktop. To do so, open your command line for git (we used bash), and run the following comands remembering to replace <your user name>.
+Clone the following file to your desired location. in the following example, it is cloned to the desktop. To do so, open your command line for git (we used bash), and run the following commands remembering to replace <your user name>.
 ```bash
 cd "C:\Users\<your user name>\Desktop"
 git clone https://git.alfresco.com/platform-services/bamboo-build-dbp.git

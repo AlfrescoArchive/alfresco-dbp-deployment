@@ -373,13 +373,9 @@ You may find it helpful to see the Kubernetes resources visually which can be ac
 After deploying the DBP, when accesing one of the applications, for example Process Services, if you receive the error message *We're sorry Invalid parameter: redirect_uri*, the `redirectUris` parameter provided for deployment is invalid. Make sure the `alfresco-infrastructure.alfresco-identity-service.client.alfresco.redirectUris` parameter has a valid value when installing the chart. For more details on how to configure it, check this [guide](https://github.com/Alfresco/alfresco-identity-service#changing-alfresco-client-redirecturis).
 
 
-# To deploy to windows
-# Deploy to Docker for Desktop - Windows
+# Docker for Desktop - Windows
 
-## Deployment
-
-### Install Docker for Desktop
-
+### Check version
 Check recommended version [here](https://github.com/Alfresco/alfresco-dbp-deployment/blob/master/README-prerequisite.md#docker-desktop).
 
 ### Enable Kubernetes

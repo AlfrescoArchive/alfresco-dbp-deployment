@@ -58,7 +58,7 @@ data:
 ```
 Note that when you paste the string output in the data section, it may be pasted with new lines in it. So, make sure to take out the new lines. And leave a single space between "data:" and the string. 
 
-Attach the secrets.yaml file to your namespace.
+Create the secret in your namespace. 
 ```bash
 kubectl create -f secrets.yaml --namespace <yourNamespace>
 ```

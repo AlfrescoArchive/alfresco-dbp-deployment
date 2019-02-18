@@ -3,6 +3,14 @@
 # Declare variables to be passed into your templates.
 replicaCount: 1
 
+global:
+  keycloak:
+    resource: alfresco
+    realm: alfresco
+    client: alfresco
+    url: "https://alfresco-identity-service.$ELB_CNAME/auth"
+  gateway:
+    host: &gatewayhost "activiti-cloud-gateway.$ELB_CNAME"
 
 alfresco-infrastructure:
   enabled: true
@@ -202,12 +210,16 @@ alfresco-sync-service:
     enabled: false
 
 activiti-cloud-full-example:
+# https://github.com/Activiti/activiti-cloud-modeling/issues/78
+# Remove the two values set here for modeling when issue is fixed
+  activiti-cloud-modeling:
+    backend: 
+      extraEnv: |
+        - name: "ACT_KEYCLOAK_REALM"
+          value: "alfresco"
+        - name: "ACT_KEYCLOAK_RESOURCE"
+          value: "alfresco"
   enabled: true
-  global:
-    keycloak:
-      url: "https://alfresco-identity-service.$ELB_CNAME/auth"
-    gateway:
-      host: &gatewayhost "activiti-cloud-gateway.$ELB_CNAME"
   infrastructure:
     activiti-cloud-gateway:
       ingress:

@@ -23,15 +23,21 @@ Docker can be faulty on its first start. So, it is always safer to restart it be
 
 ### Install helm
 Install chocolatery using command prompt (with admin rights). 
+
 ```bash
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
 ```
+
 Now you can use chocolatery to install helm.
+
 ```bash
 choco install kubernetes-helm
 ```
+
 ### Create your namespace
+```bash
 kubectl create namespace <yourNamespace>
+```
 
 ### Pull secrets
 Log in to quay.io
@@ -41,12 +47,14 @@ docker login quay.io
 Give username and password if prompted.
 
 Generate a base64 value for your dockercfg, this will allow Kubernetes to access quay.io
+
 ```bash
 certutil -encode "%USERPROFILE%\.docker\config.json" tmp.b64 && findstr /v /c:- tmp.b64
 ```
 Copy the string output.
 
 Create the file secrets.yaml. And insert the copied string into the file where specified:
+
 ```bash
 apiVersion: v1
 kind: Secret
@@ -56,6 +64,7 @@ type: kubernetes.io/dockerconfigjson
 data:
   .dockerconfigjson: <replace this with the string>
 ```
+
 Note that when you paste the string output in the data section, it may be pasted with new lines in it. So, make sure to take out the new lines. And leave a single space between "data:" and the string. 
 
 Create the secret in your namespace. 
@@ -63,29 +72,14 @@ Create the secret in your namespace.
 kubectl create -f secrets.yaml --namespace <yourNamespace>
 ```
 
-### Download the necessary conponents
+### Download the alfresco helm chart
+
 ```bash
 helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubator
 ```
 
-```bash
-docker pull alfresco/alfresco-base-java:11
-```
-
 ### Authorize conections
 Check that the config.json file in C:\Users\<YourUserName>\.docker has a string after the word "auth".
-
-Log in
-```bash
-docker login quay.io
-```
-Give username and password if prompted
-
-??? Should I include this ???
-Test connection
-```bash
-docker pull alfresco/alfresco-base-java:11
-```
 
 Go to the config.json file in "C:\Users\Ayman Harake\.docker", and check that there is a string after auth, such as in the following example.
 
@@ -93,16 +87,14 @@ Go to the config.json file in "C:\Users\Ayman Harake\.docker", and check that th
 "auth": "YWhhcmFrZTpQYXNjcnQxMlBhc2NydDEy"
 ```
 
-###??? What does this command do ???
-```bash
- --set alfresco-content-services.pdfrenderer.resources.requests.memory="500Mi" ^
-```
-
 Do the following command to find your ipv4 address and copy it to your clipboard.
+
 ```bash
 ipconfig
 ```
+
 Note: If there are many ipv4 addresses, use the one that looks the most similar to this:
+
 ```bash
 Wireless LAN adapter Wi-Fi 2:
 
@@ -114,10 +106,12 @@ Wireless LAN adapter Wi-Fi 2:
 ```
 
 Paste the ipv4 address at the end of the hosts file in C:\Windows\System32\drivers\etc, then add "localhost-k8s" to the line so that it looks like the following example. 
+
 ```bash
 10.244.50.193 localhost-k8s
 ```
-note: Make sure to leave a new line at the end before saving it. 
+
+Note: Make sure to leave a new line at the end before saving it. 
 
 ### Install alfresco-dbp
 
@@ -152,16 +146,19 @@ kubectl get pods --namespace ayman
 ```
 
 If any pods are failing, you can use each of the following commands to see more about their errors:
+
 ```bash
 kubectl logs <the part of the pod name that all the pods have in common> --namespace <your namespace name>
 kubectl describe pod <the part of the pod name that all the pods have in common> --namespace <your namespace name>
 ```
 
 If the postgres pod won't start and you are getting the following error:
+
 ```bash
 2019-02-08 10:27:04.358 UTC [1] FATAL:  data directory "/var/lib/postgresql/data/pgdata" has wrong ownership
 2019-02-08 10:27:04.358 UTC [1] HINT:  The server must be started by the user that owns the data directory.
 ```
+
 Run the following commands to delete the storageClass hostpath and set up the hostpath provisioner: 
 
 ```bash
@@ -171,13 +168,13 @@ kubectl create -f https://raw.githubusercontent.com/MaZderMind/hostpath-provisio
 kubectl create -f https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/storageclass.yaml
 ```
 
-Clone the following file to your desired location. in the following example, it is cloned to the desktop. To do so, open your command line for git (we used bash), and run the following commands remembering to replace <your user name>.
+Clone the following file to your desired location. In the following example, it is cloned to the desktop. To do so, open your command line for git (we used bash), and run the following commands remembering to replace <yourUserName>.
 
 ```bash
-cd "C:\Users\<your user name>\Desktop"
+cd "C:\Users\<yourUserName>\Desktop"
 git clone https://git.alfresco.com/platform-services/bamboo-build-dbp.git
 ```
 
-Once all the pods are ready, go to http://localhost-k8s/activiti-app/#/ and you will see that all works well but that your license is invalid. Click on "upload license". Then browse to the folder that you cloned and locate scripts/activiti.lic inside it. 
+Once all the pods are ready, go to http://localhost-k8s/activiti-app/#/ and you will see that all works well, but that your license is invalid. Click on "upload license". Then browse to the folder that you cloned and locate scripts/activiti.lic inside it. 
 
 ### That's it! :) 

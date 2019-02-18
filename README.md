@@ -507,7 +507,7 @@ Paste the ipv4 address at the end of the hosts file in C:\Windows\System32\drive
 10.244.50.193 gateway.docker.internal
 # End of section
 
- 10.244.50.193 localhost-k8s
+<Your ipv4 address> localhost-k8s
 
 ```
 

@@ -128,19 +128,30 @@ alfresco-infrastructure:
             - "*"
           redirectUris:
             - "*"
-  persistence:
-    efs:
-      enabled: true
-      dns: "$NFSSERVER"
-  nginx-ingress:
-    controller:
-      service:
-        annotations:
-          external-dns.alpha.kubernetes.io/hostname: "*.$ELB_CNAME"
-          service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "https"
-          service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: '3600'
-          service.beta.kubernetes.io/aws-load-balancer-ssl-cert: $ELB_CERTIFICATE_ARN
-          service.beta.kubernetes.io/aws-load-balancer-ssl-ports: https
+  # nginx-ingress:
+  #   controller:
+  #     publishService:
+  #       enabled: true
+  #     service:
+  #       targetPorts:
+  #         http: http
+  #         https: http
+  #       annotations:
+  #         external-dns.alpha.kubernetes.io/hostname: "*.$ELB_CNAME"
+  #         service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "https"
+  #         service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: '3600'
+  #         service.beta.kubernetes.io/aws-load-balancer-ssl-cert: $ELB_CERTIFICATE_ARN
+  #         service.beta.kubernetes.io/aws-load-balancer-ssl-ports: https
+
+alfresco-digital-workspace:
+  APP_CONFIG_AUTH_TYPE: "OAUTH"
+  APP_CONFIG_OAUTH2_HOST: "https://alfresco-identity-service.$ELB_CNAME/auth/realms/alfresco"
+  APP_CONFIG_OAUTH2_CLIENTID: "alfresco"
+  APP_CONFIG_OAUTH2_IMPLICIT_FLOW: "\"true\""
+  APP_CONFIG_OAUTH2_SILENT_LOGIN: "\"true\""
+  APP_CONFIG_OAUTH2_REDIRECT_LOGIN: "/digital-workspace/"
+  APP_CONFIG_OAUTH2_REDIRECT_LOGOUT: "/digital-workspace/logout"
+  enabled: false  
 
 alfresco-content-services:
   enabled: true
@@ -151,11 +162,13 @@ alfresco-content-services:
     password: admin
   alfresco-infrastructure:
     enabled: false
+    activemq:
+      enabled: false
   repository:
-# DEPLOY-466 / DEPLOY-467 - Remove image pin as we are using the ACS provided images
-#    image:
-#      repository: quay.io/alfresco/alfresco-dbp-repository
-#      tag: "0.3-SNAPSHOT"
+  # DEPLOY-466 / DEPLOY-467 - Remove image pin as we are using the ACS provided images
+  #    image:
+  #      repository: quay.io/alfresco/alfresco-dbp-repository
+  #      tag: "0.3-SNAPSHOT"
     environment:
       # The SYNC_SERVICE_URI should contain the details of the ingress host and port.
       SYNC_SERVICE_URI: "<ingresscontrollerurl>/syncservice"
@@ -182,14 +195,6 @@ alfresco-content-services:
   externalHost: "alfresco-cs-repository.$ELB_CNAME"
   networkpolicysetting:
     enabled: false
-  alfresco-digital-workspace:
-    APP_CONFIG_AUTH_TYPE: "OAUTH"
-    APP_CONFIG_OAUTH2_HOST: "https://alfresco-identity-service.$ELB_CNAME/auth/realms/alfresco"
-    APP_CONFIG_OAUTH2_CLIENTID: "alfresco"
-    APP_CONFIG_OAUTH2_IMPLICIT_FLOW: true
-    APP_CONFIG_OAUTH2_SILENT_LOGIN: false
-    APP_CONFIG_OAUTH2_REDIRECT_LOGIN: "/digital-workspace/"
-    APP_CONFIG_OAUTH2_REDIRECT_LOGOUT: "/digital-workspace/logout"
 
 alfresco-sync-service:
   enabled: false

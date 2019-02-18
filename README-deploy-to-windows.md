@@ -21,34 +21,17 @@ for better performance we recommend that 'Memory' value be set slightly higher, 
 ### Restart docker  
 Docker can be faulty on its first start. So, it is always safer to restart it before proceeding. Right click on the docker icon in the system tray, then left click "restart...". 
 
-### This part needs documentation -- start
-how to install helm
-install chocolatery using cmd as admin. run the following
+### Install helm
+Install chocolatery using command prompt (with admin rights). 
+```bash
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
-then do choco install kubernetes-helm
-
-
-kubectl create namespace ayman
-kubectl get namespace
-helm install alfresco-stable/alfresco-infrastructure --set alfresco-infrastructure.activemq.enabled=false --set alfresco-infrastructure.nginx-ingress.enabled=true --set alfresco-infrastructure.alfresco-identity-service.enabled=true --namespace ayman
-kubectl get pods --namespace ayman
-
-if the postgres pod won't start and you are getting the following error:
-    kubectl logs exacerbated-narwhal-postgresql-id-574d59dd4c-jzngz --namespace ayman
-    2019-02-08 10:27:04.358 UTC [1] FATAL:  data directory "/var/lib/postgresql/data/pgdata" has wrong ownership
-    2019-02-08 10:27:04.358 UTC [1] HINT:  The server must be started by the user that owns the data directory.
-do this:
-    kubectl delete storageclass hostpath
-    # Setting up hostpath provisioner.
-    kubectl create -f https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/rbac.yaml
-    kubectl create -f https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/deployment.yaml
-    kubectl create -f https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/storageclass.yaml
-
-
-
-### This part needs documentation -- end
-
-
+```
+Now you can use chocolatery to install helm.
+```bash
+choco install kubernetes-helm
+```
+### Create your namespace
+kubectl create namespace <yourNamespace>
 
 ### Pull secrets
 Log in to quay.io
@@ -138,7 +121,7 @@ note: Make sure to leave a new line at the end before saving it.
 
 ### Install alfresco-dbp
 
-Copy and paste the following block into your command line, making sure to replace <yournamespace> accordingly. 
+Copy and paste the following block into your command line, making sure to replace <yourNamespace> accordingly. 
   
 ```bash
 helm install alfresco-incubator/alfresco-dbp ^
@@ -168,13 +151,28 @@ Repeatedly  run the following command until you can see that all the pods are su
 kubectl get pods --namespace ayman
 ```
 
-Note: If any pods are failing, you can use each of the following commands to see more about their errors:
+If any pods are failing, you can use each of the following commands to see more about their errors:
 ```bash
 kubectl logs <the part of the pod name that all the pods have in common> --namespace <your namespace name>
 kubectl describe pod <the part of the pod name that all the pods have in common> --namespace <your namespace name>
 ```
 
+If the postgres pod won't start and you are getting the following error:
+```bash
+2019-02-08 10:27:04.358 UTC [1] FATAL:  data directory "/var/lib/postgresql/data/pgdata" has wrong ownership
+2019-02-08 10:27:04.358 UTC [1] HINT:  The server must be started by the user that owns the data directory.
+```
+Run the following commands to delete the storageClass hostpath and set up the hostpath provisioner: 
+
+```bash
+kubectl delete storageclass hostpath
+kubectl create -f https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/rbac.yaml
+kubectl create -f https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/deployment.yaml
+kubectl create -f https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/storageclass.yaml
+```
+
 Clone the following file to your desired location. in the following example, it is cloned to the desktop. To do so, open your command line for git (we used bash), and run the following commands remembering to replace <your user name>.
+
 ```bash
 cd "C:\Users\<your user name>\Desktop"
 git clone https://git.alfresco.com/platform-services/bamboo-build-dbp.git

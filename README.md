@@ -549,7 +549,12 @@ git clone https://git.alfresco.com/platform-services/bamboo-build-dbp.git
 
 Once all the pods are ready, go to http://localhost-k8s/activiti-app/#/ and you will see that all works well, but that your license is invalid. Click on "upload license". Then browse to the folder that you cloned and locate scripts/activiti.lic inside it. 
 
-### That's it! :) 
+### Teardown:
 
+```bash
+helm delete --purge $DBPRELEASE
+kubectl delete namespace $DESIREDNAMESPACE
+```
+Depending on your cluster type you should be able to also delete it if you want.
 
-
+For more information on running and tearing down k8s environments, follow this [guide](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/docs/running-a-cluster.md).

@@ -477,10 +477,38 @@ Wireless LAN adapter Wi-Fi 2:
    Default Gateway . . . . . . . . . : 10.244.50.1
 ```
 
-Paste the ipv4 address at the end of the hosts file in C:\Windows\System32\drivers\etc, then add "localhost-k8s" to the line so that it looks like the following example. 
+Paste the ipv4 address at the end of the hosts file in C:\Windows\System32\drivers\etc, followed by "localhost-k8s" as in the following example. 
 
 ```bash
-10.244.50.193 localhost-k8s
+# Copyright (c) 1993-2009 Microsoft Corp.
+#
+# This is a sample HOSTS file used by Microsoft TCP/IP for Windows.
+#
+# This file contains the mappings of IP addresses to host names. Each
+# entry should be kept on an individual line. The IP address should
+# be placed in the first column followed by the corresponding host name.
+# The IP address and the host name should be separated by at least one
+# space.
+#
+# Additionally, comments (such as these) may be inserted on individual
+# lines or following the machine name denoted by a '#' symbol.
+#
+# For example:
+#
+#      102.54.94.97     rhino.acme.com          # source server
+#       38.25.63.10     x.acme.com              # x client host
+
+# localhost name resolution is handled within DNS itself.
+#	127.0.0.1       localhost
+#	::1             localhost
+
+# Added by Docker for Windows
+10.244.50.193 host.docker.internal
+10.244.50.193 gateway.docker.internal
+# End of section
+
+ 10.244.50.193 localhost-k8s
+
 ```
 
 Note: Make sure to leave a new line at the end before saving it. 

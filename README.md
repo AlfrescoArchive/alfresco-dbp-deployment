@@ -375,7 +375,9 @@ After deploying the DBP, when accesing one of the applications, for example Proc
 
 # Docker for Desktop - Windows
 
-### Check version
+
+### Install Docker for Desktop
+
 Check recommended version [here](https://github.com/Alfresco/alfresco-dbp-deployment/blob/master/README-prerequisite.md#docker-desktop).
 
 ### Enable Kubernetes
@@ -390,28 +392,45 @@ While Alfresco Digital Business Platform installs and runs with only 8 GiB alloc
 for better performance we recommend that 'Memory' value be set slightly higher, to at least 10 - 12 GiB
 (depending on the size of RAM in your workstation). 
 
+### Change/Verify Context
+
+If you have previously deployed the DBP to AWS or minikube you will need to change/verify that the `docker-for-desktop` context is being used.
+
+```bash
+kubectl config current-context                 # Display the current context
+kubectl config use-context docker-for-desktop  # Set the default context if needed
+```
+
 ### Restart docker  
+
 Docker can be faulty on its first start. So, it is always safer to restart it before proceeding. Right click on the docker icon in the system tray, then left click "restart...". 
 
 ### Install helm
+
 Install chocolatery using command prompt (with admin rights). 
 
 ```bash
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
 ```
 
-Now you can use chocolatery to install helm.
+### Initialize Helm Tiller (Server Component)
+
+```bash
+helm init
+```
 
 ```bash
 choco install kubernetes-helm
 ```
 
 ### Create your namespace
+
 ```bash
 kubectl create namespace <yourNamespace>
 ```
 
 ### Pull secrets
+
 Log in to quay.io
 ```bash
 docker login quay.io
@@ -440,6 +459,7 @@ data:
 Note that when you paste the string output in the data section, it may be pasted with new lines in it. So, make sure to take out the new lines. And leave a single space between "data:" and the string. 
 
 Create the secret in your namespace. 
+
 ```bash
 kubectl create -f secrets.yaml --namespace <yourNamespace>
 ```
@@ -451,6 +471,7 @@ helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubato
 ```
 
 ### Authorize conections
+
 Check that the config.json file in C:\Users\<YourUserName>\.docker has a string after the word "auth".
 
 Go to the config.json file in "C:\Users\Ayman Harake\.docker", and check that there is a string after auth, such as in the following example.
@@ -539,6 +560,7 @@ helm install alfresco-incubator/alfresco-dbp ^
 --set alfresco-process-services.adminApp.resources.requests.memory="250Mi" ^
 --namespace <yourNameSpace>
 ```
+
 Repeatedly  run the following command until you can see that all the pods are successfully installed. This can take up to one hour. 
 
 ```bash
@@ -583,6 +605,7 @@ Once all the pods are ready, go to http://localhost-k8s/activiti-app/#/ and you 
 helm delete --purge $DBPRELEASE
 kubectl delete namespace $DESIREDNAMESPACE
 ```
+
 Depending on your cluster type you should be able to also delete it if you want.
 
 For more information on running and tearing down k8s environments, follow this [guide](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/docs/running-a-cluster.md). 

@@ -376,15 +376,15 @@ After deploying the DBP, when accesing one of the applications, for example Proc
 # Docker for Desktop - Windows
 
 
-### Install Docker for Desktop
+### 1. Install Docker for Desktop
 
 Check recommended version [here](https://github.com/Alfresco/alfresco-dbp-deployment/blob/master/README-prerequisite.md#docker-desktop).
 
-### Enable Kubernetes
+### 2. Enable Kubernetes
 
 In the 'Kubernetes' tab of the Docker settings,  click the 'Enable Kubernetes' checkbox.
 
-### Increase Memory and CPUs
+### 3. Increase Memory and CPUs
 
 In the Advanced tab of the Docker preferences, set 'CPUs' to 4.
 
@@ -392,7 +392,7 @@ While Alfresco Digital Business Platform installs and runs with only 8 GiB alloc
 for better performance we recommend that 'Memory' value be set slightly higher, to at least 10 - 12 GiB
 (depending on the size of RAM in your workstation). 
 
-### Change/Verify Context
+### 4. Change/Verify Context
 
 If you have previously deployed the DBP to AWS or minikube you will need to change/verify that the `docker-for-desktop` context is being used.
 
@@ -401,11 +401,11 @@ kubectl config current-context                 # Display the current context
 kubectl config use-context docker-for-desktop  # Set the default context if needed
 ```
 
-### Restart docker  
+### 5. Restart docker  
 
 Docker can be faulty on its first start. So, it is always safer to restart it before proceeding. Right click on the docker icon in the system tray, then left click "restart...". 
 
-### Install helm
+### 6. Install helm
 
 Install chocolatery using command prompt (with admin rights). 
 
@@ -423,13 +423,13 @@ helm init
 choco install kubernetes-helm
 ```
 
-### Create your namespace
+### 7. Create your namespace
 
 ```bash
 kubectl create namespace <yourNamespace>
 ```
 
-### Pull secrets
+### 8. Pull secrets
 
 Log in to quay.io
 ```bash
@@ -464,13 +464,13 @@ Create the secret in your namespace.
 kubectl create -f secrets.yaml --namespace <yourNamespace>
 ```
 
-### Download the alfresco helm chart
+### 9. Download the alfresco helm chart
 
 ```bash
 helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubator
 ```
 
-### Authorize conections
+### 10. Authorize connections
 
 Check that the config.json file in C:\Users\<YourUserName>\.docker has a string after the word "auth".
 
@@ -534,7 +534,7 @@ Paste the ipv4 address at the end of the hosts file in C:\Windows\System32\drive
 
 Note: Make sure to leave a new line at the end before saving it. 
 
-### Install alfresco-dbp
+### 11. Install alfresco-dbp
 
 Copy and paste the following block into your command line, making sure to replace <yourNamespace> accordingly. 
   
@@ -599,13 +599,13 @@ git clone https://git.alfresco.com/platform-services/bamboo-build-dbp.git
 
 Once all the pods are ready, go to http://localhost-k8s/activiti-app/#/ and you will see that all works well, but that your license is invalid. Click on "upload license". Then browse to the folder that you cloned and locate scripts/activiti.lic inside it. 
 
-### Teardown:
+### 12. Teardown:
 
 ```bash
-helm delete --purge $DBPRELEASE
-kubectl delete namespace $DESIREDNAMESPACE
+helm ls
 ```
 
-Depending on your cluster type you should be able to also delete it if you want.
-
-For more information on running and tearing down k8s environments, follow this [guide](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/docs/running-a-cluster.md). 
+Use the name of the DBP release found above as DBPRELEASE
+```bash 
+helm delete --purge <DBPRELEASE>
+```

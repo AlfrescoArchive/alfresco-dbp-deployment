@@ -100,12 +100,8 @@ We don't advise you to use the same EFS instance for persisting the data from mu
 
 ```helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubator```
 
-### 3. Define a variable for your Route53 entry that you will use for the deployment
+### 3. Configure Route53 entry
 
-```bash
-export ELB_CNAME="YourDesiredCname.YourRoute53DnsZone"
-#example export ELB_CNAME="alfresco.example.com"
-```
 
 ### 4. Deploy the DBP
 

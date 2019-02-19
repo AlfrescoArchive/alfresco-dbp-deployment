@@ -8,9 +8,9 @@ global:
     resource: alfresco
     realm: alfresco
     client: alfresco
-    url: "https://alfresco-identity-service.$ELB_CNAME/auth"
+    url: "https://alfresco-identity-service.REPLACEME/auth"
   gateway:
-    host: &gatewayhost "activiti-cloud-gateway.$ELB_CNAME"
+    host: &gatewayhost "activiti-cloud-gateway.REPLACEME"
 
 alfresco-infrastructure:
   enabled: true
@@ -153,7 +153,7 @@ alfresco-infrastructure:
 
 alfresco-digital-workspace:
   APP_CONFIG_AUTH_TYPE: "OAUTH"
-  APP_CONFIG_OAUTH2_HOST: "https://alfresco-identity-service.$ELB_CNAME/auth/realms/alfresco"
+  APP_CONFIG_OAUTH2_HOST: "https://alfresco-identity-service.REPLACEME/auth/realms/alfresco"
   APP_CONFIG_OAUTH2_CLIENTID: "alfresco"
   APP_CONFIG_OAUTH2_IMPLICIT_FLOW: "\"true\""
   APP_CONFIG_OAUTH2_SILENT_LOGIN: "\"true\""
@@ -183,7 +183,7 @@ alfresco-content-services:
       # The SYNC_SERVICE_URI should contain the details of the ingress host and port.
       SYNC_SERVICE_URI: "<ingresscontrollerurl>/syncservice"
       # The IDENTITY_SERVICE_URI should contain the details of the ingress host and port.
-      IDENTITY_SERVICE_URI: "https://alfresco-identity-service.$ELB_CNAME/auth"
+      IDENTITY_SERVICE_URI: "https://alfresco-identity-service.REPLACEME/auth"
       JAVA_OPTS: " -Dsolr.base.url=/solr
         -Dsolr.secureComms=none
         -Dindex.subsystem.name=solr6
@@ -202,7 +202,7 @@ alfresco-content-services:
 #    image:
 #      repository: quay.io/alfresco/alfresco-dbp-share
 #      tag: "0.3-SNAPSHOT"
-  externalHost: "alfresco-cs-repository.$ELB_CNAME"
+  externalHost: "alfresco-cs-repository.REPLACEME"
   networkpolicysetting:
     enabled: false
 

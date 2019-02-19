@@ -177,6 +177,8 @@ alfresco-content-services:
   #    image:
   #      repository: quay.io/alfresco/alfresco-dbp-repository
   #      tag: "0.3-SNAPSHOT"
+    ingress:
+      path: "/alfresco"
     environment:
       # The SYNC_SERVICE_URI should contain the details of the ingress host and port.
       SYNC_SERVICE_URI: "<ingresscontrollerurl>/syncservice"

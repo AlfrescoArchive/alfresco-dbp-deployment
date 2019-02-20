@@ -375,14 +375,24 @@ After deploying the DBP, when accesing one of the applications, for example Proc
 
 # Docker for Desktop - Windows
 
-
 ### 1. Install Docker for Desktop
 
 Check recommended version [here](https://github.com/Alfresco/alfresco-dbp-deployment/blob/master/README-prerequisite.md#docker-desktop).
 
 ### 2. Enable Kubernetes
 
-In the 'Kubernetes' tab of the Docker settings,  click the 'Enable Kubernetes' checkbox.
+In the 'Kubernetes' tab of the Docker settings, click the 'Enable Kubernetes' checkbox.
+
+Run Command Prompt as an administrator.
+
+Enter the following commands to delete the storageClass hostpath and set up the hostpath provisioner: 
+
+```bash
+kubectl delete storageclass hostpath
+kubectl create -f https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/rbac.yaml
+kubectl create -f https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/deployment.yaml
+kubectl create -f https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/storageclass.yaml
+```
 
 ### 3. Increase Memory and CPUs
 
@@ -401,32 +411,34 @@ kubectl config current-context                 # Display the current context
 kubectl config use-context docker-for-desktop  # Set the default context if needed
 ```
 
-### 5. Restart docker  
+### 5. Restart Docker  
 
-Docker can be faulty on its first start. So, it is always safer to restart it before proceeding. Right click on the docker icon in the system tray, then left click "restart...". 
+Docker can be faulty on its first start. So, it is always safer to restart it before proceeding. Right click on the Docker icon in the system tray, then left click "restart...". 
 
-### 6. Install helm
+### 6. Install Helm
 
-Install chocolatery using command prompt (with admin rights). 
+Install chocolatey using command prompt (with admin rights). 
 
 ```bash
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
 ```
 
-Initialize Helm Tiller (Server Component)
-
-```bash
-helm init
-```
+Install helm
 
 ```bash
 choco install kubernetes-helm
 ```
 
+Initialize Tiller (Server Component)
+
+```bash
+helm init
+```
+
 ### 7. Create your namespace
 
 ```bash
-kubectl create namespace <yourNamespace>
+kubectl create namespace $DESIREDNAMESPACE
 ```
 
 ### 8. Pull secrets
@@ -437,14 +449,8 @@ docker login quay.io
 ```
 Give username and password if prompted.
 
-Generate a base64 value for your dockercfg, this will allow Kubernetes to access quay.io
-
-```bash
-certutil -encode "%USERPROFILE%\.docker\config.json" tmp.b64 && findstr /v /c:- tmp.b64
-```
-Copy the string output.
-
-Create the file secrets.yaml. And insert the copied string into the file where specified:
+In windows explorer, go to the current location of your command line.
+Create the file secrets.yaml, and past the following into it. 
 
 ```bash
 apiVersion: v1
@@ -453,15 +459,33 @@ metadata:
   name: quay-registry-secret
 type: kubernetes.io/dockerconfigjson
 data:
-  .dockerconfigjson: <replace this with the string>
+  .dockerconfigjson: <replaceThis>
+```
+Back in your command line, generate a base64 value for your dockercfg, this will allow Kubernetes to access quay.io
+
+```bash
+certutil -encode "%USERPROFILE%\.docker\config.json" tmp.b64 && findstr /v /c:- tmp.b64
+```
+From the output, copy the string located under:
+
+```bash
+CertUtil: -encode command completed successfully.
 ```
 
-Note that when you paste the string output in the data section, it may be pasted with new lines in it. So, make sure to take out the new lines. And leave a single space between "data:" and the string. 
+In the secrets.yaml file, replace <replaceThis> with the copied string. 
+
+Note that when you paste the string in the data section, it may be pasted with new lines in it. So, make sure to take out the new lines. And leave a single space between "data:" and the string. 
+
+Now in your command line, remove the file that was just created as it is no longer needed. 
+
+```bash
+del tmp.b64
+```
 
 Create the secret in your namespace. 
 
 ```bash
-kubectl create -f secrets.yaml --namespace <yourNamespace>
+kubectl create -f secrets.yaml --namespace $DESIREDNAMESPACE
 ```
 
 ### 9. Download the alfresco helm chart
@@ -472,12 +496,10 @@ helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubato
 
 ### 10. Authorize connections
 
-Check that the config.json file in C:\Users\<YourUserName>\.docker has a string after the word "auth".
-
-Go to the config.json file in "C:\Users\Ayman Harake\.docker", and check that there is a string after auth, such as in the following example.
+Go to the config.json file in "C:\Users\<YourUserName>\.docker", and check that there is a string after "auth", such as in the following example.
 
 ```bash
-"auth": "YWhhcmFrZTpQYXNjcnQxMlBhc2NydDEy"
+"auth": "klsdjfsdkifdsiEWRFJDOFfslakfdjsidjfdslfjds"
 ```
 
 Do the following command to find your ipv4 address and copy it to your clipboard.
@@ -536,7 +558,7 @@ Note: Make sure to leave a new line at the end before saving it.
 
 ### 11. Install alfresco-dbp
 
-Copy and paste the following block into your command line, making sure to replace <yourNamespace> accordingly. 
+Copy and paste the following block into your command line.
   
 ```bash
 helm install alfresco-incubator/alfresco-dbp ^
@@ -558,36 +580,26 @@ helm install alfresco-incubator/alfresco-dbp ^
 --set alfresco-process-services.processEngine.environment.IDENTITY_SERVICE_AUTH="http://localhost-k8s/auth" ^
 --set alfresco-process-services.processEngine.resources.requests.memory="1000Mi" ^
 --set alfresco-process-services.adminApp.resources.requests.memory="250Mi" ^
---namespace <yourNameSpace>
+--namespace $DESIREDNAMESPACE
 ```
 
-Repeatedly  run the following command until you can see that all the pods are successfully installed. This can take up to one hour. 
+Repeatedly run the following command until you can see that all the pods are successfully installed. This can take up to one hour. 
 
 ```bash
-kubectl get pods --namespace ayman
+kubectl get pods --namespace $DESIREDNAMESPACE
 ```
 
 If any pods are failing, you can use each of the following commands to see more about their errors:
 
 ```bash
-kubectl logs <the part of the pod name that all the pods have in common> --namespace <your namespace name>
-kubectl describe pod <the part of the pod name that all the pods have in common> --namespace <your namespace name>
-```
+kubectl logs <podName> --namespace $DESIREDNAMESPACE
+kubectl describe pod <podName> --namespace $DESIREDNAMESPACE
 
 If the postgres pod won't start and you are getting the following error:
 
 ```bash
 2019-02-08 10:27:04.358 UTC [1] FATAL:  data directory "/var/lib/postgresql/data/pgdata" has wrong ownership
 2019-02-08 10:27:04.358 UTC [1] HINT:  The server must be started by the user that owns the data directory.
-```
-
-Run the following commands to delete the storageClass hostpath and set up the hostpath provisioner: 
-
-```bash
-kubectl delete storageclass hostpath
-kubectl create -f https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/rbac.yaml
-kubectl create -f https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/deployment.yaml
-kubectl create -f https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/storageclass.yaml
 ```
 
 Clone the following file to your desired location. In the following example, it is cloned to the desktop. To do so, open your command line for git (we used bash), and run the following commands remembering to replace <yourUserName>.
@@ -601,11 +613,12 @@ Once all the pods are ready, go to http://localhost-k8s/activiti-app/#/ and you 
 
 ### 12. Teardown:
 
+Use the following command to find the release name, then the next coomand to delete that release (don't forget to replace <DBPRELEASE>).
+
 ```bash
 helm ls
 ```
 
-Use the name of the DBP release found above as DBPRELEASE
 ```bash 
 helm delete --purge <DBPRELEASE>
 ```

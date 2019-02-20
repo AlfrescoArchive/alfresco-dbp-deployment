@@ -10,6 +10,7 @@ global:
     client: alfresco
     url: "https://alfresco-identity-service.REPLACEME/auth"
   gateway:
+    http: false
     host: &gatewayhost "activiti-cloud-gateway.REPLACEME"
 
 alfresco-infrastructure:

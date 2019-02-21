@@ -417,13 +417,13 @@ Docker can be faulty on its first start. So, it is always safer to restart it be
 
 ### 6. Install Helm
 
-Install chocolatey using command prompt (with admin rights). 
+To install Helm, first you need to install Chocolatey using the command prompt (with admin rights). 
 
 ```bash
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
 ```
 
-Install helm
+Install Helm
 
 ```bash
 choco install kubernetes-helm
@@ -459,7 +459,7 @@ metadata:
   name: quay-registry-secret
 type: kubernetes.io/dockerconfigjson
 data:
-  .dockerconfigjson: <replaceThis>
+  .dockerconfigjson: replaceThis
 ```
 Back in your command line, generate a base64 value for your dockercfg, this will allow Kubernetes to access quay.io
 
@@ -472,7 +472,7 @@ From the output, copy the string located under:
 CertUtil: -encode command completed successfully.
 ```
 
-In the secrets.yaml file, replace <replaceThis> with the copied string. 
+In the secrets.yaml file, replace 'replaceThis' with the copied string. 
 
 Note that when you paste the string in the data section, it may be pasted with new lines in it. So, make sure to take out the new lines. And leave a single space between "data:" and the string. 
 
@@ -496,7 +496,7 @@ helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubato
 
 ### 10. Authorize connections
 
-Go to the config.json file in "C:\Users\<YourUserName>\.docker", and check that there is a string after "auth", such as in the following example.
+Go to the config.json file in "%USERPROFILE%\.docker", and check that there is a string after "auth", such as in the following example.
 
 ```bash
 "auth": "klsdjfsdkifdsiEWRFJDOFfslakfdjsidjfdslfjds"
@@ -508,17 +508,8 @@ Do the following command to find your ipv4 address and copy it to your clipboard
 ipconfig
 ```
 
-Note: If there are many ipv4 addresses, use the one that looks the most similar to this:
+Note: If there are many ipv4 addresses, use the ipv4 address of the connection that you are currently using.
 
-```bash
-Wireless LAN adapter Wi-Fi 2:
-
-   Connection-specific DNS Suffix  . : internal.alfresco.com
-   Link-local IPv6 Address . . . . . : fe80::c4e7:80c8:7609:42ae%13
-   IPv4 Address. . . . . . . . . . . : 10.244.50.193
-   Subnet Mask . . . . . . . . . . . : 255.255.254.0
-   Default Gateway . . . . . . . . . : 10.244.50.1
-```
 
 Paste the ipv4 address at the end of the hosts file in C:\Windows\System32\drivers\etc, followed by "localhost-k8s" as in the following example. 
 
@@ -602,10 +593,10 @@ If the postgres pod won't start and you are getting the following error:
 2019-02-08 10:27:04.358 UTC [1] HINT:  The server must be started by the user that owns the data directory.
 ```
 
-Clone the following file to your desired location. In the following example, it is cloned to the desktop. To do so, open your command line for git (we used bash), and run the following commands remembering to replace <yourUserName>.
+Clone the following file to your desired location. In the following example, it is cloned to the desktop. To do so, open your command line for git (we used bash), and run the following commands.
 
 ```bash
-cd "C:\Users\<yourUserName>\Desktop"
+cd "%USERPROFILE%\Desktop"
 git clone https://git.alfresco.com/platform-services/bamboo-build-dbp.git
 ```
 
@@ -613,7 +604,7 @@ Once all the pods are ready, go to http://localhost-k8s/activiti-app/#/ and you 
 
 ### 12. Teardown:
 
-Use the following command to find the release name, then the next coomand to delete that release (don't forget to replace <DBPRELEASE>).
+Use the following command to find the release name, then the next command to delete that release (don't forget to replace DBPRELEASE.
 
 ```bash
 helm ls

@@ -449,34 +449,25 @@ docker login quay.io
 ```
 Give username and password if prompted.
 
-In windows explorer, go to the current location of your command line.
-Create the file secrets.yaml, and past the following into it. 
+Create a variable that stores an encoded version of your base64 dockerconfig file 
+
 
 ```bash
-apiVersion: v1
+$QUAY_SECRET =[Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($Text))
+```
+
+Now the following command will create a secret.yaml file and insert the secret into the proper location.
+
+```bash
+echo "apiVersion: v1
 kind: Secret
 metadata:
   name: quay-registry-secret
 type: kubernetes.io/dockerconfigjson
 data:
-  .dockerconfigjson: <replaceThis>
-```
-Back in your command line, generate a base64 value for your dockercfg, this will allow Kubernetes to access quay.io
-
-```bash
-ertutil -encode "%USERPROFILE%\.docker\config.json" tmp.b64 && findstr /v /c:- tmp.b64 && del tmp.b64
-```
+  .dockerconfigjson: $QUAY_SECRET" > secrets.yaml
+``` 
  
-From the output, copy the string located under:
-
-```bash
-CertUtil: -encode command completed successfully.
-```
-
-In the secrets.yaml file, replace 'replaceThis' with the copied string. 
-
-Note that when you paste the string in the data section, it may be pasted with new lines in it. So, make sure to take out the new lines. And leave a single space between "data:" and the string. 
-
 
 Create the secret in your namespace. 
 

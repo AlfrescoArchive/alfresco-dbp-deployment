@@ -209,9 +209,9 @@ In the 'Kubernetes' tab of the Docker preferences,  click the 'Enable Kubernetes
 
 In the Advanced tab of the Docker preferences, set 'CPUs' to 4.
 
-While Alfresco Digital Business Platform installs and runs with only 8 GiB allocated to Docker, 
-for better performance we recommend that 'Memory' value be set slightly higher, to at least 10 - 12 GiB
-(depending on the size of RAM in your workstation). 
+While Alfresco Digital Business Platform installs and runs with only 14 GiB allocated to Docker, 
+for better performance we recommend that 'Memory' value be set slightly higher, to at least 16 GiB
+(depending on the size of RAM in your workstation).
 
 ### 4. Change/Verify Context
 
@@ -242,13 +242,13 @@ helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubato
 
 ### 8. Add Local DNS
 
-Add Local DNS Entry for Host Machine (needed for JWT issuer matching). Be sure to specify an active network interface.  It is not always `en0` as illustrated.  You can use the command `ifconfig -a` to find an active interface.
+We will be forming  a local dns with the use of nip.io. All you have to do it get your ip using the following command.
 
 ```bash
-sudo sh -c 'echo "`ipconfig getifaddr en0`       localhost-k8s" >> /etc/hosts'; cat /etc/hosts
+ipconfig getifaddr en0
 ```
 
-*Note:* If your IP address changes you will need to update the `/etc/hosts` entry for localhost-k8s.
+*Note:* Save this ip for later use.
 
 ### 9. Docker Registry Pull Secrets
 
@@ -256,44 +256,24 @@ See the Anaxes Shipyard documentation on [secrets](https://github.com/Alfresco/a
 
 *Note*: You can reuse the secrets.yaml file from charts/incubator directory.  
 
-### 10. Apply Alfresco Process Services license
+### 10. Download and modify the minimal-values file
 
-If you have a valid Alfresco Process Services license, you can apply it at deployment time 
-by creating a secret called `licenseaps` from your license file:
-```bash
-kubectl create secret generic licenseaps --from-file=./activiti.lic --namespace=$DESIREDNAMESPACE
-```
-
-This step is optional. If you choose not to deploy the license this way,
-Alfresco Process Services will start up in read-only mode and you will need to apply it manually (see [Notes](#12-check-dbp-components) below).
-
-### 11. Deploy the DBP
-
-The extended install command configures the hostnames, URLs and memory requirements needed to run in Docker for Desktop.  It also configures the time for initiating the kubernetes probes to test if a service is available.
+Pull the minimal values file from this repo:
 
 ```bash
-helm install alfresco-incubator/alfresco-dbp \
---set alfresco-content-services.externalHost="localhost-k8s" \
---set alfresco-content-services.networkpolicysetting.enabled=false \
---set alfresco-content-services.repository.environment.IDENTITY_SERVICE_URI="http://localhost-k8s/auth" \
---set alfresco-content-services.repository.replicaCount=1 \
---set alfresco-content-services.repository.livenessProbe.initialDelaySeconds=420 \
---set alfresco-content-services.pdfrenderer.livenessProbe.initialDelaySeconds=300 \
---set alfresco-content-services.libreoffice.livenessProbe.initialDelaySeconds=300 \
---set alfresco-content-services.imagemagick.livenessProbe.initialDelaySeconds=300 \
---set alfresco-content-services.share.livenessProbe.initialDelaySeconds=420 \
---set alfresco-content-services.repository.resources.requests.memory="2000Mi" \
---set alfresco-content-services.pdfrenderer.resources.requests.memory="500Mi" \
---set alfresco-content-services.imagemagick.resources.requests.memory="500Mi" \
---set alfresco-content-services.libreoffice.resources.requests.memory="500Mi" \
---set alfresco-content-services.share.resources.requests.memory="1000Mi" \
---set alfresco-content-services.postgresql.resources.requests.memory="500Mi" \
---set alfresco-process-services.processEngine.environment.IDENTITY_SERVICE_AUTH="http://localhost-k8s/auth" \
---set alfresco-process-services.processEngine.resources.requests.memory="1000Mi" \
---set alfresco-process-services.adminApp.resources.requests.memory="250Mi"
+curl -O https://raw.githubusercontent.com/Alfresco/alfresco-dbp-deployment/master/charts/incubator/alfresco-dbp/minimal-values.yaml
 ```
 
-### 11. Check Deployment Status of DBP
+Open it in your favorite text editor and replace all occurences of REPLACEME with the IP you previously got from step 8
+
+### 11. Deploy the dbp
+
+```bash
+# From within the same folder as your values file
+helm install alfresco-incubator/alfresco-dbp -f minimal-values.yaml
+```
+
+### 12. Check Deployment Status of DBP
 
 ```bash
 kubectl get pods
@@ -301,29 +281,16 @@ kubectl get pods
 
 *Note:* When checking status, your pods should be `READY 1/1` and `STATUS Running`
 
-### 12. Check DBP Components
+### 13. Check DBP Components
 
 You can access DBP components at the following URLs:
-- http://localhost-k8s/alfresco
-- http://localhost-k8s/share
-- http://localhost-k8s/digital-workspace/
-- http://localhost-k8s/activiti-app
-- http://localhost-k8s/activiti-admin
-- http://localhost-k8s/auth/
+  Content: http://alfresco-cs-repository.YOURIP.nip.io/alfresco
+  Digital Workspace: http://alfresco-cs-repository.YOURIP.nip.io/digital-workspace/
+  Alfresco Identity Service: http://alfresco-identity-service.YOURIP.nip.io/auth
+  Activiti Cloud Gateway: http://activiti-cloud-gateway.YOURIP.nip.io
+  Activiti Modeling App: http://activiti-cloud-gateway.YOURIP.nip.io/activiti-cloud-modeling
 
-*Notes:*
-
-- As deployed, the activiti-app starts in read-only mode.  
-  - Apply a license by uploading an Activiti license file after deployment.
-
-- As deployed, the activiti-admin app does not work because it is not configured with the correct server endpoint. 
-  - To fix that, click 'Edit Process Services REST Endpoint' and then in the form enter http://localhost-k8s for the server address.
-  - Save the form and  click 'Check Process Services REST endpoint' to see if it is valid.
-
-- The http://localhost-k8s/activiti-admin/solr endpoint is disabled by default.   
-  - See https://github.com/Alfresco/acs-deployment/blob/master/docs/examples/search-external-access.md for more information.
-
-### 13. Teardown:
+### 14. Teardown:
 
 ```bash
 helm ls

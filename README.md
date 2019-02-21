@@ -587,21 +587,7 @@ kubectl logs <podName> --namespace $DESIREDNAMESPACE
 kubectl describe pod <podName> --namespace $DESIREDNAMESPACE
 ```
 
-If the postgres pod won't start and you are getting the following error:
 
-```bash
-2019-02-08 10:27:04.358 UTC [1] FATAL:  data directory "/var/lib/postgresql/data/pgdata" has wrong ownership
-2019-02-08 10:27:04.358 UTC [1] HINT:  The server must be started by the user that owns the data directory.
-```
-
-Clone the following file to your desired location. In the following example, it is cloned to the desktop. To do so, open your command line for git (we used bash), and run the following commands.
-
-```bash
-cd "%USERPROFILE%\Desktop"
-git clone https://git.alfresco.com/platform-services/bamboo-build-dbp.git
-```
-
-Once all the pods are ready, go to http://localhost-k8s/activiti-app/#/ and you will see that all works well, but that your license is invalid. Click on "upload license". Then browse to the folder that you cloned and locate scripts/activiti.lic inside it. 
 
 ### 12. Teardown:
 

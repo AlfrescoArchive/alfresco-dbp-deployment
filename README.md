@@ -464,8 +464,9 @@ data:
 Back in your command line, generate a base64 value for your dockercfg, this will allow Kubernetes to access quay.io
 
 ```bash
-certutil -encode "%USERPROFILE%\.docker\config.json" tmp.b64 && findstr /v /c:- tmp.b64
+ertutil -encode "%USERPROFILE%\.docker\config.json" tmp.b64 && findstr /v /c:- tmp.b64 && del tmp.b64
 ```
+
 From the output, copy the string located under:
 
 ```bash
@@ -476,11 +477,6 @@ In the secrets.yaml file, replace 'replaceThis' with the copied string.
 
 Note that when you paste the string in the data section, it may be pasted with new lines in it. So, make sure to take out the new lines. And leave a single space between "data:" and the string. 
 
-Now in your command line, remove the file that was just created as it is no longer needed. 
-
-```bash
-del tmp.b64
-```
 
 Create the secret in your namespace. 
 

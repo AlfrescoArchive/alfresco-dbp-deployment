@@ -459,7 +459,7 @@ metadata:
   name: quay-registry-secret
 type: kubernetes.io/dockerconfigjson
 data:
-  .dockerconfigjson: replaceThis
+  .dockerconfigjson: <replaceThis>
 ```
 Back in your command line, generate a base64 value for your dockercfg, this will allow Kubernetes to access quay.io
 
@@ -587,11 +587,13 @@ kubectl describe pod <podName> --namespace $DESIREDNAMESPACE
 
 ### 12. Teardown:
 
-Use the following command to find the release name, then the next command to delete that release (don't forget to replace 'DBPRELEASE'.
+Use the following command to find the release name.
 
 ```bash
 helm ls
 ```
+
+Delete that release with the following command, replacing 'DBRELEASE' with the release name that you just retrieved in the previous command. 
 
 ```bash 
 helm delete --purge <DBPRELEASE>

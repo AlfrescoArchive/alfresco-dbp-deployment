@@ -466,7 +466,7 @@ Back in your command line, generate a base64 value for your dockercfg, this will
 ```bash
 ertutil -encode "%USERPROFILE%\.docker\config.json" tmp.b64 && findstr /v /c:- tmp.b64 && del tmp.b64
 ```
-
+ 
 From the output, copy the string located under:
 
 ```bash

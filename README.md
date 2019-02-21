@@ -417,7 +417,7 @@ Docker can be faulty on its first start. So, it is always safer to restart it be
 
 ### 6. Install Helm
 
-To install Helm, first you need to install Chocolatey using the command prompt (with admin rights). 
+To install Helm, first you need to install Chocolatey using Command Prompt (with admin rights). 
 
 ```bash
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
@@ -585,6 +585,7 @@ If any pods are failing, you can use each of the following commands to see more 
 ```bash
 kubectl logs <podName> --namespace $DESIREDNAMESPACE
 kubectl describe pod <podName> --namespace $DESIREDNAMESPACE
+```
 
 If the postgres pod won't start and you are getting the following error:
 
@@ -604,7 +605,7 @@ Once all the pods are ready, go to http://localhost-k8s/activiti-app/#/ and you 
 
 ### 12. Teardown:
 
-Use the following command to find the release name, then the next command to delete that release (don't forget to replace DBPRELEASE.
+Use the following command to find the release name, then the next command to delete that release (don't forget to replace 'DBPRELEASE'.
 
 ```bash
 helm ls

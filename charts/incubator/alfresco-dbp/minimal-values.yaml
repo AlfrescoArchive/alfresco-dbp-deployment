@@ -21,6 +21,10 @@ alfresco-infrastructure:
   alfresco-identity-service:
     realm:
       alfresco:
+        extraAdminUserRealmRoles:
+          - "ACTIVITI_ADMIN"
+          - "ACTIVITI_MODELER"
+          - "ACTIVITI_USER"
         extraRealmRoles:
         - name: "ACTIVITI_USER"
         - name: "ACTIVITI_MODELER"

@@ -10,11 +10,14 @@ global:
     client: alfresco
     url: "http://alfresco-identity-service.REPLACEME.nip.io/auth"
   gateway:
-    #http: false
     host: &gatewayhost "activiti-cloud-gateway.REPLACEME.nip.io"
-
+   
 alfresco-infrastructure:
   enabled: true
+  persistence:
+    storageClass:
+      enabled: true
+      name: "hostpath"
   alfresco-identity-service:
     realm:
       alfresco:
@@ -139,8 +142,6 @@ alfresco-infrastructure:
             - "*"
 
 alfresco-digital-workspace:
-  ingress:
-    maxUploadSize: 5000m
   APP_CONFIG_AUTH_TYPE: "OAUTH"
   APP_CONFIG_OAUTH2_HOST: "http://alfresco-identity-service.REPLACEME.nip.io/auth/realms/alfresco"
   APP_CONFIG_OAUTH2_CLIENTID: "alfresco"
@@ -168,7 +169,6 @@ alfresco-content-services:
   #      tag: "0.3-SNAPSHOT"
     ingress:
       path: "/alfresco"
-      maxUploadSize: 5000m
     environment:
       # The SYNC_SERVICE_URI should contain the details of the ingress host and port.
       SYNC_SERVICE_URI: "<ingresscontrollerurl>/syncservice"
@@ -186,45 +186,32 @@ alfresco-content-services:
         -Didentity-service.authentication.validation.failure.silent=false
         -Didentity-service.auth-server-url=\"$IDENTITY_SERVICE_URI\"
         -Didentity-service.realm=alfresco
-        -Didentity-service.resource=alfresco"
-        # -Dlocal.transform.service.enabled=true
-        # -Dtransform.service.enabled=false
-        # -Dalfresco-pdf-renderer.url=null
-        # -Dimg.url=null
-        # -Djodconverter.url=null 
-        # -Dtika.url=null"
+        -Didentity-service.resource=alfresco
+        -Dlocal.transform.service.enabled=false
+        -Dtransform.service.enabled=false"
     replicaCount: 1
     livenessProbe:
       initialDelaySeconds: 420
+    readynessProbe:
+      initialDelaySeconds: 500
     resources:
       requests:
         memory: "1800Mi"
   transformrouter:
-    replicaCount: 1
-    livenessProbe:
-      initialDelaySeconds: 420
+    replicaCount: 0
   imagemagick:
-    replicaCount: 1
-    livenessProbe:
-      initialDelaySeconds: 420
+    replicaCount: 0
   libreoffice:
-    replicaCount: 1
-    livenessProbe:
-      initialDelaySeconds: 420
+    replicaCount: 0
   pdfrenderer:
-    replicaCount: 1
-    livenessProbe:
-      initialDelaySeconds: 420
+    replicaCount: 0
   tika:
-    replicaCount: 1
-    livenessProbe:
-      initialDelaySeconds: 420
+    replicaCount: 0
   share:
     replicaCount: 0
   filestore:
-    replicaCount: 1
     livenessProbe:
-      initialDelaySeconds: 420
+      initialDelaySeconds: 400
 # DEPLOY-466 / DEPLOY-467 - Remove image pin as we are using the ACS provided images
 #    image:
 #      repository: quay.io/alfresco/alfresco-dbp-share

@@ -209,8 +209,8 @@ In the 'Kubernetes' tab of the Docker preferences,  click the 'Enable Kubernetes
 
 In the Advanced tab of the Docker preferences, set 'CPUs' to 4.
 
-While Alfresco Digital Business Platform installs and runs with only 14 GiB allocated to Docker, 
-for better performance we recommend that 'Memory' value be set slightly higher, to at least 16 GiB
+While Alfresco Digital Business Platform installs and runs with only 10 GiB allocated to Docker, 
+for better performance we recommend that 'Memory' value be set slightly higher, to at least 14 GiB
 (depending on the size of RAM in your workstation).
 
 ### 4. Change/Verify Context
@@ -238,11 +238,12 @@ helm init
 
 ```bash
 helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubator
+helm repo add alfresco-stable https://kubernetes-charts.alfresco.com/stable
 ```
 
 ### 8. Add Local DNS
 
-We will be forming  a local dns with the use of nip.io. All you have to do it get your ip using the following command.
+We will be forming a local dns with the use of nip.io. All you have to do it get your ip using the following command.
 
 ```bash
 ipconfig getifaddr en0
@@ -269,7 +270,7 @@ Open it in your favorite text editor and replace all occurences of REPLACEME wit
 ### 11. Deploy the dbp
 
 ```bash
-# From within the same folder as your values file
+# From within the same folder as your minimal-values file
 helm install alfresco-incubator/alfresco-dbp -f minimal-values.yaml
 ```
 
@@ -279,17 +280,18 @@ helm install alfresco-incubator/alfresco-dbp -f minimal-values.yaml
 kubectl get pods
 ```
 
-*Note:* When checking status, your pods should be `READY 1/1` and `STATUS Running`
+*Note:* When checking status, your pods should be `READY x/x` and `STATUS Running`
 
 ### 13. Check DBP Components
 
 You can access DBP components at the following URLs:
+  Alfresco Digital Workspace: http://alfresco-cs-repository.YOURIP.nip.io/digital-workspace/
   Content: http://alfresco-cs-repository.YOURIP.nip.io/alfresco
-  Digital Workspace: http://alfresco-cs-repository.YOURIP.nip.io/digital-workspace/
+  Share: http://alfresco-cs-repository.YOURIP.nip.io/share
   Alfresco Identity Service: http://alfresco-identity-service.YOURIP.nip.io/auth
   Activiti Cloud Gateway: http://activiti-cloud-gateway.YOURIP.nip.io
   Activiti Modeling App: http://activiti-cloud-gateway.YOURIP.nip.io/activiti-cloud-modeling
-
+  
 ### 14. Teardown:
 
 ```bash
@@ -304,7 +306,9 @@ helm delete --purge <DBPRELEASE>
 
 #### kubectl not found
 
-In some cases, after installing Docker for Desktop and enabling Kubernetes, the `kubectl` command may not be found. Docker for Desktop also installs the command as `kubectl.docker`. We would recommend using this command over installing the kubernetes cli which may not match the version of kubernetes that Docker for Desktop is using. 
+In some cases, after installing Docker for Desktop and enabling Kubernetes, the `kubectl` command may not be found. 
+Docker for Desktop also installs the command as `kubectl.docker`. 
+We would recommend using this command over installing the kubernetes cli which may not match the version of kubernetes that Docker for Desktop is using. 
 
 #### K8s Cluster Namespace
 

@@ -417,11 +417,18 @@ Docker can be faulty on its first start. So, it is always safer to restart it be
 
 ### 6. Install Helm
 
-To install Helm, first you need to install Chocolatey using Command Prompt (with admin rights). 
+Enable running scripts (If not there will be an error when running the next script).
 
 ```bash
-@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+Set-ExecutionPolicy RemoteSigned
 ```
+
+In this approach, we are using Chocolatey to install Helm. So Download and run Chocolatey.
+
+```bash
+iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')) ; $Env:Path="$Env:Path" + ';' + "$Env:Allusersprofile\chocolatey\bin"
+``` 
+
 
 Install Helm
 
@@ -483,7 +490,7 @@ helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubato
 
 ### 10. Authorize connections
 
-Go to the config.json file in "%USERPROFILE%\.docker", and check that there is a string after "auth", such as in the following example.
+Go to the config.json file in "C:\Users\yourUserProfile\.docker", and check that there is a string after "auth", such as in the following example.
 
 ```bash
 "auth": "klsdjfsdkifdsiEWRFJDOFfslakfdjsidjfdslfjds"

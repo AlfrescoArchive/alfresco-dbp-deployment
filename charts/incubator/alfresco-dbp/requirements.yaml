@@ -19,3 +19,7 @@ dependencies:
     version: 1.0.0
     condition: dbp.alfresco-digital-workspace.enabled
     repository: https://kubernetes-charts.alfresco.com/incubator
+  - name: acs-events-consolidator
+    version: 0.2
+    condition: acs-events-consolidator.enabled
+    repository: https://kubernetes-charts.alfresco.com/incubator

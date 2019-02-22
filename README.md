@@ -375,6 +375,8 @@ After deploying the DBP, when accesing one of the applications, for example Proc
 
 # Docker for Desktop - Windows
 
+Note: All of the following commands will be using PowerShell. 
+
 ### 1. Install Docker for Desktop
 
 Check recommended version [here](https://github.com/Alfresco/alfresco-dbp-deployment/blob/master/README-prerequisite.md#docker-desktop).
@@ -445,7 +447,7 @@ helm init
 ### 7. Create your namespace
 
 ```bash
-kubectl create namespace $DESIREDNAMESPACE
+kubectl create namespace DESIREDNAMESPACE
 ```
 
 ### 8. Pull secrets
@@ -479,10 +481,10 @@ data:
 Create the secret in your namespace. 
 
 ```bash
-kubectl create -f secrets.yaml --namespace $DESIREDNAMESPACE
+kubectl create -f secrets.yaml --namespace DESIREDNAMESPACE
 ```
 
-### 9. Download the alfresco helm chart
+### 9. Add remote chart repository to Helm configuration.
 
 ```bash
 helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubator

@@ -59,7 +59,7 @@
 					]
 				},
 				"url": {
-					"raw": "{{dbpurl}}/auth/realms/alfresco/protocol/openid-connect/token",
+					"raw": "{{dbpurl}}/realms/alfresco/protocol/openid-connect/token",
 					"host": [
 						"{{dbpurl}}"
 					],

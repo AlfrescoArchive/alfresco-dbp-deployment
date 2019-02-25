@@ -446,8 +446,11 @@ helm init
 
 ### 7. Create your namespace
 
+Run the following command, making sure to replace "namespaceName" with your desired namespace name. 
+
 ```bash
-kubectl create namespace DESIREDNAMESPACE
+$DESIREDNAMESPACE = "<namespaceName>"
+kubectl create namespace $DESIREDNAMESPACE
 ```
 
 ### 8. Pull secrets
@@ -482,7 +485,7 @@ data:
 Create the secret in your namespace. 
 
 ```bash
-kubectl create -f secrets.yaml --namespace DESIREDNAMESPACE
+kubectl create -f secrets.yaml --namespace $DESIREDNAMESPACE
 ```
 
 ### 9. Add remote chart repository to Helm configuration.

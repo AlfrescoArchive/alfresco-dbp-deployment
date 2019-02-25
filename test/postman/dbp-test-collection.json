@@ -821,7 +821,135 @@
 			]
 		},
 		{
-			"name": "04 ADW basic Tests",
+			"name": "04 Activiti-token-auth",
+			"item": [
+				{
+					"name": "Generate Keycloak admin access token Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bcedf8cbe-1d10-4dce-991c-678762ee8103",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Token is bearer token\", function () {",
+									"    pm.expect(jsonData.token_type).to.eql(\"bearer\");",
+									"});",
+									"",
+									"pm.test(\"Response contains access token\", function () {",
+									"    pm.expect(\"access_token\" in jsonData).to.be.true;",
+									"});",
+									"",
+									"var tokens = JSON.parse(responseBody); ",
+									"pm.environment.set(\"kcAdminAccessToken\", tokens.access_token);",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_id",
+									"value": "{{identityServiceClientId}}",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "{{adminUserUsername}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{adminUserPassword}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{protocol}}://{{identityServiceUrl}}/realms/{{identityServiceRealm}}/protocol/openid-connect/token",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{identityServiceUrl}}"
+							],
+							"path": [
+								"realms",
+								"{{identityServiceRealm}}",
+								"protocol",
+								"openid-connect",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getProcessInstances",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1fcaf9d8-243d-44c5-92f1-681cfaedba35",
+								"exec": [
+									"pm.test(\"Response code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{kcAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{protocol}}://{{activitiUrl}}/rb-my-app/v1/process-instances",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{activitiUrl}}"
+							],
+							"path": [
+								"rb-my-app",
+								"v1",
+								"process-instances"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "05 ADW basic Tests",
 			"item": [
 				{
 					"name": "Check if ACA Login Page responds correctly",
@@ -881,7 +1009,7 @@
 			]
 		},
 		{
-			"name": "05 Expired Token Tests",
+			"name": "06 Expired Token Tests",
 			"item": [
 				{
 					"name": "Shorten realm's access token lifespan",
@@ -1159,54 +1287,6 @@
 							""
 						]
 					}
-				}
-			]
-		},
-		{
-			"name": "06 Activiti-token-auth",
-			"item": [
-				{
-					"name": "getProcessInstances",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "1fcaf9d8-243d-44c5-92f1-681cfaedba35",
-								"exec": [
-									"pm.test(\"Response code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{kcAccessToken}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{protocol}}://{{activitiUrl}}/rb-my-app/v1/process-instances",
-							"protocol": "{{protocol}}",
-							"host": [
-								"{{activitiUrl}}"
-							],
-							"path": [
-								"rb-my-app",
-								"v1",
-								"process-instances"
-							]
-						}
-					},
-					"response": []
 				}
 			]
 		}

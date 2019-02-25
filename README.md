@@ -22,9 +22,13 @@ Resource requirements for AWS:
 ### Helm Tiller
 
 Initialize the Helm Tiller:
+
 ```bash
 helm init
+kubectl create clusterrolebinding tiller-clusterrole-binding --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
 ```
+
+*Note:* This setup will deploy the helm server component and will give helm access to the whole cluster. For a more secure, customized setup, please read -> https://helm.sh/docs/using_helm/#role-based-access-control
 
 ### K8s Cluster Namespace
 
@@ -100,8 +104,12 @@ We don't advise you to use the same EFS instance for persisting the data from mu
 
 ```helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubator```
 
-### 3. Configure Route53 entry
+### 3. Define a variable for your Route53 entry that you will use for the deployment	### 3. Configure Route53 entry
 
+```bash	
+export ELB_CNAME="YourDesiredCname.YourRoute53DnsZone"	
+#example export ELB_CNAME="alfresco.example.com"	
+```
 
 ### 4. Deploy the DBP
 
@@ -232,7 +240,10 @@ brew update; brew install kubernetes-helm
 
 ```bash
 helm init
+kubectl create clusterrolebinding tiller-clusterrole-binding --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
 ```
+
+*Note:* This setup will deploy the helm server component and will give helm access to the whole cluster. For a more secure, customized setup, please read -> https://helm.sh/docs/using_helm/#role-based-access-control
 
 ### 7. Add the Alfresco Incubator Helm Repository
 
@@ -257,15 +268,17 @@ See the Anaxes Shipyard documentation on [secrets](https://github.com/Alfresco/a
 
 *Note*: You can reuse the secrets.yaml file from charts/incubator directory.  
 
-### 10. Download and modify the minimal-values file
+### 10. Download and modify the minimal-values.yaml file
 
-Pull the minimal values file from this repo:
+The minimal-values.yaml file contains values for local only development and multiple components are disabled with the purpose of reducing the memory footprint of the Digital Business Platform. This should not be used as a starting point for production use.
+
+Pull the minimal values file from the current repo:
 
 ```bash
 curl -O https://raw.githubusercontent.com/Alfresco/alfresco-dbp-deployment/master/charts/incubator/alfresco-dbp/minimal-values.yaml
 ```
 
-Open it in your favorite text editor and replace all occurences of REPLACEME with the IP you previously got from step 8
+Open it in your favorite text editor and replace all occurences of REPLACEME with the IP you previously got from step 8.
 
 ### 11. Deploy the dbp
 
@@ -314,7 +327,7 @@ We would recommend using this command over installing the kubernetes cli which m
 
 If you are deploying multiple projects in your Docker for Desktop Kuberenetes Cluster you may find it useful to use namespaces to segment the projects.
 
-To create a namespace
+To create a namespace:
 ```bash
 export DESIREDNAMESPACE=example
 kubectl create namespace $DESIREDNAMESPACE

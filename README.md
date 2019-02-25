@@ -452,20 +452,21 @@ kubectl create namespace DESIREDNAMESPACE
 
 ### 8. Pull secrets
 
-Log in to quay.io
+Log in to quay.io.
 ```bash
 docker login quay.io
 ```
-Give username and password if prompted.
+Give your username and password if prompted.
 
-Create a variable that stores an encoded version of your base64 dockerconfig file 
+Create a variable that stores an encoded version of your base64 docker-config file. 
 
 
 ```bash
-$QUAY_SECRET =[Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($Text))
+$dockerConfigFile = GET-CONTENT -Path "C:\Users\Ayman Harake\.docker\config.json"
+$QUAY_SECRET =[Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($dockerConfigFile))
 ```
 
-Now the following command will create a secret.yaml file and insert the secret into the proper location.
+Create a secret.yaml file using the $QUAY_SECRET variable.
 
 ```bash
 echo "apiVersion: v1

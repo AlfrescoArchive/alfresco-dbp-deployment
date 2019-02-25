@@ -458,11 +458,11 @@ docker login quay.io
 ```
 Give your username and password if prompted.
 
-Create a variable that stores an encoded version of your base64 docker-config file. 
+Create a variable that stores an encoded version of your docker-config file. 
 
 
 ```bash
-$dockerConfigFile = GET-CONTENT -Path "C:\Users\Ayman Harake\.docker\config.json"
+$dockerConfigFile = GET-CONTENT -Path "$env:USERPROFILE\.docker\config.json"
 $QUAY_SECRET =[Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($dockerConfigFile))
 ```
 

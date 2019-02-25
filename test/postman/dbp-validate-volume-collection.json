@@ -59,14 +59,14 @@
 					]
 				},
 				"url": {
-					"raw": "{{dbpurl}}/realms/alfresco/protocol/openid-connect/token",
+					"raw": "{{protocol}}://{{identityServiceUrl}}/realms/{{identityServiceRealm}}/protocol/openid-connect/token",
+					"protocol": "{{protocol}}",
 					"host": [
-						"{{dbpurl}}"
+						"{{identityServiceUrl}}"
 					],
 					"path": [
-						"auth",
 						"realms",
-						"alfresco",
+						"{{identityServiceRealm}}",
 						"protocol",
 						"openid-connect",
 						"token"

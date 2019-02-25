@@ -8,6 +8,7 @@ If you are using the default dbp setup you can access all components as follows:
 
 {{- $protocol := index (split ":" .Values.global.keycloak.url) "_0" -}}
 
+
   Alfresco Digital Workspace: {{ $protocol }}://{{ index .Values "alfresco-content-services" "externalHost" }}/digital-workspace
   Content: {{ $protocol }}://{{ index .Values "alfresco-content-services" "externalHost" }}/alfresco
   Share: {{ $protocol }}://{{ index .Values "alfresco-content-services" "externalHost" }}/share

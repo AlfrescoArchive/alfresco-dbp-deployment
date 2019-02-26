@@ -102,7 +102,8 @@ We don't advise you to use the same EFS instance for persisting the data from mu
 
 ### 2. Add the Alfresco Helm repository to helm
 
-```helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubator
+```
+helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubator
 helm repo add alfresco-stable https://kubernetes-charts.alfresco.com/stable
 ```
 

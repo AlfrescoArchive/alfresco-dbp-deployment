@@ -455,6 +455,13 @@ kubectl create namespace $DESIREDNAMESPACE
 
 ### 8. Pull secrets
 
+Go to the config.json file in "C:\Users\yourUserProfile\.docker", and delete anything inside the string after credsStore to make sure that it is empty as follows:
+
+```bash
+"credsStore": ""
+```
+
+
 Log in to quay.io.
 ```bash
 docker login quay.io
@@ -496,7 +503,7 @@ helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubato
 
 ### 10. Authorize connections
 
-Go to the config.json file in "C:\Users\yourUserProfile\.docker", and check that there is a string after "auth", such as in the following example.
+Go back to the config.json file, and check that there is a string after "auth", such as in the following example.
 
 ```bash
 "auth": "klsdjfsdkifdsiEWRFJDOFfslakfdjsidjfdslfjds"

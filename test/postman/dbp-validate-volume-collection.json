@@ -59,14 +59,14 @@
 					]
 				},
 				"url": {
-					"raw": "{{dbpurl}}/auth/realms/alfresco/protocol/openid-connect/token",
+					"raw": "{{protocol}}://{{identityServiceUrl}}/realms/{{identityServiceRealm}}/protocol/openid-connect/token",
+					"protocol": "{{protocol}}",
 					"host": [
-						"{{dbpurl}}"
+						"{{identityServiceUrl}}"
 					],
 					"path": [
-						"auth",
 						"realms",
-						"alfresco",
+						"{{identityServiceRealm}}",
 						"protocol",
 						"openid-connect",
 						"token"
@@ -125,12 +125,12 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "{{dbpurl}}/alfresco/api/-default-/public/alfresco/versions/1/nodes/-my-/children?includeSource=true",
+					"raw": "{{protocol}}://{{acsUrl}}/api/-default-/public/alfresco/versions/1/nodes/-my-/children?includeSource=true",
+					"protocol": "{{protocol}}",
 					"host": [
-						"{{dbpurl}}"
+						"{{acsUrl}}"
 					],
 					"path": [
-						"alfresco",
 						"api",
 						"-default-",
 						"public",
@@ -151,6 +151,54 @@
 				"description": "Volume validation: verify user's files are still accessible and metadata corresponds to original user"
 			},
 			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "98c01caa-7468-48ac-825d-d9384fad980f",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "9ac39787-8c43-484f-99da-88fa41bbda22",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "c4f67feb-0b18-4080-bb64-414be801b4d9",
+			"key": "acsUrl",
+			"value": "alfresco-cs-repository.{{dbpHostName}}/alfresco",
+			"type": "string"
+		},
+		{
+			"id": "892c6853-a96a-44a6-90e4-4334b38d58e6",
+			"key": "identityServiceUrl",
+			"value": "alfresco-identity-service.{{dbpHostName}}/auth",
+			"type": "string"
+		},
+		{
+			"id": "74fc2df5-7214-44b5-873a-508f7a6084ac",
+			"key": "identityServiceRealm",
+			"value": "alfresco",
+			"type": "string"
+		},
+		{
+			"id": "fc8e1820-bbec-43f6-a5f8-0f99fce02305",
+			"key": "protocol",
+			"value": "https",
+			"type": "string"
 		}
 	]
 }

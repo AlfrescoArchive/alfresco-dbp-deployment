@@ -8,13 +8,16 @@ global:
     resource: alfresco
     realm: alfresco
     client: alfresco
-    url: "https://alfresco-identity-service.REPLACEME/auth"
+    url: "http://alfresco-identity-service.REPLACEME.nip.io/auth"
   gateway:
-    http: false
-    host: &gatewayhost "activiti-cloud-gateway.REPLACEME"
-
+    host: &gatewayhost "activiti-cloud-gateway.REPLACEME.nip.io"
+   
 alfresco-infrastructure:
   enabled: true
+  persistence:
+    storageClass:
+      enabled: true
+      name: "hostpath"
   alfresco-identity-service:
     realm:
       alfresco:
@@ -134,31 +137,17 @@ alfresco-infrastructure:
               account:
                 - "manage-account"
                 - "view-profile"
-            groups:
+            groups:  
               - "testgroup"
         client:
           webOrigins:
             - "*"
           redirectUris:
             - "*"
-  # nginx-ingress:
-  #   controller:
-  #     publishService:
-  #       enabled: true
-  #     service:
-  #       targetPorts:
-  #         http: http
-  #         https: http
-  #       annotations:
-  #         external-dns.alpha.kubernetes.io/hostname: "*.$ELB_CNAME"
-  #         service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "https"
-  #         service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: '3600'
-  #         service.beta.kubernetes.io/aws-load-balancer-ssl-cert: $ELB_CERTIFICATE_ARN
-  #         service.beta.kubernetes.io/aws-load-balancer-ssl-ports: https
 
 alfresco-digital-workspace:
   APP_CONFIG_AUTH_TYPE: "OAUTH"
-  APP_CONFIG_OAUTH2_HOST: "https://alfresco-identity-service.REPLACEME/auth/realms/alfresco"
+  APP_CONFIG_OAUTH2_HOST: "http://alfresco-identity-service.REPLACEME.nip.io/auth/realms/alfresco"
   APP_CONFIG_OAUTH2_CLIENTID: "alfresco"
   APP_CONFIG_OAUTH2_IMPLICIT_FLOW: "\"true\""
   APP_CONFIG_OAUTH2_SILENT_LOGIN: "\"true\""
@@ -188,36 +177,59 @@ alfresco-content-services:
       # The SYNC_SERVICE_URI should contain the details of the ingress host and port.
       SYNC_SERVICE_URI: "<ingresscontrollerurl>/syncservice"
       # The IDENTITY_SERVICE_URI should contain the details of the ingress host and port.
-      IDENTITY_SERVICE_URI: "https://alfresco-identity-service.REPLACEME/auth"
+      IDENTITY_SERVICE_URI: "http://alfresco-identity-service.REPLACEME.nip.io/auth"
       JAVA_OPTS: " -Dsolr.base.url=/solr
         -Dsolr.secureComms=none
         -Dindex.subsystem.name=solr6
         -Dalfresco.cluster.enabled=true
         -Ddeployment.method=HELM_CHART
-        -Xms2000M -Xmx2000M
+        -Xms1800M -Xmx1800M
         -Ddsync.service.uris=\"$SYNC_SERVICE_URI\"
         -Dauthentication.chain=identity-service1:identity-service,alfrescoNtlm1:alfrescoNtlm
         -Didentity-service.enable-basic-auth=true
         -Didentity-service.authentication.validation.failure.silent=false
         -Didentity-service.auth-server-url=\"$IDENTITY_SERVICE_URI\"
         -Didentity-service.realm=alfresco
-        -Didentity-service.resource=alfresco"
+        -Didentity-service.resource=alfresco
+        -Dlocal.transform.service.enabled=false
+        -Dtransform.service.enabled=false"
+    replicaCount: 1
+    livenessProbe:
+      initialDelaySeconds: 420
+    readynessProbe:
+      initialDelaySeconds: 500
+    resources:
+      requests:
+        memory: "1800Mi"
+  transformrouter:
+    replicaCount: 0
+  imagemagick:
+    replicaCount: 0
+  libreoffice:
+    replicaCount: 0
+  pdfrenderer:
+    replicaCount: 0
+  tika:
+    replicaCount: 0
   share:
+    replicaCount: 0
+  filestore:
+    livenessProbe:
+      initialDelaySeconds: 400
 # DEPLOY-466 / DEPLOY-467 - Remove image pin as we are using the ACS provided images
 #    image:
 #      repository: quay.io/alfresco/alfresco-dbp-share
 #      tag: "0.3-SNAPSHOT"
-  externalHost: "alfresco-cs-repository.REPLACEME"
+  externalHost: "alfresco-cs-repository.REPLACEME.nip.io"
   networkpolicysetting:
     enabled: false
-
 alfresco-sync-service:
   enabled: false
   alfresco-infrastructure:
     enabled: false
 
 activiti-cloud-full-example:
-# https://github.com/Activiti/activiti-cloud-modeling/issues/78
+# http://github.com/Activiti/activiti-cloud-modeling/issues/78
 # Remove the two values set here for modeling when issue is fixed
   activiti-cloud-modeling:
     backend: 

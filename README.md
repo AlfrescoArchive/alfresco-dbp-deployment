@@ -260,7 +260,7 @@ curl -O https://raw.githubusercontent.com/Alfresco/alfresco-dbp-deployment/maste
 
 Open it in your favorite text editor and replace all occurences of REPLACEME with the IP you previously got from step 8.
 
-### 11. Deploy the dbp
+### 11. Deploy the DBP
 
 ```bash
 # From within the same folder as your minimal-values file

@@ -466,7 +466,7 @@ Create a variable that stores an encoded version of your docker-config file.
 
 ```bash
 $dockerConfigFile = GET-CONTENT -Path "$env:USERPROFILE\.docker\config.json"
-$QUAY_SECRET =[Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($dockerConfigFile))
+$QUAY_SECRET =[Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes($dockerConfigFile))
 ```
 
 Create a secret.yaml file using the $QUAY_SECRET variable.

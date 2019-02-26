@@ -7,6 +7,7 @@ The Alfresco Digital Business Platform can be deployed to different environments
 - [Deploy to AWS using KOPS](#aws)
 - [Deploy to AWS using EKS](README-cfn.md)
 - [Deploy to Docker for Desktop - Mac](#docker-for-desktop---mac)
+- [Deploy to Docker for Desktop - Windows](#docker-for-desktop---windows)
 
 # AWS
 
@@ -331,3 +332,241 @@ You may find it helpful to see the Kubernetes resources visually which can be ac
 **Error: Invalid parameter: redirect_uri**
 
 After deploying the DBP, when accesing one of the applications, for example Process Services, if you receive the error message *We're sorry Invalid parameter: redirect_uri*, the `redirectUris` parameter provided for deployment is invalid. Make sure the `alfresco-infrastructure.alfresco-identity-service.client.alfresco.redirectUris` parameter has a valid value when installing the chart. For more details on how to configure it, check this [guide](https://github.com/Alfresco/alfresco-identity-service#changing-alfresco-client-redirecturis).
+
+
+# Docker for Desktop - Windows
+
+Note: All of the following commands will be using PowerShell. 
+
+### 1. Install Docker for Desktop
+
+Check recommended version [here](https://github.com/Alfresco/alfresco-dbp-deployment/blob/master/README-prerequisite.md#docker-desktop).
+
+### 2. Enable Kubernetes
+
+In the 'Kubernetes' tab of the Docker settings, click the 'Enable Kubernetes' checkbox.
+
+Run Command Prompt as an administrator.
+
+Enter the following commands to delete the storageClass hostpath and set up the hostpath provisioner: 
+
+```bash
+kubectl delete storageclass hostpath
+kubectl create -f https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/rbac.yaml
+kubectl create -f https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/deployment.yaml
+kubectl create -f https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/storageclass.yaml
+```
+
+### 3. Increase Memory and CPUs
+
+In the Advanced tab of the Docker preferences, set 'CPUs' to 4.
+
+While Alfresco Digital Business Platform installs and runs with only 8 GiB allocated to Docker, 
+for better performance we recommend that 'Memory' value be set slightly higher, to at least 10 - 12 GiB
+(depending on the size of RAM in your workstation). 
+
+### 4. Change/Verify Context
+
+If you have previously deployed the DBP to AWS or minikube you will need to change/verify that the `docker-for-desktop` context is being used.
+
+```bash
+kubectl config current-context                 # Display the current context
+kubectl config use-context docker-for-desktop  # Set the default context if needed
+```
+
+### 5. Restart Docker  
+
+Docker can be faulty on its first start. So, it is always safer to restart it before proceeding. Right click on the Docker icon in the system tray, then left click "restart...". 
+
+### 6. Install Helm
+
+Enable running scripts (If not there will be an error when running the next script).
+
+```bash
+Set-ExecutionPolicy RemoteSigned
+```
+
+In this approach, we are using Chocolatey to install Helm. So Download and run Chocolatey.
+
+```bash
+iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')) ; $Env:Path="$Env:Path" + ';' + "$Env:Allusersprofile\chocolatey\bin"
+``` 
+
+
+Install Helm
+
+```bash
+choco install kubernetes-helm
+```
+
+Initialize Tiller (Server Component)
+
+```bash
+helm init
+```
+
+### 7. Create your namespace
+
+Run the following command, making sure to replace "namespaceName" with your desired namespace name. 
+
+```bash
+$DESIREDNAMESPACE = "<namespaceName>"
+kubectl create namespace $DESIREDNAMESPACE
+```
+
+### 8. Pull secrets
+
+Go to the config.json file in "C:\Users\yourUserProfile\.docker", and delete anything inside the string after credsStore to make sure that it is empty as follows:
+
+```bash
+"credsStore": ""
+```
+
+
+Log in to quay.io.
+```bash
+docker login quay.io
+```
+Give your username and password if prompted.
+
+Create a variable that stores an encoded version of your docker-config file. 
+
+
+```bash
+$dockerConfigFile = GET-CONTENT -Path "$env:USERPROFILE\.docker\config.json"
+$QUAY_SECRET =[Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes($dockerConfigFile))
+```
+
+Create a secret.yaml file using the $QUAY_SECRET variable.
+
+```bash
+echo "apiVersion: v1
+kind: Secret
+metadata:
+  name: quay-registry-secret
+type: kubernetes.io/dockerconfigjson
+data:
+  .dockerconfigjson: $QUAY_SECRET" > secrets.yaml
+``` 
+ 
+
+Create the secret in your namespace. 
+
+```bash
+kubectl create -f secrets.yaml --namespace $DESIREDNAMESPACE
+```
+
+### 9. Add remote chart repository to Helm configuration.
+
+```bash
+helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubator
+```
+
+### 10. Authorize connections
+
+Go back to the config.json file, and check that there is a string after "auth", such as in the following example.
+
+```bash
+"auth": "klsdjfsdkifdsiEWRFJDOFfslakfdjsidjfdslfjds"
+```
+
+Do the following command to find your ipv4 address and copy it to your clipboard.
+
+```bash
+ipconfig
+```
+
+Note: If there are many ipv4 addresses, use the ipv4 address of the connection that you are currently using.
+
+
+Paste the ipv4 address at the end of the hosts file in C:\Windows\System32\drivers\etc, followed by "localhost-k8s" as in the following example. 
+
+```bash
+# Copyright (c) 1993-2009 Microsoft Corp.
+#
+# This is a sample HOSTS file used by Microsoft TCP/IP for Windows.
+#
+# This file contains the mappings of IP addresses to host names. Each
+# entry should be kept on an individual line. The IP address should
+# be placed in the first column followed by the corresponding host name.
+# The IP address and the host name should be separated by at least one
+# space.
+#
+# Additionally, comments (such as these) may be inserted on individual
+# lines or following the machine name denoted by a '#' symbol.
+#
+# For example:
+#
+#      102.54.94.97     rhino.acme.com          # source server
+#       38.25.63.10     x.acme.com              # x client host
+
+# localhost name resolution is handled within DNS itself.
+#	127.0.0.1       localhost
+#	::1             localhost
+
+# Added by Docker for Windows
+10.244.50.193 host.docker.internal
+10.244.50.193 gateway.docker.internal
+# End of section
+
+<Your ipv4 address> localhost-k8s
+
+```
+
+Note: Make sure to leave a new line at the end before saving it. 
+
+### 11. Install alfresco-dbp
+
+Copy and paste the following block into your command line.
+  
+```bash
+helm install alfresco-incubator/alfresco-dbp `
+--set alfresco-content-services.externalHost="localhost-k8s" `
+--set alfresco-content-services.networkpolicysetting.enabled=false `
+--set alfresco-content-services.repository.environment.IDENTITY_SERVICE_URI="http://localhost-k8s/auth" `
+--set alfresco-content-services.repository.replicaCount=1 `
+--set alfresco-content-services.repository.livenessProbe.initialDelaySeconds=420 `
+--set alfresco-content-services.pdfrenderer.livenessProbe.initialDelaySeconds=300 `
+--set alfresco-content-services.libreoffice.livenessProbe.initialDelaySeconds=300 `
+--set alfresco-content-services.imagemagick.livenessProbe.initialDelaySeconds=300 `
+--set alfresco-content-services.share.livenessProbe.initialDelaySeconds=420 `
+--set alfresco-content-services.repository.resources.requests.memory="2000Mi" `
+--set alfresco-content-services.pdfrenderer.resources.requests.memory="500Mi" `
+--set alfresco-content-services.imagemagick.resources.requests.memory="500Mi" `
+--set alfresco-content-services.libreoffice.resources.requests.memory="500Mi" `
+--set alfresco-content-services.share.resources.requests.memory="1000Mi" `
+--set alfresco-content-services.postgresql.resources.requests.memory="500Mi" `
+--set alfresco-process-services.processEngine.environment.IDENTITY_SERVICE_AUTH="http://localhost-k8s/auth" `
+--set alfresco-process-services.processEngine.resources.requests.memory="1000Mi" `
+--set alfresco-process-services.adminApp.resources.requests.memory="250Mi" `
+--namespace $DESIREDNAMESPACE
+```
+
+Repeatedly run the following command until you can see that all the pods are successfully installed. This can take up to one hour. 
+
+```bash
+kubectl get pods --namespace $DESIREDNAMESPACE
+```
+
+If any pods are failing, you can use each of the following commands to see more about their errors:
+
+```bash
+kubectl logs <podName> --namespace $DESIREDNAMESPACE
+kubectl describe pod <podName> --namespace $DESIREDNAMESPACE
+```
+
+
+
+### 12. Teardown:
+
+Use the following command to find the release name.
+
+```bash
+helm ls
+```
+
+Delete that release with the following command, replacing 'DBRELEASE' with the release name that you just retrieved in the previous command. 
+
+```bash 
+helm delete --purge <DBPRELEASE>
+```

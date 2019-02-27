@@ -824,7 +824,7 @@
 			"name": "04 Activiti-token-auth",
 			"item": [
 				{
-					"name": "Generate Keycloak admin access token Copy",
+					"name": "Generate Keycloak admin access token",
 					"event": [
 						{
 							"listen": "test",
@@ -930,6 +930,59 @@
 						"body": {
 							"mode": "raw",
 							"raw": ""
+						},
+						"url": {
+							"raw": "{{protocol}}://{{activitiUrl}}/rb-my-app/v1/process-definitions",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{activitiUrl}}"
+							],
+							"path": [
+								"rb-my-app",
+								"v1",
+								"process-definitions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Start Process",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "542c9bae-80f7-4cc6-8bb3-0e928e9f8e74",
+								"exec": [
+									"pm.test(\"Response code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Initiator of the process is admin\", function () {",
+									"    pm.expect(pm.response.json().initiator).to.eql(\"admin\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{kcAccessToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n \"processDefinitionKey\": \"SimpleProcess\",\n \"payloadType\":\"StartProcessPayload\"\n}"
 						},
 						"url": {
 							"raw": "{{protocol}}://{{activitiUrl}}/rb-my-app/v1/process-instances",

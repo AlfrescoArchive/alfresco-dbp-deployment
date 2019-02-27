@@ -1,3 +1,17 @@
+{{ if .Values.dnsaddress }}
+  {{ if contains "http" .Values.dnsaddress }}
+You can access all components of the dbp using the same root address, but different paths as follows:
+
+  Alfresco Digital Workspace: {{ .Values.dnsaddress }}/digital-workspace/#/login
+  Content: {{ .Values.dnsaddress }}/alfresco
+  Share: {{ .Values.dnsaddress }}/share
+  Solr: {{ .Values.dnsaddress }}/solr
+  Process: {{ .Values.dnsaddress }}/activiti-app
+  Alfresco Identity Service: {{ .Values.dnsaddress }}/auth/
+  {{ end }}
+
+{{ else if contains "http" (index .Values "alfresco-content-services" "repository" "environment" "IDENTITY_SERVICE_URI" ) }}
+
 If you have a specific DNS address for the cluster please run the following commands to get the application paths:
 
 helm upgrade --reuse-values {{ .Release.Name }} --set dnsaddress="Your DNS address ex: http://myenv.com" yourChartPath
@@ -5,14 +19,12 @@ helm upgrade --reuse-values {{ .Release.Name }} --set dnsaddress="Your DNS addre
 The chart path can either be local "." on in the helm repo "alfresco/alfresco-dbp".
 
 If you are using the default dbp setup you can access all components as follows:
+  Alfresco Digital Workspace: {{ index .Values "alfresco-content-services" "repository" "environment" "IDENTITY_SERVICE_URI" | trimSuffix "/" | trimSuffix "/auth" }}/digital-workspace/#/login
+  Content: {{ index .Values "alfresco-content-services" "repository" "environment" "IDENTITY_SERVICE_URI" | trimSuffix "/" | trimSuffix "/auth" }}/alfresco
+  Share: {{ index .Values "alfresco-content-services" "repository" "environment" "IDENTITY_SERVICE_URI" | trimSuffix "/" | trimSuffix "/auth" }}/share
+  Solr: {{ index .Values "alfresco-content-services" "repository" "environment" "IDENTITY_SERVICE_URI" | trimSuffix "/" | trimSuffix "/auth" }}/solr
+  APS: {{ index .Values "alfresco-content-services" "repository" "environment" "IDENTITY_SERVICE_URI" | trimSuffix "/" | trimSuffix "/auth" }}/activiti-app
+  APS Admin: {{ index .Values "alfresco-content-services" "repository" "environment" "IDENTITY_SERVICE_URI" | trimSuffix "/" | trimSuffix "/auth" }}/activiti-admin
+  Alfresco Identity Service: {{ index .Values "alfresco-content-services" "repository" "environment" "IDENTITY_SERVICE_URI" | trimSuffix "/" | trimSuffix "/auth" }}/auth/
 
-{{- $protocol := index (split ":" .Values.global.keycloak.url) "_0" -}}
-
-
-  Alfresco Digital Workspace: {{ $protocol }}://{{ index .Values "alfresco-content-services" "externalHost" }}/digital-workspace
-  Content: {{ $protocol }}://{{ index .Values "alfresco-content-services" "externalHost" }}/alfresco
-  Share: {{ $protocol }}://{{ index .Values "alfresco-content-services" "externalHost" }}/share
-  Solr: {{ $protocol }}://{{ index .Values "alfresco-content-services" "externalHost" }}/solr
-  Alfresco Identity Service: {{ index .Values "global" "keycloak" "url" }}
-  Activiti Cloud Gateway: {{ $protocol }}://{{ index .Values "global" "gateway" "host" }}
-  Activiti Modeling App: {{ $protocol }}://{{ index .Values "global" "gateway" "host" }}/activiti-cloud-modeling
+{{ end }}

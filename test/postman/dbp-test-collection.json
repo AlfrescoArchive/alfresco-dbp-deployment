@@ -924,7 +924,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{kcAccessToken}}"
+								"value": "Bearer {{kcAdminAccessToken}}"
 							}
 						],
 						"body": {
@@ -970,7 +970,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{kcAccessToken}}",
+								"value": "Bearer {{kcAdminAccessToken}}",
 								"type": "text"
 							},
 							{

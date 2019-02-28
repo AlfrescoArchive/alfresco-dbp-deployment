@@ -904,7 +904,7 @@
 					"response": []
 				},
 				{
-					"name": "getProcessInstances",
+					"name": "Get Process Instances",
 					"event": [
 						{
 							"listen": "test",

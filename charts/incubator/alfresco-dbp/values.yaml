@@ -141,16 +141,6 @@ alfresco-infrastructure:
           redirectUris:
             - "*"
 
-alfresco-digital-workspace:
-  APP_CONFIG_AUTH_TYPE: "OAUTH"
-  APP_CONFIG_OAUTH2_HOST: "https://alfresco-identity-service.REPLACEME/auth/realms/alfresco"
-  APP_CONFIG_OAUTH2_CLIENTID: "alfresco"
-  APP_CONFIG_OAUTH2_IMPLICIT_FLOW: "\"true\""
-  APP_CONFIG_OAUTH2_SILENT_LOGIN: "\"true\""
-  APP_CONFIG_OAUTH2_REDIRECT_LOGIN: "/digital-workspace/"
-  APP_CONFIG_OAUTH2_REDIRECT_LOGOUT: "/digital-workspace/logout"
-  enabled: false  
-
 alfresco-content-services:
   enabled: true
   registryPullSecrets: quay-registry-secret
@@ -187,6 +177,14 @@ alfresco-content-services:
   externalHost: "alfresco-cs-repository.REPLACEME"
   networkpolicysetting:
     enabled: false
+  alfresco-digital-workspace:
+    APP_CONFIG_AUTH_TYPE: "OAUTH"
+    APP_CONFIG_OAUTH2_HOST: "https://alfresco-identity-service.REPLACEME/auth/realms/alfresco"
+    APP_CONFIG_OAUTH2_CLIENTID: "alfresco"
+    APP_CONFIG_OAUTH2_IMPLICIT_FLOW: "\"true\""
+    APP_CONFIG_OAUTH2_SILENT_LOGIN: "\"true\""
+    APP_CONFIG_OAUTH2_REDIRECT_LOGIN: "/digital-workspace/"
+    APP_CONFIG_OAUTH2_REDIRECT_LOGOUT: "/digital-workspace/logout"
 
 alfresco-sync-service:
   enabled: false

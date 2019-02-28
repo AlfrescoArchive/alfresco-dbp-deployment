@@ -422,38 +422,23 @@ Go to the config.json file in "C:\Users\yourUserProfile\.docker", and delete any
 "credsStore": ""
 ```
 
-
-Log in to quay.io.
-```bash
-docker login quay.io
-```
-Give your username and password if prompted.
-
-Create a variable that stores an encoded version of your docker-config file. 
+In your browser, go to quay.io. And ensure that you are logged in.
 
 
-```bash
-$dockerConfigFile = GET-CONTENT -Path "$env:USERPROFILE\.docker\config.json"
-$QUAY_SECRET =[Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes($dockerConfigFile))
-```
+Navigate to 'Account Settings' > 'Generate Encrypted Password', and provide your password.
 
-Create a secret.yaml file using the $QUAY_SECRET variable.
+Click on the 'Kubernetes Secret' tab, and download your secret. 
+
+Open the secret file and change the name inside to the following. 
 
 ```bash
-echo "apiVersion: v1
-kind: Secret
-metadata:
   name: quay-registry-secret
-type: kubernetes.io/dockerconfigjson
-data:
-  .dockerconfigjson: $QUAY_SECRET" > secrets.yaml
-``` 
- 
+```
 
-Create the secret in your namespace. 
+Back in PowerShell, create the secret in your namespace, replacing "secret-name.yml" with the name of the yml file that you downloaded. 
 
 ```bash
-kubectl create -f secrets.yaml --namespace $DESIREDNAMESPACE
+kubectl create -f secret-name.yml --namespace $DESIREDNAMESPACE
 ```
 
 ### 9. Add remote chart repository to Helm configuration.

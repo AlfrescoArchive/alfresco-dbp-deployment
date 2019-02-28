@@ -1,182 +1,24 @@
-# Default values for Alfresco Process Services.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-replicaCount: 1
-
 global:
   keycloak:
-    resource: alfresco
-    realm: alfresco
-    client: alfresco
     url: "http://alfresco-identity-service.REPLACEME.nip.io/auth"
   gateway:
+    http: true
     host: &gatewayhost "activiti-cloud-gateway.REPLACEME.nip.io"
    
 alfresco-infrastructure:
-  enabled: true
   persistence:
     storageClass:
       enabled: true
       name: "hostpath"
-  alfresco-identity-service:
-    realm:
-      alfresco:
-        extraAdminUserRealmRoles:
-          - "ACTIVITI_ADMIN"
-          - "ACTIVITI_MODELER"
-          - "ACTIVITI_USER"
-        extraRealmRoles:
-        - name: "ACTIVITI_USER"
-        - name: "ACTIVITI_MODELER"
-        - name: "ACTIVITI_ADMIN"
-        extraGroups:
-          - name: "hr"
-          - name: "testgroup"
-        extraUsers:
-          - username: client
-            enabled: true
-            firstName: "client"
-            lastName: User
-            email: "client@test.com"
-            credentials:
-            - type: password
-              value: client
-            realmRoles:
-              - "offline_access"
-              - "uma_authorization"
-              - "ACTIVITI_USER"
-            clientRoles:
-              account:
-                - "manage-account"
-                - "view-profile"
-          - username: modeler
-            enabled: true
-            firstName: "modeler"
-            lastName: User
-            email: "modeler@test.com"
-            credentials:
-            - type: password
-              value: password
-            realmRoles:
-              - "offline_access"
-              - "uma_authorization"
-              - "ACTIVITI_MODELER"
-            clientRoles:
-              account:
-                - "manage-account"
-                - "view-profile"
-          - username: hruser
-            enabled: true
-            firstName: "hruser"
-            lastName: hruser
-            email: "hruser@test.com"
-            credentials:
-            - type: password
-              value: password
-            realmRoles:
-              - "offline_access"
-              - "uma_authorization"
-              - "ACTIVITI_USER"
-            clientRoles:
-              account:
-                - "manage-account"
-                - "view-profile"
-            groups:
-              - "hr"
-          - username: hradmin
-            enabled: true
-            firstName: "hradmin"
-            lastName: hradmin
-            email: "hradmin@test.com"
-            credentials:
-            - type: password
-              value: password
-            realmRoles:
-              - "offline_access"
-              - "uma_authorization"
-              - "ACTIVITI_USER"
-              - "ACTIVITI_ADMIN"
-            clientRoles:
-              account:
-                - "manage-account"
-                - "view-profile"
-            groups:
-              - "hr"
-          - username: testuser
-            enabled: true
-            firstName: "testuser"
-            lastName: testuser
-            email: "testuser@test.com"
-            credentials:
-            - type: password
-              value: password
-            realmRoles:
-              - "offline_access"
-              - "uma_authorization"
-              - "ACTIVITI_USER"
-            clientRoles:
-              account:
-                - "manage-account"
-                - "view-profile"
-            groups:
-              - "testgroup"
-          - username: testadmin
-            enabled: true
-            firstName: "testadmin"
-            lastName: testadmin
-            email: "testadmin@test.com"
-            credentials:
-            - type: password
-              value: password
-            realmRoles:
-              - "offline_access"
-              - "uma_authorization"
-              - "ACTIVITI_USER"
-              - "ACTIVITI_ADMIN"
-            clientRoles:
-              account:
-                - "manage-account"
-                - "view-profile"
-            groups:  
-              - "testgroup"
-        client:
-          webOrigins:
-            - "*"
-          redirectUris:
-            - "*"
 
 alfresco-digital-workspace:
-  APP_CONFIG_AUTH_TYPE: "OAUTH"
   APP_CONFIG_OAUTH2_HOST: "http://alfresco-identity-service.REPLACEME.nip.io/auth/realms/alfresco"
-  APP_CONFIG_OAUTH2_CLIENTID: "alfresco"
-  APP_CONFIG_OAUTH2_IMPLICIT_FLOW: "\"true\""
-  APP_CONFIG_OAUTH2_SILENT_LOGIN: "\"true\""
-  APP_CONFIG_OAUTH2_REDIRECT_LOGIN: "/digital-workspace/"
-  APP_CONFIG_OAUTH2_REDIRECT_LOGOUT: "/digital-workspace/logout"
-  enabled: false  
 
 alfresco-content-services:
-  enabled: true
-  registryPullSecrets: quay-registry-secret
-  messageBroker:
-    url:
-    user: admin
-    password: admin
-  alfresco-infrastructure:
-    enabled: false
-    activemq:
-      enabled: false
   repository:
-  # DEPLOY-466 / DEPLOY-467 - Remove image pin as we are using the ACS provided images
-  #    image:
-  #      repository: quay.io/alfresco/alfresco-dbp-repository
-  #      tag: "0.3-SNAPSHOT"
-    ingress:
-      path: "/alfresco"
     environment:
-      # The SYNC_SERVICE_URI should contain the details of the ingress host and port.
-      SYNC_SERVICE_URI: "<ingresscontrollerurl>/syncservice"
-      # The IDENTITY_SERVICE_URI should contain the details of the ingress host and port.
       IDENTITY_SERVICE_URI: "http://alfresco-identity-service.REPLACEME.nip.io/auth"
       JAVA_OPTS: " -Dsolr.base.url=/solr
         -Dsolr.secureComms=none
@@ -216,42 +58,4 @@ alfresco-content-services:
   filestore:
     livenessProbe:
       initialDelaySeconds: 400
-# DEPLOY-466 / DEPLOY-467 - Remove image pin as we are using the ACS provided images
-#    image:
-#      repository: quay.io/alfresco/alfresco-dbp-share
-#      tag: "0.3-SNAPSHOT"
   externalHost: "alfresco-cs-repository.REPLACEME.nip.io"
-  networkpolicysetting:
-    enabled: false
-alfresco-sync-service:
-  enabled: false
-  alfresco-infrastructure:
-    enabled: false
-
-activiti-cloud-full-example:
-# http://github.com/Activiti/activiti-cloud-modeling/issues/78
-# Remove the two values set here for modeling when issue is fixed
-  activiti-cloud-modeling:
-    backend: 
-      extraEnv: |
-        - name: "ACT_KEYCLOAK_REALM"
-          value: "alfresco"
-        - name: "ACT_KEYCLOAK_RESOURCE"
-          value: "alfresco"
-  enabled: true
-  infrastructure:
-    activiti-cloud-gateway:
-      ingress:
-        enabled: true
-        hostName: *gatewayhost
-        annotations:
-          kubernetes.io/ingress.class: nginx
-          nginx.ingress.kubernetes.io/rewrite-target: /
-          nginx.ingress.kubernetes.io/enable-cors: true
-          nginx.ingress.kubernetes.io/cors-allow-headers: "*"
-          nginx.ingress.kubernetes.io/x-forwarded-prefix: true
-infrastructure:
-  activiti-keycloak:
-    enabled: false
-activiti-cloud-modeling:
-  enabled: true

@@ -140,20 +140,6 @@ alfresco-infrastructure:
             - "*"
           redirectUris:
             - "*"
-  # nginx-ingress:
-  #   controller:
-  #     publishService:
-  #       enabled: true
-  #     service:
-  #       targetPorts:
-  #         http: http
-  #         https: http
-  #       annotations:
-  #         external-dns.alpha.kubernetes.io/hostname: "*.$ELB_CNAME"
-  #         service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "https"
-  #         service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: '3600'
-  #         service.beta.kubernetes.io/aws-load-balancer-ssl-cert: $ELB_CERTIFICATE_ARN
-  #         service.beta.kubernetes.io/aws-load-balancer-ssl-ports: https
 
 alfresco-digital-workspace:
   APP_CONFIG_AUTH_TYPE: "OAUTH"
@@ -177,10 +163,6 @@ alfresco-content-services:
     activemq:
       enabled: false
   repository:
-  # DEPLOY-466 / DEPLOY-467 - Remove image pin as we are using the ACS provided images
-  #    image:
-  #      repository: quay.io/alfresco/alfresco-dbp-repository
-  #      tag: "0.3-SNAPSHOT"
     ingress:
       path: "/alfresco"
     environment:
@@ -202,10 +184,6 @@ alfresco-content-services:
         -Didentity-service.realm=alfresco
         -Didentity-service.resource=alfresco"
 
-# DEPLOY-466 / DEPLOY-467 - Remove image pin as we are using the ACS provided images
-#    image:
-#      repository: quay.io/alfresco/alfresco-dbp-share
-#      tag: "0.3-SNAPSHOT"
   externalHost: "alfresco-cs-repository.REPLACEME"
   networkpolicysetting:
     enabled: false

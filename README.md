@@ -115,10 +115,7 @@ Pull the values file from the current repo:
 curl -O https://raw.githubusercontent.com/Alfresco/alfresco-dbp-deployment/master/charts/incubator/alfresco-dbp/values.yaml
 ```
 
-Open it in your favorite text editor and replace all occurences of REPLACEME with your domain.
-
-***Note!***
-Please create a wildcard domain for external-dns (eg. “*.DOMAIN”) as explained [here](https://github.com/Alfresco/alfresco-infrastructure-deployment#nginx-ingress-custom-configuration)
+Open it in your favorite text editor and replace all occurences of REPLACEME with your desired Route53 entry "YourDesiredCname.YourRoute53DnsZone"
 
 ### 4. Deploy the DBP
 
@@ -153,7 +150,30 @@ If you are using `https` you should include the following setting in your helm i
 
 If you want to include multiple uris for alfresco client redirect uris check this [guide](https://github.com/Alfresco/alfresco-identity-service#changing-alfresco-client-redirecturis).
 
-### 5. Checkout the status of your DBP deployment:
+### 5. Get the DBP release name from the previous command and set it as a variable:
+
+```bash
+export DBPRELEASE=littering-lizzard
+```
+
+### 6. Get ELB IP and copy it for linking the ELB in AWS Route53:
+
+```bash
+export ELBADDRESS=$(kubectl get services $DBPRELEASE-nginx-ingress-controller --namespace=$DESIREDNAMESPACE -o jsonpath={.status.loadBalancer.ingress[0].hostname})
+echo $ELBADDRESS
+```
+
+### 7. Create a Route 53 Record Set in your Hosted Zone
+
+* Go to **AWS Management Console** and open the **Route 53** console.
+* Click **Hosted Zones** in the left navigation panel, then **Create Record Set**.
+* In the **Name** field, enter your dns name defined in step 3 prefixed by "*." , for example: "`*.YourDesiredCname.YourRoute53DnsZone`".
+* In the **Alias Target**, select your ELB address ("`$ELBADDRESS`").
+* Click **Create**.
+
+You may need to wait a couple of minutes before the record set propagates around the world.
+
+### 8. Checkout the status of your DBP deployment:
 
 *Note:* When checking status, your pods should be ```READY x/x```
 
@@ -279,12 +299,15 @@ kubectl get pods
 ### 13. Check DBP Components
 
 You can access DBP components at the following URLs:
+
+
   Alfresco Digital Workspace: http://alfresco-cs-repository.YOURIP.nip.io/digital-workspace/
   Content: http://alfresco-cs-repository.YOURIP.nip.io/alfresco
   Share: http://alfresco-cs-repository.YOURIP.nip.io/share
   Alfresco Identity Service: http://alfresco-identity-service.YOURIP.nip.io/auth
   Activiti Cloud Gateway: http://activiti-cloud-gateway.YOURIP.nip.io
   Activiti Modeling App: http://activiti-cloud-gateway.YOURIP.nip.io/activiti-cloud-modeling
+
   
 ### 14. Teardown:
 

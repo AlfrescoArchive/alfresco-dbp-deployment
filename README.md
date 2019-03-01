@@ -109,13 +109,20 @@ helm repo add alfresco-stable https://kubernetes-charts.alfresco.com/stable
 
 ### 3. Configure domain in your values file
 
-Pull the values file from the current repo:
+Depending on the dnszone you have configured in our aws account, define an entry you would like to use for your deployment.
+
+```bash
+export DNSZONE=YourDesiredCname.YourRoute53DnsZone
+```
+
+Afterwards pull the helm values file from the current repo:
 
 ```bash
 curl -O https://raw.githubusercontent.com/Alfresco/alfresco-dbp-deployment/master/charts/incubator/alfresco-dbp/values.yaml
+sed -i s/REPLACEME/$DNSZONE/g values.yaml
 ```
 
-Open it in your favorite text editor and replace all occurences of REPLACEME with your desired Route53 entry "YourDesiredCname.YourRoute53DnsZone"
+Note! The name for the DNS entry you are defining here will be set in route53 later on.
 
 ### 4. Deploy the DBP
 
@@ -258,7 +265,7 @@ helm repo add alfresco-stable https://kubernetes-charts.alfresco.com/stable
 We will be forming a local dns with the use of nip.io. All you have to do it get your ip using the following command.
 
 ```bash
-ipconfig getifaddr en0
+export LOCALIP=$(ipconfig getifaddr en0)
 ```
 
 *Note:* Save this ip for later use.
@@ -277,9 +284,8 @@ Pull the minimal values file from the current repo:
 
 ```bash
 curl -O https://raw.githubusercontent.com/Alfresco/alfresco-dbp-deployment/master/charts/incubator/alfresco-dbp/minimal-values.yaml
+sed -i s/REPLACEME/$LOCALIP/g minimal-values.yaml
 ```
-
-Open it in your favorite text editor and replace all occurences of REPLACEME with the IP you previously got from step 8.
 
 ### 11. Deploy the DBP
 

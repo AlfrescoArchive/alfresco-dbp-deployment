@@ -476,7 +476,32 @@ kubectl create -f secret-name.yml --namespace $DESIREDNAMESPACE
 helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubator
 ```
 
-### 10. Authorize connections
+### 10. Add Local DNS
+
+We will be forming a local dns with the use of nip.io. All you have to do is get your ip using the following command.
+
+```bash
+$LOCALIP = (
+    Get-NetIPConfiguration |
+    Where-Object {
+        $_.IPv4DefaultGateway -ne $null -and
+        $_.NetAdapter.Status -ne "Disconnected"
+    }
+).IPv4Address.IPAddress
+```
+
+### 11. Download and modify the minimal-values.yaml file
+
+The minimal-values.yaml file contains values for local only development and multiple components are disabled with the purpose of reducing the memory footprint of the Digital Business Platform. This should not be used as a starting point for production use.
+
+Pull the minimal values file from the current repo:
+
+```bash
+Invoke-WebRequest -Uri https://raw.githubusercontent.com/Alfresco/alfresco-dbp-deployment/master/charts/incubator/alfresco-dbp/minimal-values.yaml -OutFile minimal-values.yaml
+(Get-Content minimal-values.yaml).replace('REPLACEME', $LOCALIP) | Set-Content minimal-values.yaml
+```
+
+### 12. Authorize connections
 
 Go back to the config.json file, and check that there is a string after "auth", such as in the following example.
 
@@ -529,38 +554,34 @@ Paste the ipv4 address at the end of the hosts file in C:\Windows\System32\drive
 
 Note: Make sure to leave a new line at the end before saving it. 
 
-### 11. Install alfresco-dbp
+### 13. Install alfresco-dbp
 
 Copy and paste the following block into your command line.
   
 ```bash
-helm install alfresco-incubator/alfresco-dbp `
---set alfresco-content-services.externalHost="localhost-k8s" `
---set alfresco-content-services.networkpolicysetting.enabled=false `
---set alfresco-content-services.repository.environment.IDENTITY_SERVICE_URI="http://localhost-k8s/auth" `
---set alfresco-content-services.repository.replicaCount=1 `
---set alfresco-content-services.repository.livenessProbe.initialDelaySeconds=420 `
---set alfresco-content-services.pdfrenderer.livenessProbe.initialDelaySeconds=300 `
---set alfresco-content-services.libreoffice.livenessProbe.initialDelaySeconds=300 `
---set alfresco-content-services.imagemagick.livenessProbe.initialDelaySeconds=300 `
---set alfresco-content-services.share.livenessProbe.initialDelaySeconds=420 `
---set alfresco-content-services.repository.resources.requests.memory="2000Mi" `
---set alfresco-content-services.pdfrenderer.resources.requests.memory="500Mi" `
---set alfresco-content-services.imagemagick.resources.requests.memory="500Mi" `
---set alfresco-content-services.libreoffice.resources.requests.memory="500Mi" `
---set alfresco-content-services.share.resources.requests.memory="1000Mi" `
---set alfresco-content-services.postgresql.resources.requests.memory="500Mi" `
---set alfresco-process-services.processEngine.environment.IDENTITY_SERVICE_AUTH="http://localhost-k8s/auth" `
---set alfresco-process-services.processEngine.resources.requests.memory="1000Mi" `
---set alfresco-process-services.adminApp.resources.requests.memory="250Mi" `
---namespace $DESIREDNAMESPACE
+# From within the same folder as your minimal-values file
+helm install alfresco-incubator/alfresco-dbp -f minimal-values.yaml
 ```
 
-Repeatedly run the following command until you can see that all the pods are successfully installed. This can take up to one hour. 
+### 14. Check Deployment Status of DBP
 
 ```bash
-kubectl get pods --namespace $DESIREDNAMESPACE
+kubectl get pods
 ```
+
+*Note:* When checking status, your pods should be `READY x/x` and `STATUS Running`
+
+### 15. Check DBP Components
+
+You can access DBP components at the following URLs:
+
+
+  Alfresco Digital Workspace: http://alfresco-cs-repository.YOURIP.nip.io/digital-workspace/
+  Content: http://alfresco-cs-repository.YOURIP.nip.io/alfresco
+  Share: http://alfresco-cs-repository.YOURIP.nip.io/share
+  Alfresco Identity Service: http://alfresco-identity-service.YOURIP.nip.io/auth
+  Activiti Cloud Gateway: http://activiti-cloud-gateway.YOURIP.nip.io
+  Activiti Modeling App: http://activiti-cloud-gateway.YOURIP.nip.io/activiti-cloud-modeling
 
 If any pods are failing, you can use each of the following commands to see more about their errors:
 
@@ -571,7 +592,7 @@ kubectl describe pod <podName> --namespace $DESIREDNAMESPACE
 
 
 
-### 12. Teardown:
+### 16. Teardown:
 
 Use the following command to find the release name.
 

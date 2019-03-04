@@ -1,0 +1,61 @@
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+global:
+  keycloak:
+    url: "http://alfresco-identity-service.REPLACEME.nip.io/auth"
+  gateway:
+    http: true
+    host: &gatewayhost "activiti-cloud-gateway.REPLACEME.nip.io"
+   
+alfresco-infrastructure:
+  persistence:
+    storageClass:
+      enabled: true
+      name: "hostpath"
+
+alfresco-digital-workspace:
+  APP_CONFIG_OAUTH2_HOST: "http://alfresco-identity-service.REPLACEME.nip.io/auth/realms/alfresco"
+
+alfresco-content-services:
+  repository:
+    environment:
+      IDENTITY_SERVICE_URI: "http://alfresco-identity-service.REPLACEME.nip.io/auth"
+      JAVA_OPTS: " -Dsolr.base.url=/solr
+        -Dsolr.secureComms=none
+        -Dindex.subsystem.name=solr6
+        -Dalfresco.cluster.enabled=true
+        -Ddeployment.method=HELM_CHART
+        -Xms1800M -Xmx1800M
+        -Ddsync.service.uris=\"$SYNC_SERVICE_URI\"
+        -Dauthentication.chain=identity-service1:identity-service,alfrescoNtlm1:alfrescoNtlm
+        -Didentity-service.enable-basic-auth=true
+        -Didentity-service.authentication.validation.failure.silent=false
+        -Didentity-service.auth-server-url=\"$IDENTITY_SERVICE_URI\"
+        -Didentity-service.realm=alfresco
+        -Didentity-service.resource=alfresco
+        -Dlocal.transform.service.enabled=false
+        -Dtransform.service.enabled=false"
+    replicaCount: 1
+    livenessProbe:
+      initialDelaySeconds: 420
+    readynessProbe:
+      initialDelaySeconds: 500
+    resources:
+      requests:
+        memory: "1800Mi"
+  transformrouter:
+    replicaCount: 0
+  imagemagick:
+    replicaCount: 0
+  libreoffice:
+    replicaCount: 0
+  pdfrenderer:
+    replicaCount: 0
+  tika:
+    replicaCount: 0
+  share:
+    replicaCount: 0
+  filestore:
+    livenessProbe:
+      initialDelaySeconds: 400
+  externalHost: "alfresco-cs-repository.REPLACEME.nip.io"

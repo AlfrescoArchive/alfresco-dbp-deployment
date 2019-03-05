@@ -490,24 +490,37 @@ $LOCALIP = (
 ).IPv4Address.IPAddress
 ```
 
-### 11. Download and modify the minimal-values.yaml file
 
-The minimal-values.yaml file contains values for local only development and multiple components are disabled with the purpose of reducing the memory footprint of the Digital Business Platform. This should not be used as a starting point for production use.
 
-Pull the minimal values file from the current repo:
-
-```bash
-Invoke-WebRequest -Uri https://raw.githubusercontent.com/Alfresco/alfresco-dbp-deployment/master/charts/incubator/alfresco-dbp/minimal-values.yaml -OutFile minimal-values.yaml
-(Get-Content minimal-values.yaml).replace('REPLACEME', $LOCALIP) | Set-Content minimal-values.yaml
-```
-
-### 12. Authorize connections
+### 11. Authorize connections
 
 Go back to the config.json file, and check that there is a string after "auth", such as in the following example.
 
 ```bash
 "auth": "klsdjfsdkifdsiEWRFJDOFfslakfdjsidjfdslfjds"
 ```
+
+### 12. Add IPv4 address
+The following code should add your IP address to the correct location, however, if you have any errors, see the next step for how to do it manually. Also, this relies on having made the $LOCALIP variable from one of the previous steps. 
+
+```bash
+$file = Get-Content C:\Windows\System32\drivers\etc\hosts
+$containsWord = $file | %{$_ -match 'localhost-k8s'}
+
+If($containsWord -contains $true)
+{
+    $line = Get-Content C:\Windows\System32\drivers\etc\hosts | Select-String 'localhost-k8s' | Select-Object -ExpandProperty Line
+    $file | ForEach-Object {$_ -replace $line, "$($LOCALIP) localhost-k8s"} | Set-Content C:\Windows\System32\drivers\etc\hosts
+    echo 'The keyword exists so the line has been replaced'
+
+} Else {
+    Add-Content C:\Windows\System32\drivers\etc\hosts -Exclude help* -Value "`n`n $($LOCALIP) localhost-k8s `n"
+    echo 'The keyword does not exist so the line has been added to the bottom'
+}
+```
+
+### 13. Add IPv4 address Manually
+Skip this step if the previous step worked for you. 
 
 Do the following command to find your ipv4 address and copy it to your clipboard.
 
@@ -554,7 +567,18 @@ Paste the ipv4 address at the end of the hosts file in C:\Windows\System32\drive
 
 Note: Make sure to leave a new line at the end before saving it. 
 
-### 13. Install alfresco-dbp
+### 14. Download and modify the minimal-values.yaml file
+
+The minimal-values.yaml file contains values for local only development and multiple components are disabled with the purpose of reducing the memory footprint of the Digital Business Platform. This should not be used as a starting point for production use.
+
+Pull the minimal values file from the current repo:
+
+```bash
+Invoke-WebRequest -Uri https://raw.githubusercontent.com/Alfresco/alfresco-dbp-deployment/master/charts/incubator/alfresco-dbp/minimal-values.yaml -OutFile minimal-values.yaml
+(Get-Content minimal-values.yaml).replace('REPLACEME', $LOCALIP) | Set-Content minimal-values.yaml
+```
+
+### 15. Install alfresco-dbp
 
 Copy and paste the following block into your command line.
   
@@ -563,7 +587,7 @@ Copy and paste the following block into your command line.
 helm install alfresco-incubator/alfresco-dbp -f minimal-values.yaml
 ```
 
-### 14. Check Deployment Status of DBP
+### 16. Check Deployment Status of DBP
 
 ```bash
 kubectl get pods
@@ -571,10 +595,9 @@ kubectl get pods
 
 *Note:* When checking status, your pods should be `READY x/x` and `STATUS Running`
 
-### 15. Check DBP Components
+### 17. Check DBP Components
 
 You can access DBP components at the following URLs:
-
 
   Alfresco Digital Workspace: http://alfresco-cs-repository.YOURIP.nip.io/digital-workspace/
   Content: http://alfresco-cs-repository.YOURIP.nip.io/alfresco
@@ -592,7 +615,7 @@ kubectl describe pod <podName> --namespace $DESIREDNAMESPACE
 
 
 
-### 16. Teardown:
+### 18. Teardown:
 
 Use the following command to find the release name.
 

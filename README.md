@@ -432,6 +432,8 @@ Initialize Tiller (Server Component)
 
 ```bash
 helm init
+kubectl create clusterrolebinding tiller-clusterrole-binding --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+
 ```
 
 ### 7. Create your namespace

@@ -491,8 +491,6 @@ $LOCALIP = (
 ).IPv4Address.IPAddress
 ```
 
-
-
 ### 11. Authorize connections
 
 Go back to the config.json file, and check that there is a string after "auth", such as in the following example.
@@ -501,74 +499,7 @@ Go back to the config.json file, and check that there is a string after "auth", 
 "auth": "klsdjfsdkifdsiEWRFJDOFfslakfdjsidjfdslfjds"
 ```
 
-### 12. Add IPv4 address
-The following code should add your IP address to the correct location, however, if you have any errors, see the next step for how to do it manually. Also, this relies on having made the $LOCALIP variable from one of the previous steps. 
-
-```bash
-$file = Get-Content C:\Windows\System32\drivers\etc\hosts
-$containsWord = $file | %{$_ -match 'localhost-k8s'}
-
-If($containsWord -contains $true)
-{
-    $line = Get-Content C:\Windows\System32\drivers\etc\hosts | Select-String 'localhost-k8s' | Select-Object -ExpandProperty Line
-    $file | ForEach-Object {$_ -replace $line, "$($LOCALIP) localhost-k8s"} | Set-Content C:\Windows\System32\drivers\etc\hosts
-    echo 'The keyword exists so the line has been replaced'
-
-} Else {
-    Add-Content C:\Windows\System32\drivers\etc\hosts -Exclude help* -Value "`n`n $($LOCALIP) localhost-k8s `n"
-    echo 'The keyword does not exist so the line has been added to the bottom'
-}
-```
-
-### 13. Add IPv4 address Manually
-Skip this step if the previous step worked for you. 
-
-Do the following command to find your ipv4 address and copy it to your clipboard.
-
-```bash
-ipconfig
-```
-
-Note: If there are many ipv4 addresses, use the ipv4 address of the connection that you are currently using.
-
-
-Paste the ipv4 address at the end of the hosts file in C:\Windows\System32\drivers\etc, followed by "localhost-k8s" as in the following example. 
-
-```bash
-# Copyright (c) 1993-2009 Microsoft Corp.
-#
-# This is a sample HOSTS file used by Microsoft TCP/IP for Windows.
-#
-# This file contains the mappings of IP addresses to host names. Each
-# entry should be kept on an individual line. The IP address should
-# be placed in the first column followed by the corresponding host name.
-# The IP address and the host name should be separated by at least one
-# space.
-#
-# Additionally, comments (such as these) may be inserted on individual
-# lines or following the machine name denoted by a '#' symbol.
-#
-# For example:
-#
-#      102.54.94.97     rhino.acme.com          # source server
-#       38.25.63.10     x.acme.com              # x client host
-
-# localhost name resolution is handled within DNS itself.
-#	127.0.0.1       localhost
-#	::1             localhost
-
-# Added by Docker for Windows
-10.244.50.193 host.docker.internal
-10.244.50.193 gateway.docker.internal
-# End of section
-
-<Your ipv4 address> localhost-k8s
-
-```
-
-Note: Make sure to leave a new line at the end before saving it. 
-
-### 14. Download and modify the minimal-values.yaml file
+### 12. Download and modify the minimal-values.yaml file
 
 The minimal-values.yaml file contains values for local only development and multiple components are disabled with the purpose of reducing the memory footprint of the Digital Business Platform. This should not be used as a starting point for production use.
 
@@ -579,7 +510,7 @@ Invoke-WebRequest -Uri https://raw.githubusercontent.com/Alfresco/alfresco-dbp-d
 (Get-Content minimal-values.yaml).replace('REPLACEME', $LOCALIP) | Set-Content minimal-values.yaml
 ```
 
-### 15. Install alfresco-dbp
+### 13. Install alfresco-dbp
 
 Copy and paste the following block into your command line.
   
@@ -588,7 +519,7 @@ Copy and paste the following block into your command line.
 helm install alfresco-incubator/alfresco-dbp -f minimal-values.yaml
 ```
 
-### 16. Check Deployment Status of DBP
+### 14. Check Deployment Status of DBP
 
 ```bash
 kubectl get pods
@@ -596,7 +527,7 @@ kubectl get pods
 
 *Note:* When checking status, your pods should be `READY x/x` and `STATUS Running`
 
-### 17. Check DBP Components
+### 15. Check DBP Components
 
 You can access DBP components at the following URLs:
 
@@ -614,9 +545,7 @@ kubectl logs <podName> --namespace $DESIREDNAMESPACE
 kubectl describe pod <podName> --namespace $DESIREDNAMESPACE
 ```
 
-
-
-### 18. Teardown:
+### 16. Teardown:
 
 Use the following command to find the release name.
 

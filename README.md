@@ -7,6 +7,7 @@ The Alfresco Digital Business Platform can be deployed to different environments
 - [Deploy to AWS using KOPS](#aws)
 - [Deploy to AWS using EKS](README-cfn.md)
 - [Deploy to Docker for Desktop - Mac](#docker-for-desktop---mac)
+- [Deploy to Docker for Desktop - Windows](#docker-for-desktop---windows)
 
 # AWS
 
@@ -360,3 +361,200 @@ You may find it helpful to see the Kubernetes resources visually which can be ac
 **Error: Invalid parameter: redirect_uri**
 
 After deploying the DBP, when accesing one of the applications, for example Process Services, if you receive the error message *We're sorry Invalid parameter: redirect_uri*, the `redirectUris` parameter provided for deployment is invalid. Make sure the `alfresco-infrastructure.alfresco-identity-service.client.alfresco.redirectUris` parameter has a valid value when installing the chart. For more details on how to configure it, check this [guide](https://github.com/Alfresco/alfresco-identity-service#changing-alfresco-client-redirecturis).
+
+# Docker for Desktop - Windows
+
+Note: All of the following commands will be using PowerShell. 
+
+### 1. Install Docker for Desktop
+
+Check recommended version [here](https://github.com/Alfresco/alfresco-dbp-deployment/blob/master/README-prerequisite.md#docker-desktop).
+
+### 2. Enable Kubernetes
+
+In the 'Kubernetes' tab of the Docker settings, click the 'Enable Kubernetes' checkbox.
+
+Run Command Prompt as an administrator.
+
+Enter the following commands to delete the storageClass hostpath and set up the hostpath provisioner: 
+
+```bash
+kubectl delete storageclass hostpath
+kubectl create -f https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/rbac.yaml
+kubectl create -f https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/deployment.yaml
+kubectl create -f https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/storageclass.yaml
+```
+
+### 3. Increase Memory and CPUs
+
+In the Advanced tab of the Docker preferences, set 'CPUs' to 4.
+
+While Alfresco Digital Business Platform installs and runs with only 8 GiB allocated to Docker, 
+for better performance we recommend that 'Memory' value be set slightly higher, to at least 10 - 12 GiB
+(depending on the size of RAM in your workstation). 
+
+### 4. Change/Verify Context
+
+If you have previously deployed the DBP to AWS or minikube you will need to change/verify that the `docker-for-desktop` context is being used.
+
+```bash
+kubectl config current-context                 # Display the current context
+kubectl config use-context docker-for-desktop  # Set the default context if needed
+```
+
+### 5. Restart Docker  
+
+Docker can be faulty on its first start. So, it is always safer to restart it before proceeding. Right click on the Docker icon in the system tray, then left click "restart...". 
+
+### 6. Install Helm
+
+Enable running scripts (If not there will be an error when running the next script).
+
+```bash
+Set-ExecutionPolicy RemoteSigned
+```
+
+In this approach, we are using Chocolatey to install Helm. So Download and run Chocolatey.
+
+```bash
+iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')) ; $Env:Path="$Env:Path" + ';' + "$Env:Allusersprofile\chocolatey\bin"
+``` 
+
+
+Install Helm
+
+```bash
+choco install kubernetes-helm
+```
+
+Initialize Tiller (Server Component)
+
+```bash
+helm init
+kubectl create clusterrolebinding tiller-clusterrole-binding --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+
+```
+
+### 7. Create your namespace
+
+Run the following command, making sure to replace "namespaceName" with your desired namespace name. 
+
+```bash
+$DESIREDNAMESPACE = "<namespaceName>"
+kubectl create namespace $DESIREDNAMESPACE
+```
+
+### 8. Pull secrets
+
+Go to the config.json file in "C:\Users\yourUserProfile\.docker", and delete anything inside the string after credsStore to make sure that it is empty as follows:
+
+```bash
+"credsStore": ""
+```
+
+In your browser, go to quay.io. And ensure that you are logged in.
+
+
+Navigate to 'Account Settings' > 'Generate Encrypted Password', and provide your password.
+
+Click on the 'Kubernetes Secret' tab, and download your secret. 
+
+Open the secret file and change the name inside to the following. 
+
+```bash
+  name: quay-registry-secret
+```
+
+Back in PowerShell, create the secret in your namespace, replacing "secret-name.yml" with the name of the yml file that you downloaded. 
+
+```bash
+kubectl create -f secret-name.yml --namespace $DESIREDNAMESPACE
+```
+
+### 9. Add remote chart repository to Helm configuration.
+
+```bash
+helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubator
+```
+
+### 10. Add Local DNS
+
+We will be forming a local dns with the use of nip.io. All you have to do is get your ip using the following command.
+
+```bash
+$LOCALIP = (
+    Get-NetIPConfiguration |
+    Where-Object {
+        $_.IPv4DefaultGateway -ne $null -and
+        $_.NetAdapter.Status -ne "Disconnected"
+    }
+).IPv4Address.IPAddress
+```
+
+### 11. Authorize connections
+
+Go back to the config.json file, and check that there is a string after "auth", such as in the following example.
+
+```bash
+"auth": "klsdjfsdkifdsiEWRFJDOFfslakfdjsidjfdslfjds"
+```
+
+### 12. Download and modify the minimal-values.yaml file
+
+The minimal-values.yaml file contains values for local only development and multiple components are disabled with the purpose of reducing the memory footprint of the Digital Business Platform. This should not be used as a starting point for production use.
+
+Pull the minimal values file from the current repo:
+
+```bash
+Invoke-WebRequest -Uri https://raw.githubusercontent.com/Alfresco/alfresco-dbp-deployment/master/charts/incubator/alfresco-dbp/minimal-values.yaml -OutFile minimal-values.yaml
+(Get-Content minimal-values.yaml).replace('REPLACEME', $LOCALIP) | Set-Content minimal-values.yaml
+```
+
+### 13. Install alfresco-dbp
+
+Copy and paste the following block into your command line.
+  
+```bash
+# From within the same folder as your minimal-values file
+helm install alfresco-incubator/alfresco-dbp -f minimal-values.yaml
+```
+
+### 14. Check Deployment Status of DBP
+
+```bash
+kubectl get pods
+```
+
+*Note:* When checking status, your pods should be `READY x/x` and `STATUS Running`
+
+### 15. Check DBP Components
+
+You can access DBP components at the following URLs:
+
+  Alfresco Digital Workspace: http://alfresco-cs-repository.YOURIP.nip.io/digital-workspace/
+  Content: http://alfresco-cs-repository.YOURIP.nip.io/alfresco
+  Share: http://alfresco-cs-repository.YOURIP.nip.io/share
+  Alfresco Identity Service: http://alfresco-identity-service.YOURIP.nip.io/auth
+  Activiti Cloud Gateway: http://activiti-cloud-gateway.YOURIP.nip.io
+  Activiti Modeling App: http://activiti-cloud-gateway.YOURIP.nip.io/activiti-cloud-modeling
+
+If any pods are failing, you can use each of the following commands to see more about their errors:
+
+```bash
+kubectl logs <podName> --namespace $DESIREDNAMESPACE
+kubectl describe pod <podName> --namespace $DESIREDNAMESPACE
+```
+
+### 16. Teardown:
+
+Use the following command to find the release name.
+
+```bash
+helm ls
+```
+
+Delete that release with the following command, replacing 'DBRELEASE' with the release name that you just retrieved in the previous command. 
+
+```bash 
+helm delete --purge <DBPRELEASE>
+```

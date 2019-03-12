@@ -516,7 +516,7 @@ Copy and paste the following block into your command line.
   
 ```bash
 # From within the same folder as your minimal-values file
-helm install alfresco-incubator/alfresco-dbp -f minimal-values.yaml
+helm install alfresco-incubator/alfresco-dbp -f minimal-values.yaml --namespace $DESIREDNAMESPACE
 ```
 
 ### 14. Check Deployment Status of DBP

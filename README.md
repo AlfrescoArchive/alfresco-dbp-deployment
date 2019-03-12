@@ -308,12 +308,12 @@ kubectl get pods
 You can access DBP components at the following URLs:
 
 
-  Alfresco Digital Workspace: http://alfresco-cs-repository.YOURIP.nip.io/digital-workspace/
-  Content: http://alfresco-cs-repository.YOURIP.nip.io/alfresco
-  Share: http://alfresco-cs-repository.YOURIP.nip.io/share
-  Alfresco Identity Service: http://alfresco-identity-service.YOURIP.nip.io/auth
-  Activiti Cloud Gateway: http://activiti-cloud-gateway.YOURIP.nip.io
-  Activiti Modeling App: http://activiti-cloud-gateway.YOURIP.nip.io/activiti-cloud-modeling
+  Alfresco Digital Workspace: http://alfresco-cs-repository.YOURIP.nip.io/digital-workspace/  
+  Content: http://alfresco-cs-repository.YOURIP.nip.io/alfresco  
+  Share: http://alfresco-cs-repository.YOURIP.nip.io/share  
+  Alfresco Identity Service: http://alfresco-identity-service.YOURIP.nip.io/auth  
+  Activiti Cloud Gateway: http://activiti-cloud-gateway.YOURIP.nip.io  
+  Activiti Modeling App: http://activiti-cloud-gateway.YOURIP.nip.io/activiti-cloud-modeling  
 
   
 ### 14. Teardown:
@@ -493,7 +493,7 @@ $LOCALIP = (
 
 ### 11. Authorize connections
 
-Go back to the config.json file, and check that there is a string after "auth", such as in the following example.
+Go back to the config.json file mentioned in step 8 and check that there is a string after "auth", such as in the following example.
 
 ```bash
 "auth": "klsdjfsdkifdsiEWRFJDOFfslakfdjsidjfdslfjds"
@@ -531,12 +531,12 @@ kubectl get pods
 
 You can access DBP components at the following URLs:
 
-  Alfresco Digital Workspace: http://alfresco-cs-repository.YOURIP.nip.io/digital-workspace/
-  Content: http://alfresco-cs-repository.YOURIP.nip.io/alfresco
-  Share: http://alfresco-cs-repository.YOURIP.nip.io/share
-  Alfresco Identity Service: http://alfresco-identity-service.YOURIP.nip.io/auth
-  Activiti Cloud Gateway: http://activiti-cloud-gateway.YOURIP.nip.io
-  Activiti Modeling App: http://activiti-cloud-gateway.YOURIP.nip.io/activiti-cloud-modeling
+  Alfresco Digital Workspace: http://alfresco-cs-repository.YOURIP.nip.io/digital-workspace/  
+  Content: http://alfresco-cs-repository.YOURIP.nip.io/alfresco  
+  Share: http://alfresco-cs-repository.YOURIP.nip.io/share  
+  Alfresco Identity Service: http://alfresco-identity-service.YOURIP.nip.io/auth  
+  Activiti Cloud Gateway: http://activiti-cloud-gateway.YOURIP.nip.io  
+  Activiti Modeling App: http://activiti-cloud-gateway.YOURIP.nip.io/activiti-cloud-modeling  
 
 If any pods are failing, you can use each of the following commands to see more about their errors:
 

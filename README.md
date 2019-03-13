@@ -364,7 +364,7 @@ After deploying the DBP, when accesing one of the applications, for example Proc
 
 # Docker for Desktop - Windows
 
-Note: All of the following commands will be using PowerShell, and these instructions have only been tested by Windows 10 users. 
+Note: All of the following commands will be using PowerShell, and these instructions have only been tested by Windows 10 users.
 
 ### 1. Install Docker for Desktop
 

@@ -8,7 +8,12 @@ metadata:
     ingress.kubernetes.io/rewrite-target: /alfresco
 spec:
   rules:
+  {{- if .Values.ingress.hostName }}
+  - host: {{ tpl .Values.ingress.hostName . }}
+    http:
+  {{- else }}
   - http:
+  {{- end }}
       paths:
       - path: {{ .Values.syncservice.ingress.path }}
         backend:

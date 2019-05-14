@@ -292,7 +292,7 @@ sed -i "" s/REPLACEME/$LOCALIP/g minimal-values.yaml
 
 ```bash
 # Make sure you have the latest Helm charts locally
-helm update
+helm repo update
 ```
 
 ```bash

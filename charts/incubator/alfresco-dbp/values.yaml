@@ -4,6 +4,9 @@ replicaCount: 1
 
 global:
   keycloak:
+    resource: alfresco
+    realm: alfresco
+    client: alfresco
     url: "https://alfresco-identity-service.REPLACEME/auth"
 
 alfresco-process-services:
@@ -13,7 +16,7 @@ alfresco-process-services:
   processEngine:
     environment:
       IDENTITY_SERVICE_ENABLED: true
-      IDENTITY_SERVICE_AUTH: "<ingresscontrollerurl>/auth"
+      IDENTITY_SERVICE_AUTH: "https://alfresco-identity-service.REPLACEME/auth"
   resources:
     requests:
       memory: "2000Mi"
@@ -179,17 +182,17 @@ alfresco-content-services:
         -Didentity-service.auth-server-url=\"$IDENTITY_SERVICE_URI\"
         -Didentity-service.realm=alfresco
         -Didentity-service.resource=alfresco"
-  externalHost: "https://alfresco-identity-service.REPLACEME/auth"
+  externalHost: "alfresco-cs-repository.REPLACEME"
   networkpolicysetting:
     enabled: false
   alfresco-digital-workspace:
     APP_CONFIG_AUTH_TYPE: "OAUTH"
-    APP_CONFIG_OAUTH2_HOST: "https://alfresco-identity-service.REPLACEME/auth"
+    APP_CONFIG_OAUTH2_HOST: "https://alfresco-identity-service.REPLACEME/auth/realms/alfresco"
     APP_CONFIG_OAUTH2_CLIENTID: "alfresco"
     APP_CONFIG_OAUTH2_IMPLICIT_FLOW: "\"true\""
     APP_CONFIG_OAUTH2_SILENT_LOGIN: "\"true\""
-    APP_CONFIG_OAUTH2_REDIRECT_LOGIN: "/digital-workspace/"
-    APP_CONFIG_OAUTH2_REDIRECT_LOGOUT: "/digital-workspace/logout"
+    APP_CONFIG_OAUTH2_REDIRECT_LOGIN: "/workspace/"
+    APP_CONFIG_OAUTH2_REDIRECT_LOGOUT: "/workspace/logout"
 
 alfresco-sync-service:
   enabled: false

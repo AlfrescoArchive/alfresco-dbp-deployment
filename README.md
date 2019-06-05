@@ -312,14 +312,8 @@ You can access DBP components at the following URLs:
   Content: http://alfresco-cs-repository.YOURIP.nip.io/alfresco  
   Share: http://alfresco-cs-repository.YOURIP.nip.io/share  
   Alfresco Identity Service: http://alfresco-identity-service.YOURIP.nip.io/auth
-  
-  ## What here??
-  ## http://localhost-k8s/activiti-app
-  ## http://localhost-k8s/activiti-admin
-
-  Activiti Cloud Gateway: http://activiti-cloud-gateway.YOURIP.nip.io  
-  Activiti Modeling App: http://activiti-cloud-gateway.YOURIP.nip.io/activiti-cloud-modeling  
-
+  APS: http://alfresco-cs-repository.YOURIP.nip.io/activiti-app
+  APS Admin: http://alfresco-cs-repository.YOURIP.nip.io/activiti-admin
   
 ### 14. Teardown:
 
@@ -540,8 +534,8 @@ You can access DBP components at the following URLs:
   Content: http://alfresco-cs-repository.YOURIP.nip.io/alfresco  
   Share: http://alfresco-cs-repository.YOURIP.nip.io/share  
   Alfresco Identity Service: http://alfresco-identity-service.YOURIP.nip.io/auth  
-  Activiti Cloud Gateway: http://activiti-cloud-gateway.YOURIP.nip.io  
-  Activiti Modeling App: http://activiti-cloud-gateway.YOURIP.nip.io/activiti-cloud-modeling  
+  APS: http://alfresco-cs-repository.YOURIP.nip.io/activiti-app
+  APS Admin: http://alfresco-cs-repository.YOURIP.nip.io/activiti-admin 
 
 If any pods are failing, you can use each of the following commands to see more about their errors:
 

@@ -141,7 +141,7 @@ By default the dbp chart will deploy fully.
 To disable specific components you can set the following values to false when deploying:
 ```
 alfresco-content-services.enabled
-activiti-cloud-full-example.enabled
+alfresco-process-services.enabled
 alfresco-sync-service.enabled
 alfresco-infrastructure.nginx-ingress.enabled
 ```
@@ -311,7 +311,12 @@ You can access DBP components at the following URLs:
   Alfresco Digital Workspace: http://alfresco-cs-repository.YOURIP.nip.io/digital-workspace/  
   Content: http://alfresco-cs-repository.YOURIP.nip.io/alfresco  
   Share: http://alfresco-cs-repository.YOURIP.nip.io/share  
-  Alfresco Identity Service: http://alfresco-identity-service.YOURIP.nip.io/auth  
+  Alfresco Identity Service: http://alfresco-identity-service.YOURIP.nip.io/auth
+  
+  ## What here??
+  ## http://localhost-k8s/activiti-app
+  ## http://localhost-k8s/activiti-admin
+
   Activiti Cloud Gateway: http://activiti-cloud-gateway.YOURIP.nip.io  
   Activiti Modeling App: http://activiti-cloud-gateway.YOURIP.nip.io/activiti-cloud-modeling  
 

@@ -4,13 +4,10 @@ replicaCount: 1
 
 global:
   keycloak:
-    resource: alfresco
-    realm: alfresco
-    client: alfresco
     url: "https://alfresco-identity-service.REPLACEME/auth"
-  gateway:
-    http: false
-    host: &gatewayhost "activiti-cloud-gateway.REPLACEME"
+
+alfresco-process-services:
+  enabled: true
 
 alfresco-infrastructure:
   enabled: true
@@ -153,8 +150,6 @@ alfresco-content-services:
     activemq:
       enabled: false
   repository:
-    ingress:
-      path: "/alfresco"
     environment:
       # The SYNC_SERVICE_URI should contain the details of the ingress host and port.
       SYNC_SERVICE_URI: "<ingresscontrollerurl>/syncservice"
@@ -173,13 +168,12 @@ alfresco-content-services:
         -Didentity-service.auth-server-url=\"$IDENTITY_SERVICE_URI\"
         -Didentity-service.realm=alfresco
         -Didentity-service.resource=alfresco"
-
-  externalHost: "alfresco-cs-repository.REPLACEME"
+  externalHost: "https://alfresco-identity-service.REPLACEME/auth"
   networkpolicysetting:
     enabled: false
   alfresco-digital-workspace:
     APP_CONFIG_AUTH_TYPE: "OAUTH"
-    APP_CONFIG_OAUTH2_HOST: "https://alfresco-identity-service.REPLACEME/auth/realms/alfresco"
+    APP_CONFIG_OAUTH2_HOST: "https://alfresco-identity-service.REPLACEME/auth"
     APP_CONFIG_OAUTH2_CLIENTID: "alfresco"
     APP_CONFIG_OAUTH2_IMPLICIT_FLOW: "\"true\""
     APP_CONFIG_OAUTH2_SILENT_LOGIN: "\"true\""
@@ -190,31 +184,3 @@ alfresco-sync-service:
   enabled: false
   alfresco-infrastructure:
     enabled: false
-
-activiti-cloud-full-example:
-# https://github.com/Activiti/activiti-cloud-modeling/issues/78
-# Remove the two values set here for modeling when issue is fixed
-  activiti-cloud-modeling:
-    backend: 
-      extraEnv: |
-        - name: "ACT_KEYCLOAK_REALM"
-          value: "alfresco"
-        - name: "ACT_KEYCLOAK_RESOURCE"
-          value: "alfresco"
-  enabled: true
-  infrastructure:
-    activiti-cloud-gateway:
-      ingress:
-        enabled: true
-        hostName: *gatewayhost
-        annotations:
-          kubernetes.io/ingress.class: nginx
-          nginx.ingress.kubernetes.io/rewrite-target: /
-          nginx.ingress.kubernetes.io/enable-cors: true
-          nginx.ingress.kubernetes.io/cors-allow-headers: "*"
-          nginx.ingress.kubernetes.io/x-forwarded-prefix: true
-infrastructure:
-  activiti-keycloak:
-    enabled: false
-activiti-cloud-modeling:
-  enabled: true

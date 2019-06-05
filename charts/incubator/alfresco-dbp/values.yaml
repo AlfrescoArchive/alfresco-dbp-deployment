@@ -8,6 +8,17 @@ global:
 
 alfresco-process-services:
   enabled: true
+  alfresco-infrastructure:
+    enabled: false
+  processEngine:
+    environment:
+      IDENTITY_SERVICE_ENABLED: true
+      IDENTITY_SERVICE_AUTH: "<ingresscontrollerurl>/auth"
+  resources:
+    requests:
+      memory: "2000Mi"
+    limits:
+      memory: "3000Mi"
 
 alfresco-infrastructure:
   enabled: true

@@ -1684,7 +1684,7 @@
         {
 			"id": "4b93abbb-0d82-4907-9746-078ffa5eebcd",
 			"key": "apsUrl",
-			"value": "{{dbpurl}}/activiti-app",
+			"value": "{{dbpHostName}}/activiti-app",
 			"type": "string"
 		},
 		{

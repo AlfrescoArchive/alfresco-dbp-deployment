@@ -1680,6 +1680,12 @@
 			"key": "shareUrl",
 			"value": "alfresco-cs-repository.{{dbpHostName}}/share",
 			"type": "string"
+        },
+        {
+			"id": "4b93abbb-0d82-4907-9746-078ffa5eebcd",
+			"key": "apsUrl",
+			"value": "{{dbpurl}}/activiti-app",
+			"type": "string"
 		},
 		{
 			"id": "174bfcd0-6548-4146-a1a1-960e26ffeb0e",
@@ -1739,12 +1745,6 @@
 			"id": "c90b841e-7717-4135-a005-8b022966ad81",
 			"key": "moduleVersions",
 			"value": "[{\"moduleName\":\"alfresco-aos-module\",\"moduleVersion\":\"1.2.2\"},{\"moduleName\":\"org.alfresco.integrations.google.docs\",\"moduleVersion\":\"3.1.0\"},{\"moduleName\":\"alfresco-share-services\",\"moduleVersion\":\"6.1.0\"}]",
-			"type": "string"
-		},
-		{
-			"id": "443f4f1f-3475-404a-8cb3-822fa95649ba",
-			"key": "activitiUrl",
-			"value": "activiti-cloud-gateway.{{dbpHostName}}",
 			"type": "string"
 		},
 		{

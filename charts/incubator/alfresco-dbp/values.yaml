@@ -25,6 +25,9 @@ alfresco-process-services:
 
 alfresco-infrastructure:
   enabled: true
+  activemq:
+    persistence:
+      subPath: "alfresco-infrastructure/activemq-data-infra"
   alfresco-identity-service:
     realm:
       alfresco:

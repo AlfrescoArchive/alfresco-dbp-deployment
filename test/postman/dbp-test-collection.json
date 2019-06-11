@@ -1744,7 +1744,7 @@
 		{
 			"id": "56c88ace-2fed-4155-9078-2b20725b4b45",
 			"key": "apsLocalAdminUser",
-			"value": "admin@app.activiti.com",
+			"value": "admin",
 			"type": "string"
 		},
 		{

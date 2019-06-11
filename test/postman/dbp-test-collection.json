@@ -1752,6 +1752,12 @@
 			"key": "apsLocalAdminPassword",
 			"value": "admin",
 			"type": "string"
+        },
+		{
+			"id": "cd58f8e6-1e2a-4544-909b-2b3ce6871353",
+			"key": "apsTenantId",
+			"value": "1",
+			"type": "string"
 		},
 		{
 			"id": "c90b841e-7717-4135-a005-8b022966ad81",

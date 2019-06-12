@@ -857,7 +857,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{protocol}}://{{apsUrl}}/api/enterprise/app-version",
+                            "raw": "{{protocol}}://{{apsUrl}}/api/enterprise/app-version",
+                            "protocol": "{{protocol}}",
 							"host": [
 								"{{apsUrl}}"
 							],
@@ -900,7 +901,8 @@
 							"raw": "{ \n\t\"tenantId\": {{apsTenantId}},\n\t\"firstName\": \"Test\", \n\t\"lastName\": \"User\", \n\t\"fullname\": \"Test User\", \n\t\"email\": \"{{testUserEmail}}\", \n\t\"password\": \"Fifi4567\"\n}"
 						},
 						"url": {
-							"raw": "{{protocol}}://{{apsUrl}}/api/enterprise/admin/users",
+                            "raw": "{{protocol}}://{{apsUrl}}/api/enterprise/admin/users",
+                            "protocol": "{{protocol}}",
 							"host": [
 								"{{apsUrl}}"
 							],
@@ -1002,7 +1004,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{protocol}}://{{apsUrl}}/api/enterprise/profile?tenantId={{apsTenantId}}",
+                            "raw": "{{protocol}}://{{apsUrl}}/api/enterprise/profile?tenantId={{apsTenantId}}",
+                            "protocol": "{{protocol}}",
 							"host": [
 								"{{apsUrl}}"
 							],
@@ -1038,7 +1041,7 @@
 									"    ",
 									"    // test user bootstrapped in alfresco-realm.json is in the administrators group and ",
 									"    // as such has access to:",
-									"    // \"kickstart\", \"tasks\", \"identity\" and \"analytics\" apps",
+									"    // \"kickstart\", \"tasks\", \"identity\", and \"analytics\" apps",
 									"    pm.expect(\"size\" in jsonData).to.be.true;",
 									"    pm.expect(jsonData.size).to.be.eql(4);",
 									"    ",
@@ -1072,7 +1075,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{protocol}}://{{apsUrl}}/api/enterprise/runtime-app-definitions",
+                            "raw": "{{protocol}}://{{apsUrl}}/api/enterprise/runtime-app-definitions",
+                            "protocol": "{{protocol}}",
 							"host": [
 								"{{apsUrl}}"
 							],
@@ -1134,7 +1138,8 @@
 							"raw": "{ \"name\": \"Test Task\" }"
 						},
 						"url": {
-							"raw": "{{protocol}}://{{apsUrl}}/api/enterprise/tasks",
+                            "raw": "{{protocol}}://{{apsUrl}}/api/enterprise/tasks",
+                            "protocol": "{{protocol}}",
 							"host": [
 								"{{apsUrl}}"
 							],
@@ -1206,7 +1211,8 @@
 							"raw": "{ \"name\": \"Test Task\" }"
 						},
 						"url": {
-							"raw": "{{protocol}}://{{apsUrl}}/api/enterprise/tasks/{{apsTaskId}}",
+                            "raw": "{{protocol}}://{{apsUrl}}/api/enterprise/tasks/{{apsTaskId}}",
+                            "protocol": "{{protocol}}",
 							"host": [
 								"{{apsUrl}}"
 							],
@@ -1262,7 +1268,8 @@
 							"raw": "{ \"taskId\": \"{{apsTaskId}}\" }"
 						},
 						"url": {
-							"raw": "{{protocol}}://{{apsUrl}}/api/enterprise/tasks/{{apsTaskId}}/action/complete",
+                            "raw": "{{protocol}}://{{apsUrl}}/api/enterprise/tasks/{{apsTaskId}}/action/complete",
+                            "protocol": "{{protocol}}",
 							"host": [
 								"{{apsUrl}}"
 							],
@@ -1558,6 +1565,86 @@
 						}
 					},
 					"response": []
+                },
+                {
+					"name": "Generate Keycloak admin access token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bcedf8cbe-1d10-4dce-991c-678762ee8103",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Token is bearer token\", function () {",
+									"    pm.expect(jsonData.token_type).to.eql(\"bearer\");",
+									"});",
+									"",
+									"pm.test(\"Response contains access token\", function () {",
+									"    pm.expect(\"access_token\" in jsonData).to.be.true;",
+									"});",
+									"",
+									"var tokens = JSON.parse(responseBody); ",
+									"pm.environment.set(\"kcAdminAccessToken\", tokens.access_token);",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_id",
+									"value": "{{identityServiceClientId}}",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "{{adminUserUsername}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{adminUserPassword}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{protocol}}://{{identityServiceUrl}}/realms/{{identityServiceRealm}}/protocol/openid-connect/token",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{identityServiceUrl}}"
+							],
+							"path": [
+								"realms",
+								"{{identityServiceRealm}}",
+								"protocol",
+								"openid-connect",
+								"token"
+							]
+						}
+					},
+					"response": []
 				},
 				{
 					"name": "Revert realm's access token lifespan to original value",
@@ -1606,8 +1693,8 @@
 							"raw": "{\n\t\"accessTokenLifespan\": 600\n}"
 						},
 						"url": {
-							"raw": "https://{{identityServiceUrl}}/admin/realms/{{identityServiceRealm}}",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{identityServiceUrl}}/admin/realms/{{identityServiceRealm}}",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{identityServiceUrl}}"
 							],
@@ -1672,13 +1759,13 @@
 		{
 			"id": "1450729d-5636-4a8a-b062-816497abeb60",
 			"key": "acsUrl",
-			"value": "alfresco-cs-repository.{{dbpHostName}}/alfresco",
+			"value": "{{dbpHostName}}/alfresco",
 			"type": "string"
 		},
 		{
 			"id": "93f946b8-ce1b-4587-a219-72986753c5f6",
 			"key": "shareUrl",
-			"value": "alfresco-cs-repository.{{dbpHostName}}/share",
+			"value": "{{dbpHostName}}/share",
 			"type": "string"
         },
         {
@@ -1690,13 +1777,13 @@
 		{
 			"id": "174bfcd0-6548-4146-a1a1-960e26ffeb0e",
 			"key": "identityServiceUrl",
-			"value": "alfresco-identity-service.{{dbpHostName}}/auth",
+			"value": "{{dbpHostName}}/auth",
 			"type": "string"
 		},
 		{
 			"id": "2a23735c-3ed6-4aa7-a4c6-013e1d4cf498",
 			"key": "contentAppUrl",
-			"value": "alfresco-cs-repository.{{dbpHostName}}/workspace",
+			"value": "{{dbpHostName}}/workspace",
 			"type": "string"
 		},
 		{
@@ -1726,9 +1813,9 @@
 		{
 			"id": "eafa9b2a-571a-45c7-920a-b3802d121490",
 			"key": "testUserEmail",
-			"value": "test@test.com",
+			"value": "testuser@test.com",
 			"type": "string"
-		},
+        },
 		{
 			"id": "9e54c992-f05a-414f-8317-2f601841614f",
 			"key": "adminUserUsername",

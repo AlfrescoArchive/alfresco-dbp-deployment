@@ -166,7 +166,14 @@ alfresco-content-services:
     enabled: false
     activemq:
       enabled: false
+  share:
+    image:
+      repository: quay.io/alfresco/alfresco-dbp-share
+      tag: "0.4-SNAPSHOT"
   repository:
+    image:
+      repository: quay.io/alfresco/alfresco-dbp-repository
+      tag: "0.4-SNAPSHOT"
     environment:
       # The SYNC_SERVICE_URI should contain the details of the ingress host and port.
       SYNC_SERVICE_URI: "<ingresscontrollerurl>/syncservice"

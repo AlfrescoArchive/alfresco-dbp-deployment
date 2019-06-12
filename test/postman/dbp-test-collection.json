@@ -1759,13 +1759,13 @@
 		{
 			"id": "1450729d-5636-4a8a-b062-816497abeb60",
 			"key": "acsUrl",
-			"value": "{{dbpHostName}}/alfresco",
+			"value": "alfresco-cs-repository.{{dbpHostName}}/alfresco",
 			"type": "string"
 		},
 		{
 			"id": "93f946b8-ce1b-4587-a219-72986753c5f6",
 			"key": "shareUrl",
-			"value": "{{dbpHostName}}/share",
+			"value": "alfresco-cs-repository.{{dbpHostName}}/share",
 			"type": "string"
         },
         {
@@ -1777,13 +1777,13 @@
 		{
 			"id": "174bfcd0-6548-4146-a1a1-960e26ffeb0e",
 			"key": "identityServiceUrl",
-			"value": "{{dbpHostName}}/auth",
+			"value": "alfresco-identity-service.{{dbpHostName}}/auth",
 			"type": "string"
 		},
 		{
 			"id": "2a23735c-3ed6-4aa7-a4c6-013e1d4cf498",
 			"key": "contentAppUrl",
-			"value": "{{dbpHostName}}/workspace",
+			"value": "alfresco-cs-repository.{{dbpHostName}}/workspace",
 			"type": "string"
 		},
 		{

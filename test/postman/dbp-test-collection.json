@@ -897,7 +897,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{ \n\t\"tenantId\": {{apsTenantId}},\n\t\"firstName\": \"Test\", \n\t\"lastName\": \"User\", \n\t\"fullname\": \"Test User\", \n\t\"email\": \"{{testUserEmail}}\", \n\t\"password\": \"Fifi4567\"\n}"
+							"raw": "{ \n\t\"tenantId\": {{apsTenantId}},\n\t\"firstName\": \"Test\", \n\t\"lastName\": \"User\", \n\t\"fullname\": \"Test User\", \n\t\"email\": \"{{localTestUserEmail}}\", \n\t\"password\": \"Fifi4567\"\n}"
 						},
 						"url": {
 							"raw": "{{protocol}}://{{apsUrl}}/api/enterprise/admin/users",
@@ -1038,15 +1038,15 @@
 									"    ",
 									"    // test user bootstrapped in alfresco-realm.json is in the administrators group and ",
 									"    // as such has access to:",
-									"    // \"kickstart\", \"tasks\", \"identity\" and \"analytics\" apps",
+									"    // \"tasks\" and \"identity\" apps",
 									"    pm.expect(\"size\" in jsonData).to.be.true;",
-									"    pm.expect(jsonData.size).to.be.eql(4);",
+									"    pm.expect(jsonData.size).to.be.eql(2);",
 									"    ",
 									"    pm.expect(\"data\" in jsonData).to.be.true;",
-									"    pm.expect(jsonData.data).to.have.lengthOf(4);",
+									"    pm.expect(jsonData.data).to.have.lengthOf(2);",
 									"    ",
 									"    userapps = jsonData.data.map(t => t.defaultAppId);",
-									"    pm.expect(userapps).to.have.members([\"kickstart\", \"tasks\", \"identity\", \"analytics\"]);",
+									"    pm.expect(userapps).to.have.members([\"tasks\", \"identity\"]);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1727,6 +1727,12 @@
 			"id": "eafa9b2a-571a-45c7-920a-b3802d121490",
 			"key": "testUserEmail",
 			"value": "testuser@test.com",
+			"type": "string"
+        },
+        {
+			"id": "eafa9b2a-571a-45c7-920a-b3802d121490",
+			"key": "localTestUserEmail",
+			"value": "localtestuser@test.com",
 			"type": "string"
 		},
 		{

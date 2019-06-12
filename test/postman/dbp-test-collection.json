@@ -857,7 +857,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{protocol}}://{{apsUrl}}/api/enterprise/app-version",
+                            "raw": "{{protocol}}://{{apsUrl}}/api/enterprise/app-version",
+                            "protocol": "{{protocol}}",
 							"host": [
 								"{{apsUrl}}"
 							],
@@ -900,7 +901,8 @@
 							"raw": "{ \n\t\"tenantId\": {{apsTenantId}},\n\t\"firstName\": \"Test\", \n\t\"lastName\": \"User\", \n\t\"fullname\": \"Test User\", \n\t\"email\": \"{{localTestUserEmail}}\", \n\t\"password\": \"Fifi4567\"\n}"
 						},
 						"url": {
-							"raw": "{{protocol}}://{{apsUrl}}/api/enterprise/admin/users",
+                            "raw": "{{protocol}}://{{apsUrl}}/api/enterprise/admin/users",
+                            "protocol": "{{protocol}}",
 							"host": [
 								"{{apsUrl}}"
 							],
@@ -1002,7 +1004,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{protocol}}://{{apsUrl}}/api/enterprise/profile?tenantId={{apsTenantId}}",
+                            "raw": "{{protocol}}://{{apsUrl}}/api/enterprise/profile?tenantId={{apsTenantId}}",
+                            "protocol": "{{protocol}}",
 							"host": [
 								"{{apsUrl}}"
 							],
@@ -1072,7 +1075,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{protocol}}://{{apsUrl}}/api/enterprise/runtime-app-definitions",
+                            "raw": "{{protocol}}://{{apsUrl}}/api/enterprise/runtime-app-definitions",
+                            "protocol": "{{protocol}}",
 							"host": [
 								"{{apsUrl}}"
 							],
@@ -1134,7 +1138,8 @@
 							"raw": "{ \"name\": \"Test Task\" }"
 						},
 						"url": {
-							"raw": "{{protocol}}://{{apsUrl}}/api/enterprise/tasks",
+                            "raw": "{{protocol}}://{{apsUrl}}/api/enterprise/tasks",
+                            "protocol": "{{protocol}}",
 							"host": [
 								"{{apsUrl}}"
 							],
@@ -1206,7 +1211,8 @@
 							"raw": "{ \"name\": \"Test Task\" }"
 						},
 						"url": {
-							"raw": "{{protocol}}://{{apsUrl}}/api/enterprise/tasks/{{apsTaskId}}",
+                            "raw": "{{protocol}}://{{apsUrl}}/api/enterprise/tasks/{{apsTaskId}}",
+                            "protocol": "{{protocol}}",
 							"host": [
 								"{{apsUrl}}"
 							],
@@ -1262,7 +1268,8 @@
 							"raw": "{ \"taskId\": \"{{apsTaskId}}\" }"
 						},
 						"url": {
-							"raw": "{{protocol}}://{{apsUrl}}/api/enterprise/tasks/{{apsTaskId}}/action/complete",
+                            "raw": "{{protocol}}://{{apsUrl}}/api/enterprise/tasks/{{apsTaskId}}/action/complete",
+                            "protocol": "{{protocol}}",
 							"host": [
 								"{{apsUrl}}"
 							],

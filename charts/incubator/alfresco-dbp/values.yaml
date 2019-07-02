@@ -112,24 +112,24 @@ alfresco-infrastructure:
                 - "view-profile"
             groups:
               - "hr"
-          # - username: testuser
-          #   enabled: true
-          #   firstName: "testuser"
-          #   lastName: testuser
-          #   email: "testuser@test.com"
-          #   credentials:
-          #   - type: password
-          #     value: password
-          #   realmRoles:
-          #     - "offline_access"
-          #     - "uma_authorization"
-          #     - "ACTIVITI_USER"
-          #   clientRoles:
-          #     account:
-          #       - "manage-account"
-          #       - "view-profile"
-          #   groups:
-          #     - "testgroup"
+          - username: testuser
+            enabled: true
+            firstName: "testuser"
+            lastName: testuser
+            email: "testuser@test.com"
+            credentials:
+            - type: password
+              value: password
+            realmRoles:
+              - "offline_access"
+              - "uma_authorization"
+              - "ACTIVITI_USER"
+            clientRoles:
+              account:
+                - "manage-account"
+                - "view-profile"
+            groups:
+              - "testgroup"
           - username: testadmin
             enabled: true
             firstName: "testadmin"

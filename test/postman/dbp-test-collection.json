@@ -1813,7 +1813,7 @@
 		{
 			"id": "eafa9b2a-571a-45c7-920a-b3802d121490",
 			"key": "testUserEmail",
-			"value": "test@test.com",
+			"value": "testuser@test.com",
 			"type": "string"
         },
 		{

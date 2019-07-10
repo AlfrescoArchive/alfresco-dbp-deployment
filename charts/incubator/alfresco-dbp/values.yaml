@@ -8,12 +8,26 @@ global:
     realm: alfresco
     client: alfresco
     url: "https://alfresco-identity-service.REPLACEME/auth"
-  gateway:
-    http: false
-    host: &gatewayhost "activiti-cloud-gateway.REPLACEME"
+
+alfresco-process-services:
+  enabled: true
+  alfresco-infrastructure:
+    enabled: false
+  processEngine:
+    environment:
+      IDENTITY_SERVICE_ENABLED: true
+      IDENTITY_SERVICE_AUTH: "https://alfresco-identity-service.REPLACEME/auth"
+  resources:
+    requests:
+      memory: "2000Mi"
+    limits:
+      memory: "3000Mi"
 
 alfresco-infrastructure:
   enabled: true
+  activemq:
+    persistence:
+      subPath: "alfresco-infrastructure/activemq-data-infra"
   alfresco-identity-service:
     realm:
       alfresco:
@@ -152,9 +166,14 @@ alfresco-content-services:
     enabled: false
     activemq:
       enabled: false
+  share:
+    image:
+      repository: quay.io/alfresco/alfresco-dbp-share
+      tag: "0.4-SNAPSHOT"
   repository:
-    ingress:
-      path: "/alfresco"
+    image:
+      repository: quay.io/alfresco/alfresco-dbp-repository
+      tag: "0.4-SNAPSHOT"
     environment:
       # The SYNC_SERVICE_URI should contain the details of the ingress host and port.
       SYNC_SERVICE_URI: "<ingresscontrollerurl>/syncservice"
@@ -173,7 +192,6 @@ alfresco-content-services:
         -Didentity-service.auth-server-url=\"$IDENTITY_SERVICE_URI\"
         -Didentity-service.realm=alfresco
         -Didentity-service.resource=alfresco"
-
   externalHost: "alfresco-cs-repository.REPLACEME"
   networkpolicysetting:
     enabled: false
@@ -183,38 +201,10 @@ alfresco-content-services:
     APP_CONFIG_OAUTH2_CLIENTID: "alfresco"
     APP_CONFIG_OAUTH2_IMPLICIT_FLOW: "\"true\""
     APP_CONFIG_OAUTH2_SILENT_LOGIN: "\"true\""
-    APP_CONFIG_OAUTH2_REDIRECT_LOGIN: "/digital-workspace/"
-    APP_CONFIG_OAUTH2_REDIRECT_LOGOUT: "/digital-workspace/logout"
+    APP_CONFIG_OAUTH2_REDIRECT_LOGIN: "/workspace/"
+    APP_CONFIG_OAUTH2_REDIRECT_LOGOUT: "/workspace/logout"
 
 alfresco-sync-service:
   enabled: false
   alfresco-infrastructure:
     enabled: false
-
-activiti-cloud-full-example:
-# https://github.com/Activiti/activiti-cloud-modeling/issues/78
-# Remove the two values set here for modeling when issue is fixed
-  activiti-cloud-modeling:
-    backend: 
-      extraEnv: |
-        - name: "ACT_KEYCLOAK_REALM"
-          value: "alfresco"
-        - name: "ACT_KEYCLOAK_RESOURCE"
-          value: "alfresco"
-  enabled: true
-  infrastructure:
-    activiti-cloud-gateway:
-      ingress:
-        enabled: true
-        hostName: *gatewayhost
-        annotations:
-          kubernetes.io/ingress.class: nginx
-          nginx.ingress.kubernetes.io/rewrite-target: /
-          nginx.ingress.kubernetes.io/enable-cors: true
-          nginx.ingress.kubernetes.io/cors-allow-headers: "*"
-          nginx.ingress.kubernetes.io/x-forwarded-prefix: true
-infrastructure:
-  activiti-keycloak:
-    enabled: false
-activiti-cloud-modeling:
-  enabled: true

@@ -9,14 +9,22 @@
     <name>Alfresco DBP Share Packaging</name>
 
     <properties>
-        <alfresco.rm.share.version>2.6.0</alfresco.rm.share.version>
+        <alfresco.gs.share.version>3.1.0</alfresco.gs.share.version>
+        <alfresco.saml.share.version>1.1.1</alfresco.saml.share.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.alfresco</groupId>
-            <artifactId>alfresco-rm-share-repo</artifactId>
-            <version>${alfresco.rm.share.version}</version>
+            <artifactId>alfresco-governance-services-enterprise-share</artifactId>
+            <version>${alfresco.gs.share.version}</version>
+            <classifier>enterprise</classifier>
+            <type>amp</type>
+        </dependency>
+        <dependency>
+            <groupId>org.alfresco.saml</groupId>
+            <artifactId>alfresco-saml-share</artifactId>
+            <version>${alfresco.saml.share.version}</version>
             <classifier>enterprise</classifier>
             <type>amp</type>
         </dependency>
@@ -39,8 +47,16 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>org.alfresco</groupId>
-                                    <artifactId>alfresco-rm-enterprise-share</artifactId>
-                                    <version>${alfresco.rm.share.version}</version>
+                                    <artifactId>alfresco-governance-services-enterprise-share</artifactId>
+                                    <version>${alfresco.gs.share.version}</version>
+                                    <type>amp</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/amps</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.alfresco.saml</groupId>
+                                    <artifactId>alfresco-saml-share</artifactId>
+                                    <version>${alfresco.saml.share.version}</version>
                                     <type>amp</type>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>${project.build.directory}/amps</outputDirectory>

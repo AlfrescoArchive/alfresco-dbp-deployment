@@ -3,9 +3,6 @@
 global:
   keycloak:
     url: "http://alfresco-identity-service.REPLACEME.nip.io/auth"
-  gateway:
-    http: true
-    host: &gatewayhost "activiti-cloud-gateway.REPLACEME.nip.io"
    
 alfresco-infrastructure:
   persistence:

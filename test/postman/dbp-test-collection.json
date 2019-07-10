@@ -821,35 +821,70 @@
 			]
 		},
 		{
-			"name": "04 Activiti-token-auth",
+			"name": "04 APS-basic-auth",
 			"item": [
 				{
-					"name": "Generate Keycloak admin access token",
+					"name": "Get APS version",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "bcedf8cbe-1d10-4dce-991c-678762ee8103",
-								"type": "text/javascript",
+								"id": "5cfef929-277b-4980-b44e-e787fa8560fe",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"var jsonData = pm.response.json();",
-									"",
-									"pm.test(\"Token is bearer token\", function () {",
-									"    pm.expect(jsonData.token_type).to.eql(\"bearer\");",
+									"pm.test(\"APS edition string is valid\", function () {",
+									"    var jsonData = pm.response.json().edition;",
+									"    pm.expect(jsonData).to.eql(\"Alfresco Process Services (powered by Activiti)\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+                            "raw": "{{protocol}}://{{apsUrl}}/api/enterprise/app-version",
+                            "protocol": "{{protocol}}",
+							"host": [
+								"{{apsUrl}}"
+							],
+							"path": [
+								"api",
+								"enterprise",
+								"app-version"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create local user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "707cbbc8-69d5-4a7e-860e-ce75ef35fabb",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
 									"});",
-									"",
-									"pm.test(\"Response contains access token\", function () {",
-									"    pm.expect(\"access_token\" in jsonData).to.be.true;",
-									"});",
-									"",
-									"var tokens = JSON.parse(responseBody); ",
-									"pm.environment.set(\"kcAdminAccessToken\", tokens.access_token);",
 									""
-								]
+								],
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -858,61 +893,163 @@
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/x-www-form-urlencoded"
+								"value": "application/json"
 							}
 						],
 						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "client_id",
-									"value": "{{identityServiceClientId}}",
-									"type": "text"
-								},
-								{
-									"key": "grant_type",
-									"value": "password",
-									"type": "text"
-								},
-								{
-									"key": "username",
-									"value": "{{adminUserUsername}}",
-									"type": "text"
-								},
-								{
-									"key": "password",
-									"value": "{{adminUserPassword}}",
-									"type": "text"
-								}
-							]
+							"mode": "raw",
+							"raw": "{ \n\t\"tenantId\": {{apsTenantId}},\n\t\"firstName\": \"Test\", \n\t\"lastName\": \"User\", \n\t\"fullname\": \"Test User\", \n\t\"email\": \"{{testUserEmail}}\", \n\t\"password\": \"Fifi4567\"\n}"
 						},
 						"url": {
-							"raw": "{{protocol}}://{{identityServiceUrl}}/realms/{{identityServiceRealm}}/protocol/openid-connect/token",
-							"protocol": "{{protocol}}",
+                            "raw": "{{protocol}}://{{apsUrl}}/api/enterprise/admin/users",
+                            "protocol": "{{protocol}}",
 							"host": [
-								"{{identityServiceUrl}}"
+								"{{apsUrl}}"
 							],
 							"path": [
-								"realms",
-								"{{identityServiceRealm}}",
-								"protocol",
-								"openid-connect",
-								"token"
+								"api",
+								"enterprise",
+								"admin",
+								"users"
+							]
+						},
+						"description": "Creates local user with dummy password. Note there are password strenght requirements on dummy password."
+					},
+					"response": []
+				}
+			],
+			"description": "This folder will contain all the cases related to APS basic auth",
+			"auth": {
+				"type": "basic",
+				"basic": [
+					{
+						"key": "password",
+						"value": "{{apsLocalAdminPassword}}",
+						"type": "string"
+					},
+					{
+						"key": "username",
+						"value": "{{apsLocalAdminUser}}",
+						"type": "string"
+					},
+					{
+						"key": "saveHelperData",
+						"type": "any"
+					},
+					{
+						"key": "showPassword",
+						"value": false,
+						"type": "boolean"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "b016d990-fa80-491b-84b8-04734fa51b55",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "5455ed2b-225f-44a7-b0d3-07187af3fb2e",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "05 APS-token-auth",
+			"item": [
+				{
+					"name": "Retrieve APS test user's own profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "34b4e7f0-d846-4ddc-92be-a2241b1fb0c2",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Email in response is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var email= jsonData.email;",
+									"    pm.expect(email).to.be.eql(pm.variables.get(\"testUserEmail\"));",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{kcAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+                            "raw": "{{protocol}}://{{apsUrl}}/api/enterprise/profile?tenantId={{apsTenantId}}",
+                            "protocol": "{{protocol}}",
+							"host": [
+								"{{apsUrl}}"
+							],
+							"path": [
+								"api",
+								"enterprise",
+								"profile"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{apsTenantId}}"
+								}
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Get Process Instances",
+					"name": "Retrieve testuser's runtime app definitions",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "1fcaf9d8-243d-44c5-92f1-681cfaedba35",
+								"id": "e9bd1f06-b857-41b7-ac9d-7b87082b0301",
 								"exec": [
-									"pm.test(\"Response code is 200\", function () {",
+									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Test user can access default apps\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    ",
+									"    // test user bootstrapped in alfresco-realm.json is in the administrators group and ",
+									"    // as such has access to:",
+									"    // \"kickstart\", \"tasks\", \"identity\", and \"analytics\" apps",
+									"    pm.expect(\"size\" in jsonData).to.be.true;",
+									"    pm.expect(jsonData.size).to.be.eql(4);",
+									"    ",
+									"    pm.expect(\"data\" in jsonData).to.be.true;",
+									"    pm.expect(jsonData.data).to.have.lengthOf(4);",
+									"    ",
+									"    userapps = jsonData.data.map(t => t.defaultAppId);",
+									"    pm.expect(userapps).to.have.members([\"kickstart\", \"tasks\", \"identity\", \"analytics\"]);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -924,7 +1061,13 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{kcAdminAccessToken}}"
+								"value": "Bearer {{kcAccessToken}}",
+								"disabled": false
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"disabled": false
 							}
 						],
 						"body": {
@@ -932,34 +1075,39 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{protocol}}://{{activitiUrl}}/rb-my-app/v1/process-definitions",
-							"protocol": "{{protocol}}",
+                            "raw": "{{protocol}}://{{apsUrl}}/api/enterprise/runtime-app-definitions",
+                            "protocol": "{{protocol}}",
 							"host": [
-								"{{activitiUrl}}"
+								"{{apsUrl}}"
 							],
 							"path": [
-								"rb-my-app",
-								"v1",
-								"process-definitions"
+								"api",
+								"enterprise",
+								"runtime-app-definitions"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Start Process",
+					"name": "Create task instance as testuser",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "542c9bae-80f7-4cc6-8bb3-0e928e9f8e74",
+								"id": "e9bd1f06-b857-41b7-ac9d-7b87082b0301",
 								"exec": [
-									"pm.test(\"Response code is 200\", function () {",
+									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
-									"pm.test(\"Initiator of the process is admin\", function () {",
-									"    pm.expect(pm.response.json().initiator).to.eql(\"admin\");",
-									"});"
+									"",
+									"var jsonData = pm.response.json();",
+									"pm.test(\"Response contains task id\", function () {",
+									"    pm.expect(\"id\" in jsonData).to.be.true;",
+									"    pm.expect(jsonData.id).to.not.be.null;",
+									"});",
+									"",
+									"pm.globals.set(\"apsTaskId\", jsonData.id);"
 								],
 								"type": "text/javascript"
 							}
@@ -969,40 +1117,201 @@
 						"method": "POST",
 						"header": [
 							{
+								"disabled": false,
 								"key": "Authorization",
-								"value": "Bearer {{kcAdminAccessToken}}",
-								"type": "text"
+								"value": "Bearer {{kcAccessToken}}"
+							},
+							{
+								"disabled": false,
+								"key": "Accept",
+								"value": "application/json"
 							},
 							{
 								"key": "Content-Type",
 								"name": "Content-Type",
-								"value": "application/json",
-								"type": "text"
+								"type": "text",
+								"value": "application/json"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n \"processDefinitionKey\": \"SimpleProcess\",\n \"payloadType\":\"StartProcessPayload\"\n}"
+							"raw": "{ \"name\": \"Test Task\" }"
 						},
 						"url": {
-							"raw": "{{protocol}}://{{activitiUrl}}/rb-my-app/v1/process-instances",
-							"protocol": "{{protocol}}",
+                            "raw": "{{protocol}}://{{apsUrl}}/api/enterprise/tasks",
+                            "protocol": "{{protocol}}",
 							"host": [
-								"{{activitiUrl}}"
+								"{{apsUrl}}"
 							],
 							"path": [
-								"rb-my-app",
-								"v1",
-								"process-instances"
+								"api",
+								"enterprise",
+								"tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve testuser's task instance",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e9bd1f06-b857-41b7-ac9d-7b87082b0301",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"pm.test(\"Response contains task id\", function () {",
+									"    pm.expect(\"id\" in jsonData).to.be.true;",
+									"    pm.expect(jsonData.id).to.not.be.null;",
+									"});",
+									"",
+									"pm.test(\"Task asignee is test user\", function() {",
+									"    pm.expect(\"assignee\" in jsonData).to.be.true;",
+									"    ",
+									"    var assignee = jsonData.assignee;",
+									"    // firstName and lastName will be set at user import time, not by AIS",
+									"    pm.expect(\"firstName\" in assignee).to.be.true;",
+									"    pm.expect(\"lastName\" in assignee).to.be.true;",
+									"    // email is the key that connects AIS user with local user",
+									"    pm.expect(\"email\" in assignee).to.be.true;",
+									"    pm.expect(assignee.email).to.equal(pm.variables.get(\"testUserEmail\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"disabled": false,
+								"key": "Authorization",
+								"value": "Bearer {{kcAccessToken}}"
+							},
+							{
+								"disabled": false,
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"name\": \"Test Task\" }"
+						},
+						"url": {
+                            "raw": "{{protocol}}://{{apsUrl}}/api/enterprise/tasks/{{apsTaskId}}",
+                            "protocol": "{{protocol}}",
+							"host": [
+								"{{apsUrl}}"
+							],
+							"path": [
+								"api",
+								"enterprise",
+								"tasks",
+								"{{apsTaskId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Complete testuser's task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e9bd1f06-b857-41b7-ac9d-7b87082b0301",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"disabled": false,
+								"key": "Authorization",
+								"value": "Bearer {{kcAccessToken}}"
+							},
+							{
+								"disabled": false,
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"taskId\": \"{{apsTaskId}}\" }"
+						},
+						"url": {
+                            "raw": "{{protocol}}://{{apsUrl}}/api/enterprise/tasks/{{apsTaskId}}/action/complete",
+                            "protocol": "{{protocol}}",
+							"host": [
+								"{{apsUrl}}"
+							],
+							"path": [
+								"api",
+								"enterprise",
+								"tasks",
+								"{{apsTaskId}}",
+								"action",
+								"complete"
 							]
 						}
 					},
 					"response": []
 				}
+			],
+			"description": "This folder will contain all the cases related to APS token auth",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "09c89f1c-7ae0-4d65-a5cb-5efd1ba0de8a",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "ab49ba7a-ed0e-452c-8780-b35ae485cc79",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
 			]
 		},
 		{
-			"name": "05 ADW basic Tests",
+			"name": "06 ADW basic Tests",
 			"item": [
 				{
 					"name": "Check if ACA Login Page responds correctly",
@@ -1062,7 +1371,7 @@
 			]
 		},
 		{
-			"name": "06 Expired Token Tests",
+			"name": "07 Expired Token Tests",
 			"item": [
 				{
 					"name": "Shorten realm's access token lifespan",
@@ -1256,6 +1565,86 @@
 						}
 					},
 					"response": []
+                },
+                {
+					"name": "Generate Keycloak admin access token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bcedf8cbe-1d10-4dce-991c-678762ee8103",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Token is bearer token\", function () {",
+									"    pm.expect(jsonData.token_type).to.eql(\"bearer\");",
+									"});",
+									"",
+									"pm.test(\"Response contains access token\", function () {",
+									"    pm.expect(\"access_token\" in jsonData).to.be.true;",
+									"});",
+									"",
+									"var tokens = JSON.parse(responseBody); ",
+									"pm.environment.set(\"kcAdminAccessToken\", tokens.access_token);",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_id",
+									"value": "{{identityServiceClientId}}",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "{{adminUserUsername}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{adminUserPassword}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{protocol}}://{{identityServiceUrl}}/realms/{{identityServiceRealm}}/protocol/openid-connect/token",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{identityServiceUrl}}"
+							],
+							"path": [
+								"realms",
+								"{{identityServiceRealm}}",
+								"protocol",
+								"openid-connect",
+								"token"
+							]
+						}
+					},
+					"response": []
 				},
 				{
 					"name": "Revert realm's access token lifespan to original value",
@@ -1304,8 +1693,8 @@
 							"raw": "{\n\t\"accessTokenLifespan\": 600\n}"
 						},
 						"url": {
-							"raw": "https://{{identityServiceUrl}}/admin/realms/{{identityServiceRealm}}",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{identityServiceUrl}}/admin/realms/{{identityServiceRealm}}",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{identityServiceUrl}}"
 							],
@@ -1378,6 +1767,12 @@
 			"key": "shareUrl",
 			"value": "alfresco-cs-repository.{{dbpHostName}}/share",
 			"type": "string"
+        },
+        {
+			"id": "4b93abbb-0d82-4907-9746-078ffa5eebcd",
+			"key": "apsUrl",
+			"value": "{{dbpHostName}}/activiti-app",
+			"type": "string"
 		},
 		{
 			"id": "174bfcd0-6548-4146-a1a1-960e26ffeb0e",
@@ -1418,9 +1813,9 @@
 		{
 			"id": "eafa9b2a-571a-45c7-920a-b3802d121490",
 			"key": "testUserEmail",
-			"value": "test@test.com",
+			"value": "testuser@test.com",
 			"type": "string"
-		},
+        },
 		{
 			"id": "9e54c992-f05a-414f-8317-2f601841614f",
 			"key": "adminUserUsername",
@@ -1434,15 +1829,27 @@
 			"type": "string"
 		},
 		{
-			"id": "c90b841e-7717-4135-a005-8b022966ad81",
-			"key": "moduleVersions",
-			"value": "[{\"moduleName\":\"alfresco-aos-module\",\"moduleVersion\":\"1.2.2\"},{\"moduleName\":\"org.alfresco.integrations.google.docs\",\"moduleVersion\":\"3.1.0\"},{\"moduleName\":\"alfresco-share-services\",\"moduleVersion\":\"6.1.0\"}]",
+			"id": "56c88ace-2fed-4155-9078-2b20725b4b45",
+			"key": "apsLocalAdminUser",
+			"value": "admin",
 			"type": "string"
 		},
 		{
-			"id": "443f4f1f-3475-404a-8cb3-822fa95649ba",
-			"key": "activitiUrl",
-			"value": "activiti-cloud-gateway.{{dbpHostName}}",
+			"id": "b0a73658-9827-43a2-8561-44582552f64d",
+			"key": "apsLocalAdminPassword",
+			"value": "admin",
+			"type": "string"
+        },
+		{
+			"id": "cd58f8e6-1e2a-4544-909b-2b3ce6871353",
+			"key": "apsTenantId",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"id": "c90b841e-7717-4135-a005-8b022966ad81",
+			"key": "moduleVersions",
+			"value": "[{\"moduleName\":\"alfresco-aos-module\",\"moduleVersion\":\"1.2.2\"},{\"moduleName\":\"org.alfresco.integrations.google.docs\",\"moduleVersion\":\"3.1.0\"},{\"moduleName\":\"alfresco-share-services\",\"moduleVersion\":\"6.1.0\"}]",
 			"type": "string"
 		},
 		{

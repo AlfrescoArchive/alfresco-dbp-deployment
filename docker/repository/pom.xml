@@ -9,8 +9,9 @@
     <name>Alfresco DBP Repository Packaging</name>
 
     <properties>
-        <alfresco.rm.repo.version>2.6.0</alfresco.rm.repo.version>
-        <alfresco.sync.service.version>2.2-SNAPSHOT</alfresco.sync.service.version>
+        <alfresco.gs.repo.version>3.1.0</alfresco.gs.repo.version>
+        <alfresco.sync.service.version>3.1.0</alfresco.sync.service.version>
+        <alfresco.saml.repo.version>1.1.1</alfresco.saml.repo.version>
     </properties>
 
     <dependencies>
@@ -23,8 +24,15 @@
         </dependency>
         <dependency>
             <groupId>org.alfresco</groupId>
-            <artifactId>alfresco-rm-enterprise-repo</artifactId>
-            <version>${alfresco.rm.repo.version}</version>
+            <artifactId>alfresco-governance-services-enterprise-repo</artifactId>
+            <version>${alfresco.gs.repo.version}</version>
+            <classifier>enterprise</classifier>
+            <type>amp</type>
+        </dependency>
+        <dependency>
+            <groupId>org.alfresco.saml</groupId>
+            <artifactId>alfresco-saml-repo</artifactId>
+            <version>${alfresco.saml.repo.version}</version>
             <classifier>enterprise</classifier>
             <type>amp</type>
         </dependency>
@@ -55,8 +63,16 @@
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.alfresco</groupId>
-                                    <artifactId>alfresco-rm-enterprise-repo</artifactId>
-                                    <version>${alfresco.rm.repo.version}</version>
+                                    <artifactId>alfresco-governance-services-enterprise-repo</artifactId>
+                                    <version>${alfresco.gs.repo.version}</version>
+                                    <type>amp</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/amps</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.alfresco.saml</groupId>
+                                    <artifactId>alfresco-saml-repo</artifactId>
+                                    <version>${alfresco.saml.repo.version}</version>
                                     <type>amp</type>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>${project.build.directory}/amps</outputDirectory>

@@ -8,10 +8,10 @@ dependencies:
     condition: alfresco-sync-service.enabled
     repository: https://kubernetes-charts.alfresco.com/incubator
   - name: alfresco-infrastructure
-    version: 5.0.0
+    version: 5.1.1
     condition: alfresco-infrastructure.enabled
     repository: https://kubernetes-charts.alfresco.com/incubator
-  - name: activiti-cloud-full-example
-    version: 1.1.16
-    condition: activiti-cloud-full-example.enabled
-    repository: https://activiti.github.io/activiti-cloud-charts/
+  - name: alfresco-process-services	
+    version: 0.1.5-AUTH-273	
+    condition: alfresco-process-services.enabled	
+    repository: https://kubernetes-charts.alfresco.com/incubator

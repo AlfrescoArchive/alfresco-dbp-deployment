@@ -9,10 +9,10 @@ If you are using the default dbp setup you can access all components as follows:
 {{- $protocol := index (split ":" .Values.global.keycloak.url) "_0" -}}
 
 
-  Alfresco Digital Workspace: {{ $protocol }}://{{ index .Values "alfresco-content-services" "externalHost" }}/workspace
+  Alfresco Digital Workspace: {{ $protocol }}://{{ index .Values "alfresco-content-services" "externalHost" }}/workspace/
   Content: {{ $protocol }}://{{ index .Values "alfresco-content-services" "externalHost" }}/alfresco
   Share: {{ $protocol }}://{{ index .Values "alfresco-content-services" "externalHost" }}/share
   Solr: {{ $protocol }}://{{ index .Values "alfresco-content-services" "externalHost" }}/solr
   Alfresco Identity Service: {{ index .Values "global" "keycloak" "url" }}
-  Activiti Cloud Gateway: {{ $protocol }}://{{ index .Values "global" "gateway" "host" }}
-  Activiti Modeling App: {{ $protocol }}://{{ index .Values "global" "gateway" "host" }}/activiti-cloud-modeling
+  APS: {{ $protocol }}://{{ index .Values "alfresco-content-services" "externalHost" }}/activiti-app	
+  APS Admin: {{ $protocol }}://{{ index .Values "alfresco-content-services" "externalHost" }}/activiti-admin

@@ -56,3 +56,17 @@ alfresco-content-services:
     livenessProbe:
       initialDelaySeconds: 400
   externalHost: "alfresco-cs-repository.REPLACEME.nip.io"
+
+alfresco-process-services:
+  enabled: true
+  alfresco-infrastructure:
+    enabled: false
+  processEngine:
+    environment:
+      IDENTITY_SERVICE_ENABLED: true
+      IDENTITY_SERVICE_AUTH: "http://alfresco-identity-service.REPLACEME.nip.io/auth"
+  resources:
+    requests:
+      memory: "1000Mi"
+    limits:
+      memory: "2000Mi"

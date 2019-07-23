@@ -2,7 +2,7 @@
 # Declare variables to be passed into your templates.
 global:
   keycloak:
-    url: "http://alfresco-identity-service.192.168.0.103.nip.io/auth"
+    url: "http://alfresco-identity-service.REPLACEME.nip.io/auth"
    
 alfresco-infrastructure:
   persistence:
@@ -11,12 +11,12 @@ alfresco-infrastructure:
       name: "hostpath"
 
 alfresco-digital-workspace:
-  APP_CONFIG_OAUTH2_HOST: "http://alfresco-identity-service.192.168.0.103.nip.io/auth/realms/alfresco"
+  APP_CONFIG_OAUTH2_HOST: "http://alfresco-identity-service.REPLACEME.nip.io/auth/realms/alfresco"
 
 alfresco-content-services:
   repository:
     environment:
-      IDENTITY_SERVICE_URI: "http://alfresco-identity-service.192.168.0.103.nip.io/auth"
+      IDENTITY_SERVICE_URI: "http://alfresco-identity-service.REPLACEME.nip.io/auth"
       JAVA_OPTS: " -Dsolr.base.url=/solr
         -Dsolr.secureComms=none
         -Dindex.subsystem.name=solr6
@@ -65,12 +65,12 @@ alfresco-content-services:
   filestore:
     livenessProbe:
       initialDelaySeconds: 450
-  externalHost: "alfresco-cs-repository.192.168.0.103.nip.io"
+  externalHost: "alfresco-cs-repository.REPLACEME.nip.io"
 
 alfresco-process-services:
   processEngine:
     environment:
-      IDENTITY_SERVICE_AUTH: "http://alfresco-identity-service.192.168.0.103.nip.io/auth"
+      IDENTITY_SERVICE_AUTH: "http://alfresco-identity-service.REPLACEME.nip.io/auth"
   resources:
     requests:
       memory: "1000Mi"
@@ -78,6 +78,6 @@ alfresco-process-services:
       memory: "2000Mi"  
   processWorkspace:
     environment:
-      APP_CONFIG_BPM_HOST: "https://alfresco-cs-repository.192.168.0.103.nip.io"
-      APP_CONFIG_ECM_HOST: "https://alfresco-cs-repository.192.168.0.103.nip.io"
-      APP_CONFIG_OAUTH2_HOST: "https://alfresco-identity-service.192.168.0.103.nip.io/auth/realms/alfresco"
+      APP_CONFIG_BPM_HOST: "https://alfresco-cs-repository.REPLACEME.nip.io"
+      APP_CONFIG_ECM_HOST: "https://alfresco-cs-repository.REPLACEME.nip.io"
+      APP_CONFIG_OAUTH2_HOST: "https://alfresco-identity-service.REPLACEME.nip.io/auth/realms/alfresco"

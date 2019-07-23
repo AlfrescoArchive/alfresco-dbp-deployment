@@ -34,12 +34,15 @@ alfresco-content-services:
         -Dtransform.service.enabled=false"
     replicaCount: 1
     livenessProbe:
-      initialDelaySeconds: 500
+      initialDelaySeconds: 460
     readynessProbe:
-      initialDelaySeconds: 600
+      initialDelaySeconds: 500
     resources:
       requests:
         memory: "1800Mi"
+  alfresco-search:
+    livenessProbe:
+      initialDelaySeconds: 450
   transformrouter:
     replicaCount: 0
   transformmisc:

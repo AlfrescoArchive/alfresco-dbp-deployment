@@ -2,7 +2,7 @@
 # Declare variables to be passed into your templates.
 global:
   keycloak:
-    url: "http://alfresco-identity-service.REPLACEME.nip.io/auth"
+    url: "http://alfresco-identity-service.192.168.0.103.nip.io/auth"
    
 alfresco-infrastructure:
   persistence:
@@ -11,12 +11,12 @@ alfresco-infrastructure:
       name: "hostpath"
 
 alfresco-digital-workspace:
-  APP_CONFIG_OAUTH2_HOST: "http://alfresco-identity-service.REPLACEME.nip.io/auth/realms/alfresco"
+  APP_CONFIG_OAUTH2_HOST: "http://alfresco-identity-service.192.168.0.103.nip.io/auth/realms/alfresco"
 
 alfresco-content-services:
   repository:
     environment:
-      IDENTITY_SERVICE_URI: "http://alfresco-identity-service.REPLACEME.nip.io/auth"
+      IDENTITY_SERVICE_URI: "http://alfresco-identity-service.192.168.0.103.nip.io/auth"
       JAVA_OPTS: " -Dsolr.base.url=/solr
         -Dsolr.secureComms=none
         -Dindex.subsystem.name=solr6
@@ -34,39 +34,50 @@ alfresco-content-services:
         -Dtransform.service.enabled=false"
     replicaCount: 1
     livenessProbe:
-      initialDelaySeconds: 420
-    readynessProbe:
       initialDelaySeconds: 500
+    readynessProbe:
+      initialDelaySeconds: 600
     resources:
       requests:
         memory: "1800Mi"
   transformrouter:
     replicaCount: 0
+  transformmisc:
+    replicaCount: 0
   imagemagick:
-    replicaCount: 0
+    replicaCount: 1
+    livenessProbe:
+      initialDelaySeconds: 450
   libreoffice:
-    replicaCount: 0
+    replicaCount: 1
+    livenessProbe:
+      initialDelaySeconds: 450
   pdfrenderer:
-    replicaCount: 0
+    replicaCount: 1
+    livenessProbe:
+      initialDelaySeconds: 450
   tika:
-    replicaCount: 0
+    replicaCount: 1
+    livenessProbe:
+      initialDelaySeconds: 450
   share:
     replicaCount: 0
   filestore:
     livenessProbe:
-      initialDelaySeconds: 400
-  externalHost: "alfresco-cs-repository.REPLACEME.nip.io"
+      initialDelaySeconds: 450
+  externalHost: "alfresco-cs-repository.192.168.0.103.nip.io"
 
 alfresco-process-services:
-  enabled: true
-  alfresco-infrastructure:
-    enabled: false
   processEngine:
     environment:
-      IDENTITY_SERVICE_ENABLED: true
-      IDENTITY_SERVICE_AUTH: "http://alfresco-identity-service.REPLACEME.nip.io/auth"
+      IDENTITY_SERVICE_AUTH: "http://alfresco-identity-service.192.168.0.103.nip.io/auth"
   resources:
     requests:
       memory: "1000Mi"
     limits:
-      memory: "2000Mi"
+      memory: "2000Mi"  
+  processWorkspace:
+    environment:
+      APP_CONFIG_BPM_HOST: "https://alfresco-cs-repository.192.168.0.103.nip.io"
+      APP_CONFIG_ECM_HOST: "https://alfresco-cs-repository.192.168.0.103.nip.io"
+      APP_CONFIG_OAUTH2_HOST: "https://alfresco-identity-service.192.168.0.103.nip.io/auth/realms/alfresco"

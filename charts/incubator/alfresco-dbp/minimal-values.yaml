@@ -10,10 +10,9 @@ alfresco-infrastructure:
       enabled: true
       name: "hostpath"
 
-alfresco-digital-workspace:
-  APP_CONFIG_OAUTH2_HOST: "http://alfresco-identity-service.REPLACEME.nip.io/auth/realms/alfresco"
-
 alfresco-content-services:
+  alfresco-digital-workspace:
+    APP_CONFIG_OAUTH2_HOST: "http://alfresco-identity-service.REPLACEME.nip.io/auth/realms/alfresco"
   repository:
     environment:
       IDENTITY_SERVICE_URI: "http://alfresco-identity-service.REPLACEME.nip.io/auth"
@@ -34,25 +33,53 @@ alfresco-content-services:
         -Dtransform.service.enabled=false"
     replicaCount: 1
     livenessProbe:
-      initialDelaySeconds: 420
+      initialDelaySeconds: 460
     readynessProbe:
       initialDelaySeconds: 500
     resources:
       requests:
         memory: "1800Mi"
+  alfresco-search:
+    livenessProbe:
+      initialDelaySeconds: 450
   transformrouter:
     replicaCount: 0
+  transformmisc:
+    replicaCount: 0
   imagemagick:
-    replicaCount: 0
+    replicaCount: 1
+    livenessProbe:
+      initialDelaySeconds: 450
   libreoffice:
-    replicaCount: 0
+    replicaCount: 1
+    livenessProbe:
+      initialDelaySeconds: 450
   pdfrenderer:
-    replicaCount: 0
+    replicaCount: 1
+    livenessProbe:
+      initialDelaySeconds: 450
   tika:
-    replicaCount: 0
+    replicaCount: 1
+    livenessProbe:
+      initialDelaySeconds: 450
   share:
     replicaCount: 0
   filestore:
     livenessProbe:
-      initialDelaySeconds: 400
+      initialDelaySeconds: 450
   externalHost: "alfresco-cs-repository.REPLACEME.nip.io"
+
+alfresco-process-services:
+  processEngine:
+    environment:
+      IDENTITY_SERVICE_AUTH: "http://alfresco-identity-service.REPLACEME.nip.io/auth"
+  resources:
+    requests:
+      memory: "1000Mi"
+    limits:
+      memory: "2000Mi"  
+  processWorkspace:
+    environment:
+      APP_CONFIG_BPM_HOST: "https://alfresco-cs-repository.REPLACEME.nip.io"
+      APP_CONFIG_ECM_HOST: "https://alfresco-cs-repository.REPLACEME.nip.io"
+      APP_CONFIG_OAUTH2_HOST: "https://alfresco-identity-service.REPLACEME.nip.io/auth/realms/alfresco"

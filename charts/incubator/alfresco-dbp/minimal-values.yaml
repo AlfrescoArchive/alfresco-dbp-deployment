@@ -10,10 +10,9 @@ alfresco-infrastructure:
       enabled: true
       name: "hostpath"
 
-alfresco-digital-workspace:
-  APP_CONFIG_OAUTH2_HOST: "http://alfresco-identity-service.REPLACEME.nip.io/auth/realms/alfresco"
-
 alfresco-content-services:
+  alfresco-digital-workspace:
+    APP_CONFIG_OAUTH2_HOST: "http://alfresco-identity-service.REPLACEME.nip.io/auth/realms/alfresco"
   repository:
     environment:
       IDENTITY_SERVICE_URI: "http://alfresco-identity-service.REPLACEME.nip.io/auth"

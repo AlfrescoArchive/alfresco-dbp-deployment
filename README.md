@@ -285,10 +285,15 @@ Pull the minimal values file from the current repo:
 
 ```bash
 curl -O https://raw.githubusercontent.com/Alfresco/alfresco-dbp-deployment/master/charts/incubator/alfresco-dbp/minimal-values.yaml
-sed -i s/REPLACEME/$LOCALIP/g minimal-values.yaml
+sed -i "" s/REPLACEME/$LOCALIP/g minimal-values.yaml
 ```
 
 ### 11. Deploy the DBP
+
+```bash
+# Make sure you have the latest Helm charts locally
+helm repo update
+```
 
 ```bash
 # From within the same folder as your minimal-values file

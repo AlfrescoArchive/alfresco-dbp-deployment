@@ -7,7 +7,7 @@ dependencies:
     version: 5.1.1
     condition: alfresco-infrastructure.enabled
     repository: https://kubernetes-charts.alfresco.com/incubator
-  - name: alfresco-process-services	
+  - name: alfresco-process-services
     version: 0.1.5
-    condition: alfresco-process-services.enabled	
+    condition: alfresco-process-services.enabled
     repository: https://kubernetes-charts.alfresco.com/incubator

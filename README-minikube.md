@@ -56,7 +56,7 @@ This environment variable will be used in the deployment steps.
 
 See the Anaxes Shipyard documentation on [secrets](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/SECRETS.md).
 
-*Note*: You can reuse the secrets.yaml file from charts/incubator directory. 
+*Note*: You can reuse the secrets.yaml file from charts/incubator directory.
 
 ```bash
 cd charts/incubator
@@ -171,19 +171,18 @@ helm install alfresco-incubator/alfresco-dbp \
 --namespace=$DESIREDNAMESPACE
 ```
 
-You can either deploy the dbp fully or choose the components you need for your specific case. 
+You can either deploy the dbp fully or choose the components you need for your specific case.
 By default the dbp chart will deploy fully.
 
 To disable specific components you can set the following values to false when deploying:
 ```
 alfresco-content-services.enabled
 alfresco-process-services.enabled
-alfresco-sync-service.enabled
 ```
 
-Example: For disabling sync-service you will need to append the following subcommand to the helm install command:
+Example: For disabling process-service you will need to append the following subcommand to the helm install command:
 ```bash
- --set alfresco-sync-service.enabled=false 
+ --set alfresco-process-service.enabled=false 
 ```
 
 ### 8. Get the DBP release name from the previous command and set it as a variable:

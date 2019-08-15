@@ -7,7 +7,7 @@ global:
     resource: alfresco
     realm: alfresco
     client: alfresco
-    url: "http://alfresco-identity-service.rpopa3.dev.alfresco.me/auth"
+    url: "https://alfresco-identity-service.REPLACEME/auth"
 
 alfresco-process-services:
   enabled: true
@@ -16,7 +16,7 @@ alfresco-process-services:
   processEngine:
     environment:
       IDENTITY_SERVICE_ENABLED: "\"true\""
-      IDENTITY_SERVICE_AUTH: "http://alfresco-identity-service.rpopa3.dev.alfresco.me/auth"
+      IDENTITY_SERVICE_AUTH: "https://alfresco-identity-service.REPLACEME/auth"
   resources:
     requests:
       memory: "2000Mi"
@@ -26,12 +26,12 @@ alfresco-process-services:
     ingress:
       path: /apw
     environment:
-      APP_CONFIG_BPM_HOST: "http://alfresco-cs-repository.rpopa3.dev.alfresco.me"
-      APP_CONFIG_ECM_HOST: "http://alfresco-cs-repository.rpopa3.dev.alfresco.me"
+      APP_CONFIG_BPM_HOST: "https://alfresco-cs-repository.REPLACEME"
+      APP_CONFIG_ECM_HOST: "https://alfresco-cs-repository.REPLACEME"
       BASE_PATH: "./" # TODO needs support in Docker image
       APP_CONFIG_PROVIDERS: "BPM"
       APP_CONFIG_AUTH_TYPE: "OAUTH" # i.e. BASIC | OAUTH
-      APP_CONFIG_OAUTH2_HOST: "http://alfresco-identity-service.rpopa3.dev.alfresco.me/auth/realms/alfresco"
+      APP_CONFIG_OAUTH2_HOST: "https://alfresco-identity-service.REPLACEME/auth/realms/alfresco"
       APP_CONFIG_OAUTH2_CLIENTID: "alfresco"
       APP_CONFIG_OAUTH2_IMPLICIT_FLOW: "\"true\""
       APP_CONFIG_OAUTH2_SILENT_LOGIN: "\"true\""
@@ -40,14 +40,6 @@ alfresco-process-services:
 
 alfresco-infrastructure:
   enabled: true
-  persistence:
-    enabled: true
-    baseSize: 20Gi
-    storageClass: #enable and define if you already have a custom storage class defined
-      enabled: true
-      accessModes:
-        - ReadWriteMany
-      name: "rpopa3"
   activemq:
     persistence:
       subPath: "alfresco-infrastructure/activemq-data-infra"
@@ -192,16 +184,16 @@ alfresco-content-services:
   share:
     image:
       repository: quay.io/alfresco/alfresco-dbp-share
-      tag: "0.4-SNAPSHOT-SAML"
+      tag: "0.4-SNAPSHOT"
   repository:
     image:
       repository: quay.io/alfresco/alfresco-dbp-repository
-      tag: "0.4-SNAPSHOT-SAML"
+      tag: "0.4-SNAPSHOT"
     environment:
       # The SYNC_SERVICE_URI should contain the details of the ingress host and port.
       SYNC_SERVICE_URI: "<ingresscontrollerurl>/syncservice"
       # The IDENTITY_SERVICE_URI should contain the details of the ingress host and port.
-      IDENTITY_SERVICE_URI: "http://alfresco-identity-service.rpopa3.dev.alfresco.me/auth"
+      IDENTITY_SERVICE_URI: "https://alfresco-identity-service.REPLACEME/auth"
       JAVA_OPTS: " -Dsolr.base.url=/solr
         -Dsolr.secureComms=none
         -Dindex.subsystem.name=solr6
@@ -215,20 +207,12 @@ alfresco-content-services:
         -Didentity-service.auth-server-url=\"$IDENTITY_SERVICE_URI\"
         -Didentity-service.realm=alfresco
         -Didentity-service.resource=alfresco
-        -Dsaml.keystore.location=/opt/saml/saml.keystore
-        -Dsaml.keystore.keyMetaData.location=/opt/saml/saml-keystore-passwords.properties
-        -Dsaml.sp.isEnabled=true -Dsaml.sp.isEnforced=false -Dsaml.sp.idp.description=PingFederate
-        -Dsaml.sp.idp.sso.request.url=https://pingfederate.alfresco.me:9031/idp/SSO.saml2
-        -Dsaml.sp.idp.slo.request.url=https://pingfederate.alfresco.me:9031/idp/SLO.saml2
-        -Dsaml.sp.idp.slo.response.url=https://pingfederate.alfresco.me:9031/idp/SLO.saml2
-        -Dsaml.sp.idp.spIssuer=alfresco-cs-repository.rpopa3.dev.alfresco.me
-        -Dsaml.sp.user.mapping.id=PersonImmutableID"
-  externalHost: "alfresco-cs-repository.rpopa3.dev.alfresco.me"
+  externalHost: "alfresco-cs-repository.REPLACEME"
   networkpolicysetting:
     enabled: false
   alfresco-digital-workspace:
     APP_CONFIG_AUTH_TYPE: "OAUTH"
-    APP_CONFIG_OAUTH2_HOST: "http://alfresco-identity-service.rpopa3.dev.alfresco.me/auth/realms/alfresco"
+    APP_CONFIG_OAUTH2_HOST: "https://alfresco-identity-service.REPLACEME/auth/realms/alfresco"
     APP_CONFIG_OAUTH2_CLIENTID: "alfresco"
     APP_CONFIG_OAUTH2_IMPLICIT_FLOW: "\"true\""
     APP_CONFIG_OAUTH2_SILENT_LOGIN: "\"true\""

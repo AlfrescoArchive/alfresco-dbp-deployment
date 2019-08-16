@@ -87,16 +87,28 @@ Create an [EFS storage](https://docs.aws.amazon.com/efs/latest/ug/creating-using
 it is in the same VPC as your cluster. Make sure you [open inbound traffic](https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_SecurityGroups.html) 
 in the security group to allow NFS traffic. 
 
-Save the name of the server ex:
+Save the name of the server as in this example:
+
 ```bash
 export NFSSERVER=fs-d660549f.efs.us-east-1.amazonaws.com
 ```
 
-***Note!***
-The Persistent volume created to store the data on the created EFS has the ReclaimPolicy set to Recycle.
-This means that by default, when you delete the release the saved data is deleted automatically.
+Then install a nfs client service to create a dynamic storage class in kubernetes. This can be used by multiple deployments.
 
-To change this behaviour and keep the data you can set the alfresco-infrastructure.persistence.reclaimPolicy value to Retain.
+```bash
+helm install stable/nfs-client-provisioner \
+--name $DESIREDNAMESPACE \
+--set nfs.server="$NFSSERVER" \
+--set nfs.path="/" \
+--set storageClass.reclaimPolicy="Delete" \
+--set storageClass.name="$DESIREDNAMESPACE-sc" \
+--namespace $DESIREDNAMESPACE
+```
+
+Note! The Persistent volume created with NFS to store the data on the created EFS has the ReclaimPolicy set to Delete. This means that by default, when you delete the release the saved data is deleted automatically.
+
+To change this behaviour and keep the data you can set the storageClass.reclaimPolicy value to Retain.
+
 For more Information on Reclaim Policies checkout the official K8S documentation here -> https://kubernetes.io/docs/concepts/storage/persistent-volumes/#reclaim-policy
 
 We don't advise you to use the same EFS instance for persisting the data from multiple dbp deployments.
@@ -130,8 +142,8 @@ Note! The name for the DNS entry you are defining here will be set in route53 la
 ```bash
 # From within the same folder as your values file
 helm install alfresco-incubator/alfresco-dbp -f values.yaml \
---set alfresco-infrastructure.persistence.efs.enabled=true \
---set alfresco-infrastructure.persistence.efs.dns="$NFSSERVER" \
+--set alfresco-infrastructure.persistence.storageClass.enabled=true \
+--set alfresco-infrastructure.persistence.storageClass.name="$DESIREDNAMESPACE-sc" \
 --namespace=$DESIREDNAMESPACE
 ```
 

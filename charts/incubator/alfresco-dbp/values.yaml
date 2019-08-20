@@ -200,7 +200,7 @@ alfresco-content-services:
         -Dalfresco.cluster.enabled=true
         -Ddeployment.method=HELM_CHART
         -Xms2000M -Xmx2000M
-        -Dsync.service.uris=\"$SYNC_SERVICE_URI\"
+        -Ddsync.service.uris=\"$SYNC_SERVICE_URI\"
         -Dauthentication.chain=identity-service1:identity-service,alfrescoNtlm1:alfrescoNtlm
         -Didentity-service.enable-basic-auth=true
         -Didentity-service.authentication.validation.failure.silent=false

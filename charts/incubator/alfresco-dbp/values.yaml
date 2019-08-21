@@ -191,7 +191,9 @@ alfresco-content-services:
         -Didentity-service.authentication.validation.failure.silent=false
         -Didentity-service.auth-server-url=\"$IDENTITY_SERVICE_URI\"
         -Didentity-service.realm=alfresco
-        -Didentity-service.resource=alfresco"
+        -Didentity-service.resource=alfresco
+        -Dsaml.keystore.location=/opt/saml/saml.keystore
+        -Dsaml.keystore.keyMetaData.location=/opt/saml/saml-keystore-passwords.properties"
   externalHost: "alfresco-cs-repository.REPLACEME"
   networkpolicysetting:
     enabled: false

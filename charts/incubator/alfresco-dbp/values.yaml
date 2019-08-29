@@ -22,21 +22,6 @@ alfresco-process-services:
       memory: "2000Mi"
     limits:
       memory: "3000Mi"
-  processWorkspace:
-    ingress:
-      path: /apw
-    environment:
-      APP_CONFIG_BPM_HOST: "https://alfresco-cs-repository.REPLACEME"
-      APP_CONFIG_ECM_HOST: "https://alfresco-cs-repository.REPLACEME"
-      BASE_PATH: "./" # TODO needs support in Docker image
-      APP_CONFIG_PROVIDERS: "BPM"
-      APP_CONFIG_AUTH_TYPE: "OAUTH" # i.e. BASIC | OAUTH
-      APP_CONFIG_OAUTH2_HOST: "https://alfresco-identity-service.REPLACEME/auth/realms/alfresco"
-      APP_CONFIG_OAUTH2_CLIENTID: "alfresco"
-      APP_CONFIG_OAUTH2_IMPLICIT_FLOW: "\"true\""
-      APP_CONFIG_OAUTH2_SILENT_LOGIN: "\"true\""
-      APP_CONFIG_OAUTH2_REDIRECT_LOGIN: "/apw"
-      APP_CONFIG_OAUTH2_REDIRECT_LOGOUT: "/apw/logout"
 
 alfresco-infrastructure:
   enabled: true

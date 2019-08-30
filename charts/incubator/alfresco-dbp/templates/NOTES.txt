@@ -16,3 +16,4 @@ If you are using the default dbp setup you can access all components as follows:
   Alfresco Identity Service: {{ index .Values "global" "keycloak" "url" }}
   APS: {{ $protocol }}://{{ index .Values "alfresco-content-services" "externalHost" }}/activiti-app	
   APS Admin: {{ $protocol }}://{{ index .Values "alfresco-content-services" "externalHost" }}/activiti-admin
+  Sync Service {{ $protocol }}://{{ index .Values "alfresco-content-services" "externalHost" }}/syncservice/healthcheck

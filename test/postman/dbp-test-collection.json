@@ -1174,10 +1174,10 @@
 									"    pm.expect(\"assignee\" in jsonData).to.be.true;",
 									"    ",
 									"    var assignee = jsonData.assignee;",
-									"    // firstName and lastName will be set at user import time, not by AIS",
+									"    // firstName and lastName will be set at user import time, not by AIMS",
 									"    pm.expect(\"firstName\" in assignee).to.be.true;",
 									"    pm.expect(\"lastName\" in assignee).to.be.true;",
-									"    // email is the key that connects AIS user with local user",
+									"    // email is the key that connects AIMS user with local user",
 									"    pm.expect(\"email\" in assignee).to.be.true;",
 									"    pm.expect(assignee.email).to.equal(pm.variables.get(\"testUserEmail\"));",
 									"});"

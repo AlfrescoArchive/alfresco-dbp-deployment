@@ -1,6 +1,6 @@
 dependencies:
   - name: alfresco-content-services
-    version: 2.1.0-kerberos
+    version: 2.1.0-kerberosFix
     condition: alfresco-content-services.enabled
     repository: https://kubernetes-charts.alfresco.com/incubator
   - name: alfresco-sync-service

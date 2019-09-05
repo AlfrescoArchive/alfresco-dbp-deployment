@@ -22,6 +22,17 @@ alfresco-process-services:
       memory: "2000Mi"
     limits:
       memory: "3000Mi"
+  processWorkspace:
+    ingress:
+      path: "/apw"
+    environment:
+      APP_CONFIG_BPM_HOST: "http://alfresco-process.REPLACEME"
+      APP_CONFIG_ECM_HOST: "http://alfresco-process.REPLACEME"
+      APP_CONFIG_AUTH_TYPE: "OAUTH"
+      APP_CONFIG_OAUTH2_HOST: "http://alfresco-identity-service.REPLACEME/auth/realms/alfresco"
+      APP_CONFIG_OAUTH2_CLIENTID: "alfresco"
+      APP_CONFIG_OAUTH2_REDIRECT_LOGIN: "/apw/"
+      BASE_PATH: "./" # Should be implemented in ACTIVITI-3355
 
 alfresco-infrastructure:
   enabled: true

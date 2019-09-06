@@ -32,6 +32,7 @@ alfresco-process-services:
       APP_CONFIG_OAUTH2_HOST: "http://alfresco-identity-service.REPLACEME/auth/realms/alfresco"
       APP_CONFIG_OAUTH2_CLIENTID: "alfresco"
       APP_CONFIG_OAUTH2_REDIRECT_LOGIN: "/apw/"
+      APP_CONFIG_OAUTH2_REDIRECT_LOGOUT: "/apw/logout"
       BASE_PATH: "./" # Should be implemented in ACTIVITI-3355
 
 alfresco-infrastructure:

@@ -12,10 +12,16 @@ USER root
 RUN mkdir -p ${TOMCAT_DIR}/amps/dbp && \
     chgrp ${GROUPNAME} ${TOMCAT_DIR}/amps/dbp
 
-# Add DBP AMPs and change ownership to be the same as the base image. 
-COPY --chown=root:${GROUPNAME} target/amps ${TOMCAT_DIR}/amps/dbp
+# Add DBP AMPs and change ownership to be the same as the base image.
+# Note: 
+# Docker version on Bamboo elastic agents is 18.09.3, which doesn't support argument substitution.
+# When DELENG-679 gets fixed we should change the COPY command to:
+# COPY --chown=root:${GROUPNAME} target/amps ${TOMCAT_DIR}/amps/dbp
+COPY --chown=root:Alfresco target/amps ${TOMCAT_DIR}/amps/dbp
 
-COPY --chown=root:${GROUPNAME} saml /opt/saml
+# Same as the above, when DELENG-679 gets fixed we should change the COPY command to:
+# COPY --chown=root:${GROUPNAME} saml /opt/saml
+COPY --chown=root:Alfresco saml /opt/saml
 
 # After applying AMPs, change the group and mod of the added files and directories from the AMPs, 
 # to be the same as the base image settings.

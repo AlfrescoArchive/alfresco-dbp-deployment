@@ -1,5 +1,7 @@
 FROM alfresco/alfresco-content-repository:6.1.1-RC1
 
+# TODO DEPLOY-827
+
 ARG GROUPNAME=Alfresco
 ARG TOMCAT_DIR=/usr/local/tomcat
 ARG USERNAME=alfresco

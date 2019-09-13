@@ -6,6 +6,11 @@ SHARE_CONFIG_CUSTOM='/usr/local/tomcat/shared/classes/alfresco/web-extension/sha
 
 echo "Configuring ${SHARE_CONFIG_CUSTOM} with SAML settings."
 
+# Remove the 'replace="false"' attribute from the 'CSRFPolicy' config element in share-config-custom.xml in the base image,
+# to avoid having two CSRFPolicy config elements with attribute 'replace' set to 'true' (i.e. performed by the substituter.sh script in the base image).
+# This will allow our custom 'CSRFPolicy' element for SAML to replace the base config. 
+sed -i 's|condition="CSRFPolicy" replace="false"|condition="CSRFPolicy"|g' "$SHARE_CONFIG_CUSTOM"
+
 # First delete the last tag
 sed -i '/^[ \t]*<\/alfresco-config>/d' "${SHARE_CONFIG_CUSTOM}"
 
@@ -14,6 +19,7 @@ sed -i '/^[ \t]*<\/alfresco-config>/d' "${SHARE_CONFIG_CUSTOM}"
 # the '<referer></referer>' and '<origin></origin>' properties will be replaced with appropriate values by the base image at runtime.
 echo -e '<config evaluator="string-compare" condition="CSRFPolicy" replace="true">
         <properties>
+            <token>Alfresco-CSRFToken</token>
             <referer></referer>
             <origin></origin>
         </properties>

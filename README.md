@@ -9,7 +9,7 @@ The Alfresco Digital Business Platform can be deployed to different environments
 - [Deploy to Docker for Desktop - Mac](#docker-for-desktop---mac)
 - [Deploy to Docker for Desktop - Windows](#docker-for-desktop---windows)
 
-*Note:* If using azure instead of aws then you will need to use azure database instead of postgres.
+*Note:* If using Azure instead of AWS then you will need to use Azure Databases instead of Postgres.
 
 # AWS
 

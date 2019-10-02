@@ -55,6 +55,10 @@ For routing the components of the DBP deployment outside the k8s cluster we use 
 
 For more options on configuring the ingress controller that is deployed through the alfresco-infrastructure chart, please check the [Alfresco Infrastructure](https://github.com/Alfresco/alfresco-infrastructure-deployment) chart Readme.
 
+### Database
+
+When deploying to cloud environments like AWS and Azure you should consider using native database services from those providers rather than deploying Postgres within the Kubernetes cluster.
+
 ## Deployment
 
 ### 1. EFS Storage

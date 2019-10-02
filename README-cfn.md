@@ -1,5 +1,7 @@
 # DBP Deployment on AWS EKS
 
+*Note:* When deploying to cloud environments like AWS and Azure you should consider using native database services from those providers rather than deploying Postgres within the Kubernetes cluster.
+
 ## Overview
 
 This project contains the code for the AWS-based DBP product on AWS Cloud using an AWS CloudFormation template.  It's built with a main CloudFormation (CFN) template that also spins up sub-stacks for a VPC, Bastion Host, EKS Cluster and Worker Nodes (including registering them with the EKS Master) in an auto-scaling group.

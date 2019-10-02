@@ -43,35 +43,11 @@ This environment variable will be used in the deployment steps.
 
 ### Docker Registry Pull Secrets
 
-See the Anaxes Shipyard documentation on [secrets](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/SECRETS.md).
-
-*Note*: You can reuse the secrets.yaml file from charts/incubator directory. 
-
-```bash
-cd charts/incubator
-cat ~/.docker/config.json | base64
+If a Helm chart needs to pull a protected image, instructions on how to create and use a secret can be found [here](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry). For example, the following code would create a quay.io secret called quay-registry-secret:
+```
+kubectl create secret docker-registry quay-registry-secret --docker-server=quay.io --docker-username=<your-name> --docker-password=<your-pword> --namespace example
 ```
 
-Add the base64 string generated to .dockerconfigjson in secrets.yaml. The file should look similar to this:
-
-```bash
-apiVersion: v1
-kind: Secret
-metadata:
-  name: quay-registry-secret
-type: kubernetes.io/dockerconfigjson
-data:
-# Docker registries config json in base64 to do this just run - cat ~/.docker/config.json | base64
-  .dockerconfigjson: ew0KCSJhdXRocyI6IHsNCgkJImh0dHBzOi8vcXVheS5pbyI6IHsNCgkJCSJhdXRoIjogImRHVnpkRHAwWlhOMD0iDQoJCX0sDQoJCSJxdWF5LmlvIjogew0KCQkJImF1dGgiOiAiZEdWemREcDBaWE4w550KCQl9DQoJfSwNCgkiSHR0cEhlYWRlcnMiOiB7DQoJCSJVc2VyLUFnZW50IjogIkRvY2tlci1DbGllbnQvMTcuMTIuMC1jZS1yYzMgKGRhcndpbikiDQoJfQ0KfQ==
-```
-
-Then run this command:
-
-```bash
-kubectl create -f secrets.yaml --namespace $DESIREDNAMESPACE
-```
-
-*Note*: Make sure the $DESIREDNAMESPACE variable has been set when the infrastructure chart was deployed so that the secret gets created in the same namespace.
 
 ### Ingress Customization
 
@@ -285,7 +261,10 @@ export LOCALIP=$(ipconfig getifaddr en0)
 
 ### 9. Docker Registry Pull Secrets
 
-See the Anaxes Shipyard documentation on [secrets](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/SECRETS.md).
+If a Helm chart needs to pull a protected image, instructions on how to create and use a secret can be found [here](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry). For example, the following code would create a quay.io secret called quay-registry-secret:
+```
+kubectl create secret docker-registry quay-registry-secret --docker-server=quay.io --docker-username=<your-name> --docker-password=<your-pword> --namespace example
+```
 
 *Note*: You can reuse the secrets.yaml file from charts/incubator directory.  
 
@@ -457,29 +436,9 @@ kubectl create namespace $DESIREDNAMESPACE
 
 ### 8. Pull secrets
 
-Go to the config.json file in "C:\Users\yourUserProfile\.docker", and delete anything inside the string after credsStore to make sure that it is empty as follows:
-
-```bash
-"credsStore": ""
+If a Helm chart needs to pull a protected image, instructions on how to create and use a secret can be found [here](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry). For example, the following code would create a quay.io secret called quay-registry-secret:
 ```
-
-In your browser, go to quay.io. And ensure that you are logged in.
-
-
-Navigate to 'Account Settings' > 'Generate Encrypted Password', and provide your password.
-
-Click on the 'Kubernetes Secret' tab, and download your secret. 
-
-Open the secret file and change the name inside to the following. 
-
-```bash
-  name: quay-registry-secret
-```
-
-Back in PowerShell, create the secret in your namespace, replacing "secret-name.yml" with the name of the yml file that you downloaded. 
-
-```bash
-kubectl create -f secret-name.yml --namespace $DESIREDNAMESPACE
+kubectl create secret docker-registry quay-registry-secret --docker-server=quay.io --docker-username=<your-name> --docker-password=<your-pword> --namespace example
 ```
 
 ### 9. Add remote chart repository to Helm configuration.

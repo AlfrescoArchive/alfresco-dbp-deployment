@@ -4,7 +4,7 @@ The Alfresco Digital Business Platform Deployment requires:
 
 | Component   | Recommended version | Getting Started Guide |
 | ------------|:-----------: | ---------------------- |
-| Docker      | 18.09.0      | https://docs.docker.com/ |
+| Docker      | 19.03.1      | https://docs.docker.com/ |
 | Kubernetes  | 1.10.3       | https://kubernetes.io/docs/tutorials/kubernetes-basics/ |
 | Kubectl     | 1.10.3       | https://kubernetes.io/docs/tasks/tools/install-kubectl/ |
 | Helm        | 2.12.3       | https://docs.helm.sh/using_helm/#quickstart-guide |

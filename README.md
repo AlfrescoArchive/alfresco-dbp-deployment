@@ -111,7 +111,7 @@ export DNSZONE=YourDesiredCname.YourRoute53DnsZone
 Afterwards pull the helm values file from the current repo:
 
 ```bash
-curl -O https://raw.githubusercontent.com/Alfresco/alfresco-dbp-deployment/master/charts/incubator/alfresco-dbp/values.yaml
+curl -O https://raw.githubusercontent.com/Alfresco/alfresco-dbp-deployment/master/helm/alfresco-dbp/values.yaml
 sed -i s/REPLACEME/$DNSZONE/g values.yaml
 ```
 
@@ -270,7 +270,7 @@ If a Helm chart needs to pull a protected image, instructions on how to create a
 kubectl create secret docker-registry quay-registry-secret --docker-server=quay.io --docker-username=<your-name> --docker-password=<your-pword> --namespace example
 ```
 
-*Note*: You can reuse the secrets.yaml file from charts/incubator directory.  
+*Note*: You can reuse the secrets.yaml file from `helm` directory.  
 
 ### 10. Download and modify the minimal-values.yaml file
 
@@ -279,7 +279,7 @@ The minimal-values.yaml file contains values for local only development and mult
 Pull the minimal values file from the current repo:
 
 ```bash
-curl -O https://raw.githubusercontent.com/Alfresco/alfresco-dbp-deployment/master/charts/incubator/alfresco-dbp/minimal-values.yaml
+curl -O https://raw.githubusercontent.com/Alfresco/alfresco-dbp-deployment/master/helm/alfresco-dbp/minimal-values.yaml
 sed -i '' 's/REPLACEME/'"$LOCALIP"'/g' minimal-values.yaml
 ```
 
@@ -480,7 +480,7 @@ The minimal-values.yaml file contains values for local only development and mult
 Pull the minimal values file from the current repo:
 
 ```bash
-Invoke-WebRequest -Uri https://raw.githubusercontent.com/Alfresco/alfresco-dbp-deployment/master/charts/incubator/alfresco-dbp/minimal-values.yaml -OutFile minimal-values.yaml
+Invoke-WebRequest -Uri https://raw.githubusercontent.com/Alfresco/alfresco-dbp-deployment/master/helm/alfresco-dbp/minimal-values.yaml -OutFile minimal-values.yaml
 (Get-Content minimal-values.yaml).replace('REPLACEME', $LOCALIP) | Set-Content minimal-values.yaml
 ```
 

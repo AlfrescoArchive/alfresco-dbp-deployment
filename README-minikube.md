@@ -56,10 +56,10 @@ This environment variable will be used in the deployment steps.
 
 See the Anaxes Shipyard documentation on [secrets](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/SECRETS.md).
 
-*Note*: You can reuse the secrets.yaml file from charts/incubator directory.
+*Note*: You can reuse the secrets.yaml file from `helm` directory.
 
 ```bash
-cd charts/incubator
+cd helm
 cat ~/.docker/config.json | base64
 ```
 

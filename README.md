@@ -112,7 +112,7 @@ export DNSZONE=YourDesiredCname.YourRoute53DnsZone
 Afterwards pull the helm values file from the current repo:
 
 ```bash
-curl -O https://raw.githubusercontent.com/Alfresco/alfresco-dbp-deployment/master/charts/incubator/alfresco-dbp/values.yaml
+curl -O https://raw.githubusercontent.com/Alfresco/alfresco-dbp-deployment/master/helm/alfresco-dbp/values.yaml
 sed -i s/REPLACEME/$DNSZONE/g values.yaml
 ```
 
@@ -272,7 +272,7 @@ If a Helm chart needs to pull a protected image, instructions on how to create a
 kubectl create secret docker-registry quay-registry-secret --docker-server=quay.io --docker-username=<your-name> --docker-password=<your-pword> --namespace example
 ```
 
-*Note*: You can reuse the secrets.yaml file from charts/incubator directory.  
+*Note*: You can reuse the secrets.yaml file from `helm` directory.  
 
 ### 10. Download and modify the minimal-values.yaml file
 
@@ -281,7 +281,7 @@ The minimal-values.yaml file contains values for local only development and mult
 Pull the minimal values file from the current repo:
 
 ```bash
-curl -O https://raw.githubusercontent.com/Alfresco/alfresco-dbp-deployment/master/charts/incubator/alfresco-dbp/minimal-values.yaml
+curl -O https://raw.githubusercontent.com/Alfresco/alfresco-dbp-deployment/master/helm/alfresco-dbp/minimal-values.yaml
 sed -i '' 's/REPLACEME/'"$LOCALIP"'/g' minimal-values.yaml
 ```
 
@@ -304,13 +304,12 @@ kubectl get pods
 
 You can access DBP components at the following URLs:
 
-
-  Alfresco Digital Workspace: http://alfresco-cs-repository.YOURIP.nip.io/digital-workspace/  
-  Content: http://alfresco-cs-repository.YOURIP.nip.io/alfresco  
-  Share: http://alfresco-cs-repository.YOURIP.nip.io/share  
-  Alfresco Identity Service: http://alfresco-identity-service.YOURIP.nip.io/auth
-  APS: http://alfresco-cs-repository.YOURIP.nip.io/activiti-app
-  APS Admin: http://alfresco-cs-repository.YOURIP.nip.io/activiti-admin
+  Alfresco Digital Workspace: http://alfresco-cs-repository.YOURIP.nip.io/workspace/   
+  Content: http://alfresco-cs-repository.YOURIP.nip.io/alfresco    
+  Share: http://alfresco-cs-repository.YOURIP.nip.io/share    
+  Alfresco Identity Service: http://alfresco-identity-service.YOURIP.nip.io/auth    
+  APS: http://alfresco-cs-repository.YOURIP.nip.io/activiti-app    
+  APS Admin: http://alfresco-cs-repository.YOURIP.nip.io/activiti-admin  
   
 ### 14. Teardown:
 
@@ -482,7 +481,7 @@ The minimal-values.yaml file contains values for local only development and mult
 Pull the minimal values file from the current repo:
 
 ```bash
-Invoke-WebRequest -Uri https://raw.githubusercontent.com/Alfresco/alfresco-dbp-deployment/master/charts/incubator/alfresco-dbp/minimal-values.yaml -OutFile minimal-values.yaml
+Invoke-WebRequest -Uri https://raw.githubusercontent.com/Alfresco/alfresco-dbp-deployment/master/helm/alfresco-dbp/minimal-values.yaml -OutFile minimal-values.yaml
 (Get-Content minimal-values.yaml).replace('REPLACEME', $LOCALIP) | Set-Content minimal-values.yaml
 ```
 
@@ -507,12 +506,12 @@ kubectl get pods
 
 You can access DBP components at the following URLs:
 
-  Alfresco Digital Workspace: http://alfresco-cs-repository.YOURIP.nip.io/digital-workspace/  
+  Alfresco Digital Workspace: http://alfresco-cs-repository.YOURIP.nip.io/workspace/  
   Content: http://alfresco-cs-repository.YOURIP.nip.io/alfresco  
   Share: http://alfresco-cs-repository.YOURIP.nip.io/share  
   Alfresco Identity Service: http://alfresco-identity-service.YOURIP.nip.io/auth  
-  APS: http://alfresco-cs-repository.YOURIP.nip.io/activiti-app
-  APS Admin: http://alfresco-cs-repository.YOURIP.nip.io/activiti-admin 
+  APS: http://alfresco-cs-repository.YOURIP.nip.io/activiti-app    
+  APS Admin: http://alfresco-cs-repository.YOURIP.nip.io/activiti-admin    
 
 If any pods are failing, you can use each of the following commands to see more about their errors:
 

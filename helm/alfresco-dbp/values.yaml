@@ -15,7 +15,7 @@ alfresco-process-services:
     enabled: false
   processEngine:
     environment:
-      IDENTITY_SERVICE_ENABLED: "\"true\""
+      IDENTITY_SERVICE_ENABLED: "true"
       IDENTITY_SERVICE_AUTH: "https://alfresco-identity-service.REPLACEME/auth"
   resources:
     requests:

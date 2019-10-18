@@ -21,7 +21,7 @@ alfresco-content-services:
         -Dindex.subsystem.name=solr6
         -Dalfresco.cluster.enabled=true
         -Ddeployment.method=HELM_CHART
-        -Xms1800M -Xmx1800M
+        -Xms1200M -Xmx1200M
         -Ddsync.service.uris=\"$SYNC_SERVICE_URI\"
         -Dauthentication.chain=identity-service1:identity-service,alfrescoNtlm1:alfrescoNtlm
         -Didentity-service.enable-basic-auth=true
@@ -38,18 +38,28 @@ alfresco-content-services:
       initialDelaySeconds: 500
     resources:
       requests:
-        memory: "1800Mi"
+        memory: "1200Mi"
   alfresco-search:
     livenessProbe:
       initialDelaySeconds: 450
   transformrouter:
-    replicaCount: 0
+    replicaCount: 1
   transformmisc:
-    replicaCount: 0
+    replicaCount: 1
+    resources:
+      requests:
+        memory: "512Mi"
+      limits:
+        memory: "512Mi"
   imagemagick:
     replicaCount: 1
     livenessProbe:
       initialDelaySeconds: 450
+    resources:
+      requests:
+        memory: "512Mi"
+      limits:
+        memory: "512Mi"
   libreoffice:
     replicaCount: 1
     livenessProbe:
@@ -58,15 +68,35 @@ alfresco-content-services:
     replicaCount: 1
     livenessProbe:
       initialDelaySeconds: 450
+    resources:
+      requests:
+        memory: "512Mi"
+      limits:
+        memory: "512Mi"
   tika:
     replicaCount: 1
     livenessProbe:
       initialDelaySeconds: 450
+    resources:
+      requests:
+        memory: "512Mi"
+      limits:
+        memory: "512Mi"
   share:
-    replicaCount: 0
+    replicaCount: 1
+    resources:
+      requests:
+        memory: "1000Mi"
+      limits:
+        memory: "1000Mi"
   filestore:
     livenessProbe:
       initialDelaySeconds: 450
+    resources:
+      requests:
+        memory: "512Mi"
+      limits:
+        memory: "512Mi"
   externalHost: "alfresco-cs-repository.REPLACEME.nip.io"
 
 alfresco-process-services:
@@ -77,7 +107,7 @@ alfresco-process-services:
     requests:
       memory: "1000Mi"
     limits:
-      memory: "2000Mi"  
+      memory: "1000Mi"  
   processWorkspace:
     environment:
       APP_CONFIG_BPM_HOST: "https://alfresco-cs-repository.REPLACEME.nip.io"

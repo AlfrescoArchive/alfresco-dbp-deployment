@@ -45,7 +45,7 @@ This environment variable will be used in the deployment steps.
 
 If a Helm chart needs to pull a protected image, instructions on how to create and use a secret can be found [here](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry). For example, the following code would create a quay.io secret called quay-registry-secret:
 ```
-kubectl create secret docker-registry quay-registry-secret --docker-server=quay.io --docker-username=<your-name> --docker-password=<your-pword> --namespace example
+kubectl create secret docker-registry quay-registry-secret --docker-server=quay.io --docker-username=<your-name> --docker-password=<your-pword> --namespace $DESIREDNAMESPACE
 ```
 
 
@@ -269,7 +269,7 @@ export LOCALIP=$(ipconfig getifaddr en0)
 
 If a Helm chart needs to pull a protected image, instructions on how to create and use a secret can be found [here](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry). For example, the following code would create a quay.io secret called quay-registry-secret:
 ```
-kubectl create secret docker-registry quay-registry-secret --docker-server=quay.io --docker-username=<your-name> --docker-password=<your-pword> --namespace example
+kubectl create secret docker-registry quay-registry-secret --docker-server=quay.io --docker-username=<your-name> --docker-password=<your-pword>
 ```
 
 *Note*: You can reuse the secrets.yaml file from `helm` directory.  
@@ -443,7 +443,7 @@ kubectl create namespace $DESIREDNAMESPACE
 
 If a Helm chart needs to pull a protected image, instructions on how to create and use a secret can be found [here](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry). For example, the following code would create a quay.io secret called quay-registry-secret:
 ```
-kubectl create secret docker-registry quay-registry-secret --docker-server=quay.io --docker-username=<your-name> --docker-password=<your-pword> --namespace example
+kubectl create secret docker-registry quay-registry-secret --docker-server=quay.io --docker-username=<your-name> --docker-password=<your-pword> --namespace $DESIREDNAMESPACE
 ```
 
 ### 9. Add remote chart repository to Helm configuration.

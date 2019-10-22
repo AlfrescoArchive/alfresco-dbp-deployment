@@ -45,7 +45,7 @@ This environment variable will be used in the deployment steps.
 
 If a Helm chart needs to pull a protected image, instructions on how to create and use a secret can be found [here](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry). For example, the following code would create a quay.io secret called quay-registry-secret:
 ```
-kubectl create secret docker-registry quay-registry-secret --docker-server=quay.io --docker-username=<your-name> --docker-password=<your-pword> --namespace example
+kubectl create secret docker-registry quay-registry-secret --docker-server=quay.io --docker-username=<your-name> --docker-password=<your-pword> --namespace $DESIREDNAMESPACE
 ```
 
 
@@ -267,7 +267,7 @@ export LOCALIP=$(ipconfig getifaddr en0)
 
 If a Helm chart needs to pull a protected image, instructions on how to create and use a secret can be found [here](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry). For example, the following code would create a quay.io secret called quay-registry-secret:
 ```
-kubectl create secret docker-registry quay-registry-secret --docker-server=quay.io --docker-username=<your-name> --docker-password=<your-pword> --namespace example
+kubectl create secret docker-registry quay-registry-secret --docker-server=quay.io --docker-username=<your-name> --docker-password=<your-pword>
 ```
 
 *Note*: You can reuse the secrets.yaml file from `helm` directory.  
@@ -302,13 +302,12 @@ kubectl get pods
 
 You can access DBP components at the following URLs:
 
-
-  Alfresco Digital Workspace: http://alfresco-cs-repository.YOURIP.nip.io/digital-workspace/  
-  Content: http://alfresco-cs-repository.YOURIP.nip.io/alfresco  
-  Share: http://alfresco-cs-repository.YOURIP.nip.io/share  
-  Alfresco Identity Service: http://alfresco-identity-service.YOURIP.nip.io/auth
-  APS: http://alfresco-cs-repository.YOURIP.nip.io/activiti-app
-  APS Admin: http://alfresco-cs-repository.YOURIP.nip.io/activiti-admin
+  Alfresco Digital Workspace: http://alfresco-cs-repository.YOURIP.nip.io/workspace/   
+  Content: http://alfresco-cs-repository.YOURIP.nip.io/alfresco    
+  Share: http://alfresco-cs-repository.YOURIP.nip.io/share    
+  Alfresco Identity Service: http://alfresco-identity-service.YOURIP.nip.io/auth    
+  APS: http://alfresco-cs-repository.YOURIP.nip.io/activiti-app    
+  APS Admin: http://alfresco-cs-repository.YOURIP.nip.io/activiti-admin  
   
 ### 14. Teardown:
 
@@ -442,7 +441,7 @@ kubectl create namespace $DESIREDNAMESPACE
 
 If a Helm chart needs to pull a protected image, instructions on how to create and use a secret can be found [here](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry). For example, the following code would create a quay.io secret called quay-registry-secret:
 ```
-kubectl create secret docker-registry quay-registry-secret --docker-server=quay.io --docker-username=<your-name> --docker-password=<your-pword> --namespace example
+kubectl create secret docker-registry quay-registry-secret --docker-server=quay.io --docker-username=<your-name> --docker-password=<your-pword> --namespace $DESIREDNAMESPACE
 ```
 
 ### 9. Add remote chart repository to Helm configuration.
@@ -505,12 +504,12 @@ kubectl get pods
 
 You can access DBP components at the following URLs:
 
-  Alfresco Digital Workspace: http://alfresco-cs-repository.YOURIP.nip.io/digital-workspace/  
+  Alfresco Digital Workspace: http://alfresco-cs-repository.YOURIP.nip.io/workspace/  
   Content: http://alfresco-cs-repository.YOURIP.nip.io/alfresco  
   Share: http://alfresco-cs-repository.YOURIP.nip.io/share  
   Alfresco Identity Service: http://alfresco-identity-service.YOURIP.nip.io/auth  
-  APS: http://alfresco-cs-repository.YOURIP.nip.io/activiti-app
-  APS Admin: http://alfresco-cs-repository.YOURIP.nip.io/activiti-admin 
+  APS: http://alfresco-cs-repository.YOURIP.nip.io/activiti-app    
+  APS Admin: http://alfresco-cs-repository.YOURIP.nip.io/activiti-admin    
 
 If any pods are failing, you can use each of the following commands to see more about their errors:
 

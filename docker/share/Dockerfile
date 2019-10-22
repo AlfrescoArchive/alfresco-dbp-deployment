@@ -1,4 +1,4 @@
-FROM alfresco/alfresco-share:6.1.1-RC1
+FROM alfresco/alfresco-share:6.1.1
 
 # Create a directory to avoid reinstalling the existing AMPs
 RUN mkdir -p /usr/local/tomcat/amps_share/dbp

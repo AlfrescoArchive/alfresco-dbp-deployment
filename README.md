@@ -98,6 +98,7 @@ We don't advise you to use the same EFS instance for persisting the data from mu
 ```
 helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubator
 helm repo add alfresco-stable https://kubernetes-charts.alfresco.com/stable
+helm repo add codecentric https://codecentric.github.io/helm-charts
 ```
 
 ### 3. Configure domain in your values file
@@ -251,6 +252,7 @@ kubectl create clusterrolebinding tiller-clusterrole-binding --clusterrole=clust
 ```bash
 helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubator
 helm repo add alfresco-stable https://kubernetes-charts.alfresco.com/stable
+helm repo add codecentric https://codecentric.github.io/helm-charts
 ```
 
 ### 8. Add Local DNS
@@ -302,13 +304,12 @@ kubectl get pods
 
 You can access DBP components at the following URLs:
 
-
-  Alfresco Digital Workspace: http://alfresco-cs-repository.YOURIP.nip.io/digital-workspace/  
-  Content: http://alfresco-cs-repository.YOURIP.nip.io/alfresco  
-  Share: http://alfresco-cs-repository.YOURIP.nip.io/share  
-  Alfresco Identity Service: http://alfresco-identity-service.YOURIP.nip.io/auth
-  APS: http://alfresco-cs-repository.YOURIP.nip.io/activiti-app
-  APS Admin: http://alfresco-cs-repository.YOURIP.nip.io/activiti-admin
+  Alfresco Digital Workspace: http://alfresco-cs-repository.YOURIP.nip.io/workspace/   
+  Content: http://alfresco-cs-repository.YOURIP.nip.io/alfresco    
+  Share: http://alfresco-cs-repository.YOURIP.nip.io/share    
+  Alfresco Identity Service: http://alfresco-identity-service.YOURIP.nip.io/auth    
+  APS: http://alfresco-cs-repository.YOURIP.nip.io/activiti-app    
+  APS Admin: http://alfresco-cs-repository.YOURIP.nip.io/activiti-admin  
   
 ### 14. Teardown:
 
@@ -505,12 +506,12 @@ kubectl get pods
 
 You can access DBP components at the following URLs:
 
-  Alfresco Digital Workspace: http://alfresco-cs-repository.YOURIP.nip.io/digital-workspace/  
+  Alfresco Digital Workspace: http://alfresco-cs-repository.YOURIP.nip.io/workspace/  
   Content: http://alfresco-cs-repository.YOURIP.nip.io/alfresco  
   Share: http://alfresco-cs-repository.YOURIP.nip.io/share  
   Alfresco Identity Service: http://alfresco-identity-service.YOURIP.nip.io/auth  
-  APS: http://alfresco-cs-repository.YOURIP.nip.io/activiti-app
-  APS Admin: http://alfresco-cs-repository.YOURIP.nip.io/activiti-admin 
+  APS: http://alfresco-cs-repository.YOURIP.nip.io/activiti-app    
+  APS Admin: http://alfresco-cs-repository.YOURIP.nip.io/activiti-admin    
 
 If any pods are failing, you can use each of the following commands to see more about their errors:
 

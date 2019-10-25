@@ -43,41 +43,21 @@ This environment variable will be used in the deployment steps.
 
 ### Docker Registry Pull Secrets
 
-See the Anaxes Shipyard documentation on [secrets](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/SECRETS.md).
-
-*Note*: You can reuse the secrets.yaml file from charts/incubator directory. 
-
-```bash
-cd charts/incubator
-cat ~/.docker/config.json | base64
+If a Helm chart needs to pull a protected image, instructions on how to create and use a secret can be found [here](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry). For example, the following code would create a quay.io secret called quay-registry-secret:
+```
+kubectl create secret docker-registry quay-registry-secret --docker-server=quay.io --docker-username=<your-name> --docker-password=<your-pword> --namespace $DESIREDNAMESPACE
 ```
 
-Add the base64 string generated to .dockerconfigjson in secrets.yaml. The file should look similar to this:
-
-```bash
-apiVersion: v1
-kind: Secret
-metadata:
-  name: quay-registry-secret
-type: kubernetes.io/dockerconfigjson
-data:
-# Docker registries config json in base64 to do this just run - cat ~/.docker/config.json | base64
-  .dockerconfigjson: ew0KCSJhdXRocyI6IHsNCgkJImh0dHBzOi8vcXVheS5pbyI6IHsNCgkJCSJhdXRoIjogImRHVnpkRHAwWlhOMD0iDQoJCX0sDQoJCSJxdWF5LmlvIjogew0KCQkJImF1dGgiOiAiZEdWemREcDBaWE4w550KCQl9DQoJfSwNCgkiSHR0cEhlYWRlcnMiOiB7DQoJCSJVc2VyLUFnZW50IjogIkRvY2tlci1DbGllbnQvMTcuMTIuMC1jZS1yYzMgKGRhcndpbikiDQoJfQ0KfQ==
-```
-
-Then run this command:
-
-```bash
-kubectl create -f secrets.yaml --namespace $DESIREDNAMESPACE
-```
-
-*Note*: Make sure the $DESIREDNAMESPACE variable has been set when the infrastructure chart was deployed so that the secret gets created in the same namespace.
 
 ### Ingress Customization
 
 For routing the components of the DBP deployment outside the k8s cluster we use [nginx-ingress](https://github.com/kubernetes/charts/tree/master/stable/nginx-ingress). For your deployment to function properly you must have a route53 DNSZone and you will need to create a route53 record set in the following steps.
 
 For more options on configuring the ingress controller that is deployed through the alfresco-infrastructure chart, please check the [Alfresco Infrastructure](https://github.com/Alfresco/alfresco-infrastructure-deployment) chart Readme.
+
+### Database
+
+When deploying to cloud environments like AWS and Azure you should consider using native database services from those providers rather than deploying Postgres within the Kubernetes cluster.
 
 ## Deployment
 
@@ -87,16 +67,28 @@ Create an [EFS storage](https://docs.aws.amazon.com/efs/latest/ug/creating-using
 it is in the same VPC as your cluster. Make sure you [open inbound traffic](https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_SecurityGroups.html) 
 in the security group to allow NFS traffic. 
 
-Save the name of the server ex:
+Save the name of the server as in this example:
+
 ```bash
 export NFSSERVER=fs-d660549f.efs.us-east-1.amazonaws.com
 ```
 
-***Note!***
-The Persistent volume created to store the data on the created EFS has the ReclaimPolicy set to Recycle.
-This means that by default, when you delete the release the saved data is deleted automatically.
+Then install a nfs client service to create a dynamic storage class in kubernetes. This can be used by multiple deployments.
 
-To change this behaviour and keep the data you can set the alfresco-infrastructure.persistence.reclaimPolicy value to Retain.
+```bash
+helm install stable/nfs-client-provisioner \
+--name $DESIREDNAMESPACE \
+--set nfs.server="$NFSSERVER" \
+--set nfs.path="/" \
+--set storageClass.reclaimPolicy="Delete" \
+--set storageClass.name="$DESIREDNAMESPACE-sc" \
+--namespace $DESIREDNAMESPACE
+```
+
+Note! The Persistent volume created with NFS to store the data on the created EFS has the ReclaimPolicy set to Delete. This means that by default, when you delete the release the saved data is deleted automatically.
+
+To change this behaviour and keep the data you can set the storageClass.reclaimPolicy value to Retain.
+
 For more Information on Reclaim Policies checkout the official K8S documentation here -> https://kubernetes.io/docs/concepts/storage/persistent-volumes/#reclaim-policy
 
 We don't advise you to use the same EFS instance for persisting the data from multiple dbp deployments.
@@ -119,7 +111,7 @@ export DNSZONE=YourDesiredCname.YourRoute53DnsZone
 Afterwards pull the helm values file from the current repo:
 
 ```bash
-curl -O https://raw.githubusercontent.com/Alfresco/alfresco-dbp-deployment/master/charts/incubator/alfresco-dbp/values.yaml
+curl -O https://raw.githubusercontent.com/Alfresco/alfresco-dbp-deployment/master/helm/alfresco-dbp/values.yaml
 sed -i s/REPLACEME/$DNSZONE/g values.yaml
 ```
 
@@ -130,8 +122,8 @@ Note! The name for the DNS entry you are defining here will be set in route53 la
 ```bash
 # From within the same folder as your values file
 helm install alfresco-incubator/alfresco-dbp -f values.yaml \
---set alfresco-infrastructure.persistence.efs.enabled=true \
---set alfresco-infrastructure.persistence.efs.dns="$NFSSERVER" \
+--set alfresco-infrastructure.persistence.storageClass.enabled=true \
+--set alfresco-infrastructure.persistence.storageClass.name="$DESIREDNAMESPACE-sc" \
 --namespace=$DESIREDNAMESPACE
 ```
 
@@ -273,9 +265,12 @@ export LOCALIP=$(ipconfig getifaddr en0)
 
 ### 9. Docker Registry Pull Secrets
 
-See the Anaxes Shipyard documentation on [secrets](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/SECRETS.md).
+If a Helm chart needs to pull a protected image, instructions on how to create and use a secret can be found [here](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry). For example, the following code would create a quay.io secret called quay-registry-secret:
+```
+kubectl create secret docker-registry quay-registry-secret --docker-server=quay.io --docker-username=<your-name> --docker-password=<your-pword>
+```
 
-*Note*: You can reuse the secrets.yaml file from charts/incubator directory.  
+*Note*: You can reuse the secrets.yaml file from `helm` directory.  
 
 ### 10. Download and modify the minimal-values.yaml file
 
@@ -284,7 +279,7 @@ The minimal-values.yaml file contains values for local only development and mult
 Pull the minimal values file from the current repo:
 
 ```bash
-curl -O https://raw.githubusercontent.com/Alfresco/alfresco-dbp-deployment/master/charts/incubator/alfresco-dbp/minimal-values.yaml
+curl -O https://raw.githubusercontent.com/Alfresco/alfresco-dbp-deployment/master/helm/alfresco-dbp/minimal-values.yaml
 sed -i '' 's/REPLACEME/'"$LOCALIP"'/g' minimal-values.yaml
 ```
 
@@ -307,13 +302,12 @@ kubectl get pods
 
 You can access DBP components at the following URLs:
 
-
-  Alfresco Digital Workspace: http://alfresco-cs-repository.YOURIP.nip.io/digital-workspace/  
-  Content: http://alfresco-cs-repository.YOURIP.nip.io/alfresco  
-  Share: http://alfresco-cs-repository.YOURIP.nip.io/share  
-  Alfresco Identity Service: http://alfresco-identity-service.YOURIP.nip.io/auth
-  APS: http://alfresco-cs-repository.YOURIP.nip.io/activiti-app
-  APS Admin: http://alfresco-cs-repository.YOURIP.nip.io/activiti-admin
+  Alfresco Digital Workspace: http://alfresco-cs-repository.YOURIP.nip.io/workspace/   
+  Content: http://alfresco-cs-repository.YOURIP.nip.io/alfresco    
+  Share: http://alfresco-cs-repository.YOURIP.nip.io/share    
+  Alfresco Identity Service: http://alfresco-identity-service.YOURIP.nip.io/auth    
+  APS: http://alfresco-cs-repository.YOURIP.nip.io/activiti-app    
+  APS Admin: http://alfresco-cs-repository.YOURIP.nip.io/activiti-admin  
   
 ### 14. Teardown:
 
@@ -445,29 +439,9 @@ kubectl create namespace $DESIREDNAMESPACE
 
 ### 8. Pull secrets
 
-Go to the config.json file in "C:\Users\yourUserProfile\.docker", and delete anything inside the string after credsStore to make sure that it is empty as follows:
-
-```bash
-"credsStore": ""
+If a Helm chart needs to pull a protected image, instructions on how to create and use a secret can be found [here](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry). For example, the following code would create a quay.io secret called quay-registry-secret:
 ```
-
-In your browser, go to quay.io. And ensure that you are logged in.
-
-
-Navigate to 'Account Settings' > 'Generate Encrypted Password', and provide your password.
-
-Click on the 'Kubernetes Secret' tab, and download your secret. 
-
-Open the secret file and change the name inside to the following. 
-
-```bash
-  name: quay-registry-secret
-```
-
-Back in PowerShell, create the secret in your namespace, replacing "secret-name.yml" with the name of the yml file that you downloaded. 
-
-```bash
-kubectl create -f secret-name.yml --namespace $DESIREDNAMESPACE
+kubectl create secret docker-registry quay-registry-secret --docker-server=quay.io --docker-username=<your-name> --docker-password=<your-pword> --namespace $DESIREDNAMESPACE
 ```
 
 ### 9. Add remote chart repository to Helm configuration.
@@ -505,7 +479,7 @@ The minimal-values.yaml file contains values for local only development and mult
 Pull the minimal values file from the current repo:
 
 ```bash
-Invoke-WebRequest -Uri https://raw.githubusercontent.com/Alfresco/alfresco-dbp-deployment/master/charts/incubator/alfresco-dbp/minimal-values.yaml -OutFile minimal-values.yaml
+Invoke-WebRequest -Uri https://raw.githubusercontent.com/Alfresco/alfresco-dbp-deployment/master/helm/alfresco-dbp/minimal-values.yaml -OutFile minimal-values.yaml
 (Get-Content minimal-values.yaml).replace('REPLACEME', $LOCALIP) | Set-Content minimal-values.yaml
 ```
 
@@ -530,12 +504,12 @@ kubectl get pods
 
 You can access DBP components at the following URLs:
 
-  Alfresco Digital Workspace: http://alfresco-cs-repository.YOURIP.nip.io/digital-workspace/  
+  Alfresco Digital Workspace: http://alfresco-cs-repository.YOURIP.nip.io/workspace/  
   Content: http://alfresco-cs-repository.YOURIP.nip.io/alfresco  
   Share: http://alfresco-cs-repository.YOURIP.nip.io/share  
   Alfresco Identity Service: http://alfresco-identity-service.YOURIP.nip.io/auth  
-  APS: http://alfresco-cs-repository.YOURIP.nip.io/activiti-app
-  APS Admin: http://alfresco-cs-repository.YOURIP.nip.io/activiti-admin 
+  APS: http://alfresco-cs-repository.YOURIP.nip.io/activiti-app    
+  APS Admin: http://alfresco-cs-repository.YOURIP.nip.io/activiti-admin    
 
 If any pods are failing, you can use each of the following commands to see more about their errors:
 

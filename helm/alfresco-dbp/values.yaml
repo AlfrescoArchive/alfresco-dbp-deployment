@@ -3,6 +3,7 @@
 replicaCount: 1
 
 global:
+  alfrescoRegistryPullSecrets: quay-registry-secret
   keycloak:
     resource: alfresco
     realm: alfresco
@@ -24,13 +25,13 @@ alfresco-process-services:
       memory: "3000Mi"
   processWorkspace:
     ingress:
-      path: /apw
+      path: "/apw"
     environment:
-      APP_CONFIG_BPM_HOST: "https://alfresco-cs-repository.REPLACEME"
-      APP_CONFIG_ECM_HOST: "https://alfresco-cs-repository.REPLACEME"
-      BASE_PATH: "./" # TODO needs support in Docker image
+      APP_CONFIG_BPM_HOST: "http://alfresco-process.REPLACEME"
+      APP_CONFIG_ECM_HOST: "http://alfresco-cs-repository.REPLACEME"
       APP_CONFIG_PROVIDERS: "BPM"
-      APP_CONFIG_AUTH_TYPE: "BASIC" # i.e. BASIC | OAUTH
+      APP_CONFIG_AUTH_TYPE: "BASIC"
+      BASE_PATH: "./" # Should be implemented in ACTIVITI-3355
 
 alfresco-infrastructure:
   enabled: true
@@ -166,7 +167,6 @@ alfresco-infrastructure:
 
 alfresco-content-services:
   enabled: true
-  registryPullSecrets: quay-registry-secret
   messageBroker:
     url:
     user: admin
@@ -178,14 +178,12 @@ alfresco-content-services:
   share:
     image:
       repository: quay.io/alfresco/alfresco-dbp-share
-      tag: "0.4-SNAPSHOT"
+      tag: "6.1.1"
   repository:
     image:
       repository: quay.io/alfresco/alfresco-dbp-repository
-      tag: "0.4-SNAPSHOT"
+      tag: "6.1.1"
     environment:
-      # The SYNC_SERVICE_URI should contain the details of the ingress host and port.
-      SYNC_SERVICE_URI: "<ingresscontrollerurl>/syncservice"
       # The IDENTITY_SERVICE_URI should contain the details of the ingress host and port.
       IDENTITY_SERVICE_URI: "https://alfresco-identity-service.REPLACEME/auth"
       JAVA_OPTS: " -Dsolr.base.url=/solr
@@ -194,13 +192,14 @@ alfresco-content-services:
         -Dalfresco.cluster.enabled=true
         -Ddeployment.method=HELM_CHART
         -Xms2000M -Xmx2000M
-        -Ddsync.service.uris=\"$SYNC_SERVICE_URI\"
         -Dauthentication.chain=identity-service1:identity-service,alfrescoNtlm1:alfrescoNtlm
         -Didentity-service.enable-basic-auth=true
         -Didentity-service.authentication.validation.failure.silent=false
         -Didentity-service.auth-server-url=\"$IDENTITY_SERVICE_URI\"
         -Didentity-service.realm=alfresco
-        -Didentity-service.resource=alfresco"
+        -Didentity-service.resource=alfresco
+        -Dsaml.keystore.location=/opt/saml/saml.keystore
+        -Dsaml.keystore.keyMetaData.location=/opt/saml/saml-keystore-passwords.properties"
   externalHost: "alfresco-cs-repository.REPLACEME"
   networkpolicysetting:
     enabled: false
@@ -212,8 +211,3 @@ alfresco-content-services:
     APP_CONFIG_OAUTH2_SILENT_LOGIN: "\"true\""
     APP_CONFIG_OAUTH2_REDIRECT_LOGIN: "/workspace/"
     APP_CONFIG_OAUTH2_REDIRECT_LOGOUT: "/workspace/logout"
-
-alfresco-sync-service:
-  enabled: false
-  alfresco-infrastructure:
-    enabled: false

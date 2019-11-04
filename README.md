@@ -238,6 +238,16 @@ kubectl config use-context docker-for-desktop  # Set the default context if need
 brew update; brew install kubernetes-helm
 ```
 
+Note that you can also install a specific version from a commit reference and roll back the Helm client and server to a previous version if need be.  For example, to roll back to Helm version 2.14.3:
+
+```bash
+brew uninstall kubernetes-helm
+brew install https://github.com/Homebrew/homebrew-core/raw/0a17b8e50963de12e8ab3de22e53fccddbe8a226/Formula/kubernetes-helm.rb
+helm init --upgrade --force-upgrade
+sleep 10 # It takes a few seconds to upgrade tiller
+helm version
+```
+
 ### 6. Initialize Helm Tiller (Server Component)
 
 ```bash

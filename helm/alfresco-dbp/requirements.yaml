@@ -2,7 +2,7 @@ dependencies:
   - name: alfresco-content-services
     version: ~2.1.0
     condition: alfresco-content-services.enabled
-    repository: https://kubernetes-charts.alfresco.com/incubator
+    repository: https://kubernetes-charts.alfresco.com/stable
   - name: alfresco-infrastructure
     version: ~5.2.0
     condition: alfresco-infrastructure.enabled

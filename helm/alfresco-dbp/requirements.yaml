@@ -8,6 +8,6 @@ dependencies:
     condition: alfresco-infrastructure.enabled
     repository: https://kubernetes-charts.alfresco.com/incubator
   - name: alfresco-process-services
-    version: ">=0.1.5"
+    version: ">=0.2.0"
     condition: alfresco-process-services.enabled
-    repository: https://kubernetes-charts.alfresco.com/stable
+    repository: https://kubernetes-charts.alfresco.com/incubator

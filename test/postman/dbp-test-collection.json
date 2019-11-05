@@ -1371,7 +1371,63 @@
 			]
 		},
 		{
-			"name": "07 Expired Token Tests",
+			"name": "07 APW basic Tests",
+			"item": [
+				{
+					"name": "Check if APW Login Page responds correctly",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3c43eeb3-7656-4486-89df-45fc2c5f9184",
+								"exec": [
+									"pm.test(\"Verify status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Verify Page Body Contains Process Workspace\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Process Workspace\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "bd8701f8-d7da-4455-8444-c60553778f91",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{protocol}}://{{processWorkspaceUrl}}/#/login",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{processWorkspaceUrl}}"
+							],
+							"path": [
+								""
+							],
+							"hash": "/login"
+						},
+						"description": "This request will validate whether the Process Workspace works"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "08 Expired Token Tests",
 			"item": [
 				{
 					"name": "Shorten realm's access token lifespan",
@@ -1856,6 +1912,12 @@
 			"id": "383f9895-2954-4e04-9bdb-cf80eda212d5",
 			"key": "protocol",
 			"value": "https",
+			"type": "string"
+		},
+		{
+			"id": "b17c6ab4-2bd6-420c-8a9e-cfe8c7b45cab",
+			"key": "processWorkspaceUrl",
+			"value": "alfresco-process.{{dbpHostName}}/process-workspace/",
 			"type": "string"
 		}
 	]

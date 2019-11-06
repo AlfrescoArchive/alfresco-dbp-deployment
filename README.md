@@ -98,7 +98,6 @@ We don't advise you to use the same EFS instance for persisting the data from mu
 ```
 helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubator
 helm repo add alfresco-stable https://kubernetes-charts.alfresco.com/stable
-helm repo add codecentric https://codecentric.github.io/helm-charts
 ```
 
 ### 3. Configure domain in your values file
@@ -262,7 +261,6 @@ kubectl create clusterrolebinding tiller-clusterrole-binding --clusterrole=clust
 ```bash
 helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubator
 helm repo add alfresco-stable https://kubernetes-charts.alfresco.com/stable
-helm repo add codecentric https://codecentric.github.io/helm-charts
 ```
 
 ### 8. Add Local DNS

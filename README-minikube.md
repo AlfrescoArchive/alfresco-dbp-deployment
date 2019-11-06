@@ -159,10 +159,7 @@ export ELBADDRESS=$(minikube ip)
 
 ### 6. Add the Alfresco Helm repository to helm
 
-```
-helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubator
-helm repo add codecentric https://codecentric.github.io/helm-charts
-```
+```helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubator```
 
 ### 7. Deploy the DBP
 

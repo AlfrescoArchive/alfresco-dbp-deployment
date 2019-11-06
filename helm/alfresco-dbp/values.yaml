@@ -182,7 +182,14 @@ alfresco-content-services:
     enabled: false
     activemq:
       enabled: false
+  share:
+    image:
+      repository: quay.io/alfresco/alfresco-dbp-share
+      tag: "6.1.1"
   repository:
+    image:
+      repository: quay.io/alfresco/alfresco-dbp-repository
+      tag: "6.1.1"
     environment:
       # The IDENTITY_SERVICE_URI should contain the details of the ingress host and port.
       IDENTITY_SERVICE_URI: "https://alfresco-identity-service.REPLACEME/auth"
@@ -198,7 +205,8 @@ alfresco-content-services:
         -Didentity-service.auth-server-url=\"$IDENTITY_SERVICE_URI\"
         -Didentity-service.realm=alfresco
         -Didentity-service.resource=alfresco
-        -Dsaml.keystore.location=/usr/local/tomcat/keystore/saml.keystore"
+        -Dsaml.keystore.location=/usr/local/tomcat/keystore/saml.keystore
+        -Dsaml.keystore.keyMetaData.location=/usr/local/tomcat/keystore/saml-keystore-passwords.properties"
   externalHost: "alfresco-cs-repository.REPLACEME"
   networkpolicysetting:
     enabled: false
@@ -210,4 +218,3 @@ alfresco-content-services:
     APP_CONFIG_OAUTH2_SILENT_LOGIN: "\"true\""
     APP_CONFIG_OAUTH2_REDIRECT_LOGIN: "/workspace/"
     APP_CONFIG_OAUTH2_REDIRECT_LOGOUT: "/workspace/logout"
-    APP_CONFIG_OAUTH2_REDIRECT_SILENT_IFRAME_URI: "http://alfresco-cs-repository.REPLACEME/workspace/assets/silent-refresh.html"

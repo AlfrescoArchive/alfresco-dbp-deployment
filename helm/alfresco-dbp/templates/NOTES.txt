@@ -12,7 +12,7 @@ If you are using the default dbp setup you can access all components as follows:
   Share: {{ $protocol }}://{{ index .Values "alfresco-content-services" "externalHost" }}/share
   Solr: {{ $protocol }}://{{ index .Values "alfresco-content-services" "externalHost" }}/solr
   Alfresco Identity Service: {{ index .Values "global" "keycloak" "url" }}
+  Process Workspace: {{ $protocol }}://{{ index .Values "alfresco-process-services" "ingress" "hostName" }}/process-workspace/s
   APS: {{ $protocol }}://{{ index .Values "alfresco-process-services" "ingress" "hostName" }}/activiti-app
   APS Admin: {{ $protocol }}://{{ index .Values "alfresco-process-services" "ingress" "hostName" }}/activiti-admin
   Sync Service: {{ $protocol }}://{{ index .Values "alfresco-content-services" "externalHost" }}/syncservice/healthcheck
-  Process Workspace: {{ $protocol }}://{{ index .Values "alfresco-process-services" "ingress" "hostName" }}/process-workspace

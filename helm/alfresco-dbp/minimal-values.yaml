@@ -3,7 +3,7 @@
 global:
   keycloak:
     url: "http://alfresco-identity-service.REPLACEME.nip.io/auth"
-   
+
 alfresco-infrastructure:
   persistence:
     storageClass:
@@ -100,6 +100,9 @@ alfresco-content-services:
   externalHost: "alfresco-cs-repository.REPLACEME.nip.io"
 
 alfresco-process-services:
+  ingress:
+    protocol: http
+    hostName: 'alfresco-process.REPLACEME.nip.io'
   processEngine:
     environment:
       IDENTITY_SERVICE_AUTH: "http://alfresco-identity-service.REPLACEME.nip.io/auth"
@@ -107,9 +110,10 @@ alfresco-process-services:
     requests:
       memory: "1000Mi"
     limits:
-      memory: "1000Mi"  
+      memory: "1000Mi"
   processWorkspace:
     environment:
-      APP_CONFIG_BPM_HOST: "https://alfresco-cs-repository.REPLACEME.nip.io"
+      APP_CONFIG_BPM_HOST: "https://alfresco-process.REPLACEME.nip.io"
       APP_CONFIG_ECM_HOST: "https://alfresco-cs-repository.REPLACEME.nip.io"
       APP_CONFIG_OAUTH2_HOST: "https://alfresco-identity-service.REPLACEME.nip.io/auth/realms/alfresco"
+      APP_CONFIG_OAUTH2_REDIRECT_SILENT_IFRAME_URI: "http://alfresco-process.REPLACEME.nip.io/process-workspace/assets/silent-refresh.html"

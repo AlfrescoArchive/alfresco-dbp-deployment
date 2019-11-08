@@ -37,8 +37,8 @@ alfresco-process-services:
       APP_CONFIG_OAUTH2_HOST: "http://alfresco-identity-service.REPLACEME/auth/realms/alfresco"
       APP_CONFIG_OAUTH2_CLIENTID: "alfresco"
       APP_CONFIG_OAUTH2_REDIRECT_LOGIN: "/process-workspace/"
-      APP_CONFIG_OAUTH2_REDIRECT_LOGOUT: "/process-workspace/logout"
-      APP_CONFIG_OAUTH2_REDIRECT_SILENT_IFRAME_URI: "http://alfresco-cs-repository.REPLACEME/process-workspace/assets/silent-refresh.html"
+      APP_CONFIG_OAUTH2_REDIRECT_LOGOUT: "/process-workspace/"
+      APP_CONFIG_OAUTH2_REDIRECT_SILENT_IFRAME_URI: "http://alfresco-process.REPLACEME/process-workspace/assets/silent-refresh.html"
 
 alfresco-infrastructure:
   enabled: true

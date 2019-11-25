@@ -23,7 +23,7 @@ This deployment comprises:
 - Alfresco Transform Router 1.0.2.1
 - Alfresco Imagemagick 2.0.17
 
-For a more detailed list see [this diagram](alfresco-dbp.puml)
+For a more detailed list see [this diagram](alfresco-dbp.png)
 
 The Alfresco Digital Business Platform can be deployed to different environments such as AWS or locally.
 

@@ -2,6 +2,32 @@
 
 Check [prerequisites section](https://github.com/Alfresco/alfresco-dbp-deployment/blob/master/README-prerequisite.md) before you start.
 
+This deployment comprises:
+
+##### Core products
+- Alfresco Process Services 1.10
+- Alfresco Process Services Admin 1.10
+- Alfresco Content Repository 6.1.1
+- Alfresco Content Share 6.1.1
+- Alfresco Governance Services 3.2.0
+- Alfresco Digital Workspace 1.3.0
+- Alfresco Process Workspace 1.3.4
+- Alfresco Sync Service 3.2.0
+
+##### Shared Services
+- Alfresco Identity Management Service 1.2.0
+- Alfresco Shared File Store 0.5.3
+- Alfresco Tika 2.1.0
+- Alfresco LibreOffice 2.1.0
+- Alfresco Search Services 1.4.0
+- Alfresco PDF Renderer 2.1.0
+- Alfresco Transform Router 1.1.0
+- Alfresco Imagemagick 2.1.0
+- Alfresco Event Gateway 0.3
+- Alfresco Transform Misc 2.1.0
+
+For a more detailed list see [this diagram](alfresco-dbp-2.0.png)
+
 The Alfresco Digital Business Platform can be deployed to different environments such as AWS or locally.
 
 - [Deploy to AWS using KOPS](#aws)

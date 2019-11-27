@@ -11,7 +11,3 @@ To upgrade a component you should follow this process:
 1. If you are updating DBP 1.5, please increase the version of the DBP chart in [Chart.yaml](https://github.com/Alfresco/alfresco-dbp-deployment/blob/master/helm/alfresco-dbp/Chart.yaml#L2).
 1. Create a PR referencing a JIRA issue.
 1. The DBP test pipeline should be run when new versions of the chart are pushed to the Helm repository.
-
-#### Contributor Agreement
-
-As a contributor you must sign a [contribution agreement](https://cla-assistant.io/Alfresco/alfresco-identity-service). Please review the guidelines for [submitting contributions](https://community.alfresco.com/docs/DOC-6269-submitting-contributions). After reviewing the guidelines, if you have any questions about making a contribution you can contact us on the [Platform Services](https://gitter.im/Alfresco/platform-services) gitter channel.

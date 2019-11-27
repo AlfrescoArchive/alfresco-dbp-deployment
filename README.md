@@ -14,7 +14,7 @@ This deployment comprises:
 - Alfresco Sync Service 3.1.2
 
 #####Shared Services
-- Alfresco Identity Service 1.1
+- Alfresco Identity Management Service 1.1
 - Alfresco Shared File Store 0.5.3
 - Alfresco Tika 2.0.17
 - Alfresco LibreOffice 2.0.17

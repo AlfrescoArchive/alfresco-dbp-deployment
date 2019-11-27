@@ -11,7 +11,7 @@ This deployment comprises:
 - Alfresco Content Share 6.1.1
 - Alfresco Digital Workspace 1.2.0
 - Alfresco Process Workspace 1.3.4
-- Alfresco Service Sync 3.1.2
+- Alfresco Sync Service 3.1.2
 
 #####Shared Services
 - Alfresco Identity Service 1.1

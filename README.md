@@ -4,17 +4,18 @@ Check [prerequisites section](https://github.com/Alfresco/alfresco-dbp-deploymen
 
 This deployment comprises:
 
-#####Core products
+##### Core products
 - Alfresco Process Services 1.10
 - Alfresco Process Services Admin 1.10
 - Alfresco Content Repository 6.1.1
 - Alfresco Content Share 6.1.1
-- Alfresco Digital Workspace 1.2.0
+- Alfresco Governance Services 3.2.0
+- Alfresco Digital Workspace 1.3.0
 - Alfresco Process Workspace 1.3.4
 - Alfresco Sync Service 3.1.2
 
-#####Shared Services
-- Alfresco Identity Management Service 1.1
+##### Shared Services
+- Alfresco Identity Management Service 1.1.0
 - Alfresco Shared File Store 0.5.3
 - Alfresco Tika 2.0.17
 - Alfresco LibreOffice 2.0.17

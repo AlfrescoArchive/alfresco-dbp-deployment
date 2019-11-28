@@ -10,4 +10,4 @@ dependencies:
   - name: alfresco-process-services
     version: 0.2.0
     condition: alfresco-process-services.enabled
-    repository: https://kubernetes-charts.alfresco.com/incubator
+    repository: https://kubernetes-charts.alfresco.com/stable

@@ -1,15 +1,14 @@
 FROM alfresco/alfresco-share:6.1.1
 
-# Create a directory to avoid reinstalling the existing AMPs
-RUN mkdir -p /usr/local/tomcat/amps_share/dbp
+ARG TOMCAT_DIR=/usr/local/tomcat
 
-# Add DBP AMPs
-COPY target/amps /usr/local/tomcat/amps_share/dbp
+# Copy DBP AMPs into 'dbp' fir to avoid reinstalling the existing AMPs
+COPY target/amps ${TOMCAT_DIR}/amps_share/dbp
 
-RUN java -jar /usr/local/tomcat/alfresco-mmt/alfresco-mmt*.jar install \
-       /usr/local/tomcat/amps_share/dbp /usr/local/tomcat/webapps/share -directory -nobackup
+RUN java -jar ${TOMCAT_DIR}/alfresco-mmt/alfresco-mmt*.jar install \
+       ${TOMCAT_DIR}/amps_share/dbp ${TOMCAT_DIR}/webapps/share -directory -nobackup
 
 # We don't need these for kerberos
-# COPY saml/saml-config.sh /usr/local/tomcat/shared/classes/alfresco
-# RUN chmod +x /usr/local/tomcat/shared/classes/alfresco/saml-config.sh && \
-#     /usr/local/tomcat/shared/classes/alfresco/saml-config.sh
+#COPY saml/saml-config.sh ${TOMCAT_DIR}/shared/classes/alfresco
+#RUN chmod +x ${TOMCAT_DIR}/shared/classes/alfresco/saml-config.sh && \
+#    ${TOMCAT_DIR}/shared/classes/alfresco/saml-config.sh

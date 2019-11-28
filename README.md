@@ -2,6 +2,30 @@
 
 Check [prerequisites section](https://github.com/Alfresco/alfresco-dbp-deployment/blob/master/README-prerequisite.md) before you start.
 
+This deployment comprises:
+
+##### Core products
+- Alfresco Process Services 1.10
+- Alfresco Process Services Admin 1.10
+- Alfresco Content Repository 6.1.1
+- Alfresco Content Share 6.1.1
+- Alfresco Governance Services 3.2.0
+- Alfresco Digital Workspace 1.3.0
+- Alfresco Process Workspace 1.3.4
+- Alfresco Sync Service 3.1.2
+
+##### Shared Services
+- Alfresco Identity Management Service 1.1.0
+- Alfresco Shared File Store 0.5.3
+- Alfresco Tika 2.0.17
+- Alfresco LibreOffice 2.0.17
+- Alfresco Search Services 1.4.0
+- Alfresco PDF Renderer 2.0.17
+- Alfresco Transform Router 1.0.2.1
+- Alfresco Imagemagick 2.0.17
+
+For a more detailed list see [this diagram](alfresco-dbp.png)
+
 The Alfresco Digital Business Platform can be deployed to different environments such as AWS or locally.
 
 - [Deploy to AWS using KOPS](#aws)
@@ -235,6 +259,16 @@ kubectl config use-context docker-for-desktop  # Set the default context if need
 
 ```bash
 brew update; brew install kubernetes-helm
+```
+
+Note that you can also install a specific version from a commit reference and roll back the Helm client and server to a previous version if need be.  For example, to roll back to Helm version 2.14.3:
+
+```bash
+brew uninstall kubernetes-helm
+brew install https://github.com/Homebrew/homebrew-core/raw/0a17b8e50963de12e8ab3de22e53fccddbe8a226/Formula/kubernetes-helm.rb
+helm init --upgrade --force-upgrade
+sleep 10 # It takes a few seconds to upgrade tiller
+helm version
 ```
 
 ### 6. Initialize Helm Tiller (Server Component)

@@ -253,9 +253,26 @@
 							"script": {
 								"id": "f7790914-dc1d-4fee-a06f-09cd10fca8a4",
 								"type": "text/javascript",
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
+								"exec": [									
+									"function retryOnFailure(successCode, numberOfRetrys) {",
+									"    var key = request.name + '_counter';",
+									"    var execCounter = postman.getEnvironmentVariable(key) || 1;",
+									"",
+									"    var sleepDuration = 1000;",
+									"    var waitUntilTime = new Date().getTime() + sleepDuration;",
+									"    if (responseCode.code !== successCode && execCounter <= numberOfRetrys) {",
+									"        while (new Date().getTime() < waitUntilTime) {",
+									"            // Do Nothing -> Wait",
+									"        }",
+									"        console.log('Retrying: ' + request.name + '\\nGot: ' + responseCode.code + ' Expected: ' + successCode + '\\nWaited: ' + sleepDuration / 1000 + 'sec  \\nRetry Number: ' + execCounter + ' of ' + numberOfRetrys);",
+									"        execCounter++;",
+									"        postman.setEnvironmentVariable(key, execCounter);",
+									"        postman.setNextRequest(request.name);",
+									"    }",
+									"}",
+									"",
+									"pm.test(\"Status code is \" + 200, function () {",
+									"    retryOnFailure(200, 4);",
 									"});",
 									"",
 									"pm.test(\"Solr response is valid\", function() {",
@@ -830,9 +847,26 @@
 							"listen": "test",
 							"script": {
 								"id": "5cfef929-277b-4980-b44e-e787fa8560fe",
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
+								"exec": [							
+									"function retryOnFailure(successCode, numberOfRetrys) {",
+									"    var key = request.name + '_counter';",
+									"    var execCounter = postman.getEnvironmentVariable(key) || 1;",
+									"",
+									"    var sleepDuration = 1000;",
+									"    var waitUntilTime = new Date().getTime() + sleepDuration;",
+									"    if (responseCode.code !== successCode && execCounter <= numberOfRetrys) {",
+									"        while (new Date().getTime() < waitUntilTime) {",
+									"            // Do Nothing -> Wait",
+									"        }",
+									"        console.log('Retrying: ' + request.name + '\\nGot: ' + responseCode.code + ' Expected: ' + successCode + '\\nWaited: ' + sleepDuration / 1000 + 'sec  \\nRetry Number: ' + execCounter + ' of ' + numberOfRetrys);",
+									"        execCounter++;",
+									"        postman.setEnvironmentVariable(key, execCounter);",
+									"        postman.setNextRequest(request.name);",
+									"    }",
+									"}",
+									"",
+									"pm.test(\"Status code is \" + 200, function () {",
+									"    retryOnFailure(200, 4);",
 									"});",
 									"",
 									"pm.test(\"APS edition string is valid\", function () {",
@@ -977,9 +1011,26 @@
 							"script": {
 								"id": "34b4e7f0-d846-4ddc-92be-a2241b1fb0c2",
 								"type": "text/javascript",
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
+								"exec": [								
+									"function retryOnFailure(successCode, numberOfRetrys) {",
+									"    var key = request.name + '_counter';",
+									"    var execCounter = postman.getEnvironmentVariable(key) || 1;",
+									"",
+									"    var sleepDuration = 1000;",
+									"    var waitUntilTime = new Date().getTime() + sleepDuration;",
+									"    if (responseCode.code !== successCode && execCounter <= numberOfRetrys) {",
+									"        while (new Date().getTime() < waitUntilTime) {",
+									"            // Do Nothing -> Wait",
+									"        }",
+									"        console.log('Retrying: ' + request.name + '\\nGot: ' + responseCode.code + ' Expected: ' + successCode + '\\nWaited: ' + sleepDuration / 1000 + 'sec  \\nRetry Number: ' + execCounter + ' of ' + numberOfRetrys);",
+									"        execCounter++;",
+									"        postman.setEnvironmentVariable(key, execCounter);",
+									"        postman.setNextRequest(request.name);",
+									"    }",
+									"}",
+									"",
+									"pm.test(\"Status code is \" + 200, function () {",
+									"    retryOnFailure(200, 4);",
 									"});",
 									"",
 									"pm.test(\"Email in response is valid\", function () {",
@@ -1371,7 +1422,63 @@
 			]
 		},
 		{
-			"name": "07 Expired Token Tests",
+			"name": "07 APW basic Tests",
+			"item": [
+				{
+					"name": "Check if APW Login Page responds correctly",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3c43eeb3-7656-4486-89df-45fc2c5f9184",
+								"exec": [
+									"pm.test(\"Verify status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Verify Page Body Contains Process Workspace\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Process Workspace\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "bd8701f8-d7da-4455-8444-c60553778f91",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{protocol}}://{{processWorkspaceUrl}}/#/login",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{processWorkspaceUrl}}"
+							],
+							"path": [
+								""
+							],
+							"hash": "/login"
+						},
+						"description": "This request will validate whether the Process Workspace works"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "08 Expired Token Tests",
 			"item": [
 				{
 					"name": "Shorten realm's access token lifespan",
@@ -1849,13 +1956,19 @@
 		{
 			"id": "c90b841e-7717-4135-a005-8b022966ad81",
 			"key": "moduleVersions",
-			"value": "[{\"moduleName\":\"alfresco-aos-module\",\"moduleVersion\":\"1.2.2\"},{\"moduleName\":\"org.alfresco.integrations.google.docs\",\"moduleVersion\":\"3.1.0\"},{\"moduleName\":\"alfresco-share-services\",\"moduleVersion\":\"6.1.0\"}]",
+			"value": "[{\"moduleName\":\"alfresco-aos-module\",\"moduleVersion\":\"1.3.0\"},{\"moduleName\":\"org.alfresco.integrations.google.docs\",\"moduleVersion\":\"3.1.0\"},{\"moduleName\":\"alfresco-share-services\",\"moduleVersion\":\"6.1.1\"}]",
 			"type": "string"
 		},
 		{
 			"id": "383f9895-2954-4e04-9bdb-cf80eda212d5",
 			"key": "protocol",
 			"value": "https",
+			"type": "string"
+		},
+		{
+			"id": "b17c6ab4-2bd6-420c-8a9e-cfe8c7b45cab",
+			"key": "processWorkspaceUrl",
+			"value": "alfresco-process.{{dbpHostName}}/process-workspace/",
 			"type": "string"
 		}
 	]

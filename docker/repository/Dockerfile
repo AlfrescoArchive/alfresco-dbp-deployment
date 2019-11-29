@@ -1,4 +1,4 @@
-FROM alfresco/alfresco-content-repository:6.1.1
+FROM alfresco/alfresco-content-repository:6.1.1.2
 
 ARG GROUPNAME=Alfresco
 ARG USERNAME=alfresco
@@ -18,12 +18,9 @@ COPY --chown=root:${GROUPNAME} target/amps ${TOMCAT_DIR}/amps/dbp
 # to be the same as the base image settings.
 RUN java -jar ${TOMCAT_DIR}/alfresco-mmt/alfresco-mmt*.jar install \
         ${TOMCAT_DIR}/amps/dbp ${TOMCAT_DIR}/webapps/alfresco -directory -nobackup && \
-        chgrp -R ${GROUPNAME} ${TOMCAT_DIR} && \
-        find ${TOMCAT_DIR}/webapps -type d -exec chmod 0750 {} \; && \
-        find ${TOMCAT_DIR}/webapps -type f -exec chmod 0640 {} \; && \
-        find ${TOMCAT_DIR}/keystore -type d -exec chmod 0750 {} \; && \
-        find ${TOMCAT_DIR}/keystore -type f -exec chmod 0640 {} \; && \
-        chmod -R g+r ${TOMCAT_DIR}/webapps
+        chgrp -R ${GROUPNAME} ${TOMCAT_DIR}/webapps/alfresco && \
+        find ${TOMCAT_DIR}/webapps/alfresco -type d -exec chmod 0750 {} \; && \
+        find ${TOMCAT_DIR}/webapps/alfresco -type f -exec chmod 0640 {} \;
 
 # Switch back to 'alfresco' user
 USER ${USERNAME}

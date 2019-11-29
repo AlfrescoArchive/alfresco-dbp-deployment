@@ -185,11 +185,11 @@ alfresco-content-services:
   share:
     image:
       repository: quay.io/alfresco/alfresco-dbp-share
-      tag: "6.1.1.2-KERBEROS"
+      tag: "6.1.1.1-KERBEROS"
   repository:
     image:
       repository: quay.io/alfresco/alfresco-dbp-repository
-      tag: "6.1.1.1-KERBEROS"
+      tag: "6.1.1.2-KERBEROS"
     environment:
       # The IDENTITY_SERVICE_URI should contain the details of the ingress host and port.
       IDENTITY_SERVICE_URI: "https://alfresco-identity-service.REPLACEME/auth"

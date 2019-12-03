@@ -6,8 +6,8 @@ dependencies:
   - name: alfresco-infrastructure
     version: ~5.2.0
     condition: alfresco-infrastructure.enabled
-    repository: https://kubernetes-charts.alfresco.com/stable
+    repository: https://kubernetes-charts.alfresco.com/incubator
   - name: alfresco-process-services
     version: ~0.2.0
     condition: alfresco-process-services.enabled
-    repository: https://kubernetes-charts.alfresco.com/stable
+    repository: https://kubernetes-charts.alfresco.com/incubator

@@ -389,6 +389,20 @@ You may find it helpful to see the Kubernetes resources visually which can be ac
 
 After deploying the DBP, when accesing one of the applications, for example Process Services, if you receive the error message *We're sorry Invalid parameter: redirect_uri*, the `redirectUris` parameter provided for deployment is invalid. Make sure the `alfresco-infrastructure.alfresco-identity-service.client.alfresco.redirectUris` parameter has a valid value when installing the chart. For more details on how to configure it, check this [guide](https://github.com/Alfresco/alfresco-identity-service#changing-alfresco-client-redirecturis).
 
+**No Digital Business Platform components can be accessed**
+
+Please make sure that you are not running any server locally that would occupy port 80. For example macOs Server runs specifically on this port, please disable it before deploying the Digital Business Platform.
+
+**Digital Business Platfrom components fail to start because of Database Connection failure**
+
+Please make sure that the Databases used by the Digital Business Platform components start up correctly. Before deploying the DBP please make sure that you do not have persistent volumes from previous instalations still on your cluster.
+You can check and delete these volumes using the following commands:
+
+``` bash
+kubectl get pvc -n $DESIREDNAMESPACE
+kubectl delete pvc oldpvc -n $DESIREDNAMESPACE
+```
+
 # Docker for Desktop - Windows
 
 Note: All of the following commands will be using PowerShell, and these instructions have only been tested by Windows 10 users.

@@ -46,9 +46,6 @@ alfresco-infrastructure:
     persistence:
       subPath: "alfresco-infrastructure/activemq-data-infra"
   alfresco-identity-service:
-    keycloak:
-      postgresql:
-        postgresqlPassword: "keycloak"
     realm:
       alfresco:
         extraAdminUserRealmRoles:

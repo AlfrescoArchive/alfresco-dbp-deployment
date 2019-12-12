@@ -396,11 +396,14 @@ Please make sure that you are not running any server locally that would occupy p
 **Digital Business Platfrom components fail to start because of Database Connection failure**
 
 Please make sure that the Databases used by the Digital Business Platform components start up correctly. Before deploying the DBP please make sure that you do not have persistent volumes from previous instalations still on your cluster.
+This is happening because on localSetup kubernetes stores volume data locally on your drive. For more information on Persistent Volumes please refer to the [kubernetes documentation](https://kubernetes.io/docs/concepts/storage/persistent-volumes/).
 You can check and delete these volumes using the following commands:
 
 ``` bash
 kubectl get pvc -n $DESIREDNAMESPACE
-kubectl delete pvc oldpvc -n $DESIREDNAMESPACE
+kubectl delete pvc {oldpvc} -n $DESIREDNAMESPACE
+kubectl get pv -n $DESIREDNAMESPACE
+kubectl delete pv {oldpv} -n $DESIREDNAMESPACE
 ```
 
 # Docker for Desktop - Windows

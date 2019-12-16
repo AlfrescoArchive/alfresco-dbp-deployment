@@ -391,7 +391,7 @@ After deploying the DBP, when accesing one of the applications, for example Proc
 
 **No Digital Business Platform components can be accessed**
 
-Please make sure that you are not running any server locally that would occupy port 80. For example macOs Server runs specifically on this port, please disable it before deploying the Digital Business Platform.
+Please make sure that you are not running any server locally that would occupy port 80. For example macOS Server runs specifically on this port, please disable it before deploying the Digital Business Platform.
 
 **Digital Business Platfrom components fail to start because of Database Connection failure**
 

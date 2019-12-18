@@ -1,6 +1,6 @@
 dependencies:
   - name: alfresco-content-services
-    version: ">=3.0.0"
+    version: 2.1.3-kerberosFix
     condition: alfresco-content-services.enabled
     repository: https://kubernetes-charts.alfresco.com/incubator
   - name: alfresco-infrastructure

@@ -13,5 +13,10 @@ else
     mvn clean package
 fi
 
+if [ ! -z "$BRANCH_NAME" -a "$BRANCH_NAME" != "master" ]
+then
+  DOCKER_IMAGE_TAG="${DOCKER_IMAGE_TAG}-${BRANCH_NAME}"
+fi
+
 echo "Building image ($DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG)..."
 docker build -t quay.io/alfresco/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG .

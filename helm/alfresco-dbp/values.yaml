@@ -46,6 +46,9 @@ alfresco-infrastructure:
     persistence:
       subPath: "alfresco-infrastructure/activemq-data-infra"
   alfresco-identity-service:
+    keycloak:
+      postgresql:
+        postgresPassword: "keycloak" #Setting this password is only needed for 1.5.0 chart version
     realm:
       alfresco:
         extraAdminUserRealmRoles:

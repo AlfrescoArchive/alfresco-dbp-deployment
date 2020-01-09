@@ -3,7 +3,7 @@ set -o errexit
 
 . ./build.properties
 
-if [ ! -z "$BRANCH_NAME" -a "$BRANCH_NAME" != "master" ]
+if [ ! -z "$BRANCH_NAME" -a "$BRANCH_NAME" != "master" -a "$BRANCH_NAME" != "1.6.x" -a "$BRANCH_NAME" != "develop" ]
 then
   DOCKER_IMAGE_TAG="${DOCKER_IMAGE_TAG}-${BRANCH_NAME}"
 fi

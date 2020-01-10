@@ -9,6 +9,10 @@ alfresco-infrastructure:
     storageClass:
       enabled: true
       name: "hostpath"
+  alfresco-identity-service:
+    keycloak:
+      postgresql:
+        postgresPassword: "keycloak" #Setting this password is only needed for 1.5.0 chart version
 
 alfresco-content-services:
   alfresco-digital-workspace:

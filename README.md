@@ -15,7 +15,7 @@ This deployment comprises:
 - Alfresco Sync Service 3.1.2
 
 ##### Shared Services
-- Alfresco Identity Management Service 1.1.0
+- Alfresco Identity Management Service 1.2.0
 - Alfresco Shared File Store 0.5.3
 - Alfresco Tika 2.0.17
 - Alfresco LibreOffice 2.0.17
@@ -23,8 +23,9 @@ This deployment comprises:
 - Alfresco PDF Renderer 2.0.17
 - Alfresco Transform Router 1.0.2.1
 - Alfresco Imagemagick 2.0.17
+- Alfresco Event Gateway 0.3
 
-For a more detailed list see [this diagram](alfresco-dbp.png)
+For a more detailed list see [this diagram](alfresco-dbp-1.6.png)
 
 The Alfresco Digital Business Platform can be deployed to different environments such as AWS or locally.
 
@@ -122,6 +123,7 @@ We don't advise you to use the same EFS instance for persisting the data from mu
 ```
 helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubator
 helm repo add alfresco-stable https://kubernetes-charts.alfresco.com/stable
+helm repo add codecentric https://codecentric.github.io/helm-charts
 ```
 
 ### 3. Configure domain in your values file
@@ -285,6 +287,7 @@ kubectl create clusterrolebinding tiller-clusterrole-binding --clusterrole=clust
 ```bash
 helm repo add alfresco-incubator https://kubernetes-charts.alfresco.com/incubator
 helm repo add alfresco-stable https://kubernetes-charts.alfresco.com/stable
+helm repo add codecentric https://codecentric.github.io/helm-charts
 ```
 
 ### 8. Add Local DNS

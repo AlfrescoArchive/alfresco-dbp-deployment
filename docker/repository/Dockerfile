@@ -1,4 +1,4 @@
-FROM alfresco/alfresco-content-repository:6.1.1
+FROM alfresco/alfresco-content-repository:6.2.0
 
 ARG GROUPNAME=Alfresco
 ARG USERNAME=alfresco
@@ -13,7 +13,7 @@ COPY --chown=root:${GROUPNAME} target/amps ${TOMCAT_DIR}/amps/dbp
 
 COPY --chown=root:${GROUPNAME} saml ${TOMCAT_DIR}/keystore
 
-# After applying AMPs, change the group and mod of the added files and directories from the AMPs, 
+# After applying AMPs, change the group and mod of the added files and directories from the AMPs,
 # to be the same as the base image settings.
 RUN java -jar ${TOMCAT_DIR}/alfresco-mmt/alfresco-mmt*.jar install \
         ${TOMCAT_DIR}/amps/dbp ${TOMCAT_DIR}/webapps/alfresco -directory -nobackup && \

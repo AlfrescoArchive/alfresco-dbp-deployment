@@ -21,7 +21,7 @@ The Alfresco Digital Business Platform Deployment requires:
 | Kops        | 1.8.1        | https://github.com/kubernetes/kops/blob/master/docs/aws.md |
 | Minikube    | 0.25.0       | https://kubernetes.io/docs/getting-started-guides/minikube/ |
 
-Any variation from these technologies and versions may affect the end result. If you do experience any issues please let us know through our [Gitter channel](https://gitter.im/Alfresco/platform-services?utm_source=share-link&utm_medium=link&utm_campaign=share-link).
+Any variation from these technologies and versions may affect the end result. 
 
 *Note*: You do not need to clone this repo to deploy the dbp.
 

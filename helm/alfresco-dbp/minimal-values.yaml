@@ -9,6 +9,10 @@ alfresco-infrastructure:
     storageClass:
       enabled: true
       name: "hostpath"
+  alfresco-identity-service:
+    keycloak:
+      postgresql:
+        postgresPassword: "keycloak" #Setting this password is only needed for 1.5.0 chart version
 
 alfresco-content-services:
   alfresco-digital-workspace:
@@ -113,7 +117,7 @@ alfresco-process-services:
       memory: "1000Mi"
   processWorkspace:
     environment:
-      APP_CONFIG_BPM_HOST: "https://alfresco-process.REPLACEME.nip.io"
-      APP_CONFIG_ECM_HOST: "https://alfresco-cs-repository.REPLACEME.nip.io"
-      APP_CONFIG_OAUTH2_HOST: "https://alfresco-identity-service.REPLACEME.nip.io/auth/realms/alfresco"
+      APP_CONFIG_BPM_HOST: "http://alfresco-process.REPLACEME.nip.io"
+      APP_CONFIG_ECM_HOST: "http://alfresco-cs-repository.REPLACEME.nip.io"
+      APP_CONFIG_OAUTH2_HOST: "http://alfresco-identity-service.REPLACEME.nip.io/auth/realms/alfresco"
       APP_CONFIG_OAUTH2_REDIRECT_SILENT_IFRAME_URI: "http://alfresco-process.REPLACEME.nip.io/process-workspace/assets/silent-refresh.html"

@@ -36,4 +36,4 @@ For Docker Desktop deployment you will also need:
 | Homebrew           |  1.7.7           | https://brew.sh/         |
 | Docker Desktop     |  2.0.0.0         | https://www.docker.com/products/docker-desktop |
 
-Any variation from these technologies and versions may affect the end result. If you do experience any issues please let us know through our [Gitter channel](https://gitter.im/Alfresco/platform-services?utm_source=share-link&utm_medium=link&utm_campaign=share-link).
+Any variation from these technologies and versions may affect the end result. 

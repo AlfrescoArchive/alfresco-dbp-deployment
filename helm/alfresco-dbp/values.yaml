@@ -221,3 +221,6 @@ alfresco-content-services:
     APP_CONFIG_OAUTH2_SILENT_LOGIN: "\"true\""
     APP_CONFIG_OAUTH2_REDIRECT_LOGIN: "/workspace/"
     APP_CONFIG_OAUTH2_REDIRECT_LOGOUT: "/workspace/logout"
+
+
+

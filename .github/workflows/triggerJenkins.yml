@@ -14,5 +14,6 @@ jobs:
       id: extract_branch
     - name: Trigger Alfresco DBP Pipeline
       run: |
-        echo ${{ steps.extract_branch.outputs.branch }}
-        echo "Hello World!"
+        BRANCH=${{ steps.extract_branch.outputs.branch }}
+        CRUMB=$(curl -u builduser:${{ secrets.JenkinsToken }} 'http://jenkins-jx.jx-ps.dev.alfresco.me/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)')
+        curl -X POST -u builduser:${{ secrets.JenkinsToken }} -H "$CRUMB" 'http://jenkins-jx.jx-ps.dev.alfresco.me/job/platform-services/job/alfresco-dbp-test/job/DEPLOY-932/buildWithParameters?BRANCH_NAME=$BRANCH'

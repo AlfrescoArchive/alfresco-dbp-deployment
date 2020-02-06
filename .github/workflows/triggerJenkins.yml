@@ -17,7 +17,7 @@ jobs:
     - name: Get Chart Version
       shell: bash
       run: |
-        cd alfresco-dbp-deployment/helm/alfresco-dbp
+        cd helm/alfresco-dbp
         version=$(sed -n 's/^version:[[:space:]]*//p' Chart.yaml)
         echo "Chart version: "+$version
         echo "::set-output name=CHART_VERSION::$version"

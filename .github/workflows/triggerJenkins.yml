@@ -12,10 +12,7 @@ jobs:
       shell: bash
       run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
       id: extract_branch
-    - uses: actions/checkout@v2
-    - name: Run a one-line script
-      run: echo Hello, world!
-    - name: Run a multi-line script
+    - name: Trigger Alfresco DBP Pipeline
       run: |
-        echo Add other actions to build,
-        echo test, and deploy your project.
+        echo ${{ steps.extract_branch.outputs.branch }}
+        echo "Hello World!"

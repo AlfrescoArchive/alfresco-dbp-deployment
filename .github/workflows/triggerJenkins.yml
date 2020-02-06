@@ -19,10 +19,12 @@ jobs:
       run: |
         cd helm/alfresco-dbp
         version=$(sed -n 's/^version:[[:space:]]*//p' Chart.yaml)
-        echo "Chart version: "+$version
+        echo "Chart version: "$version
         echo "::set-output name=CHART_VERSION::$version"
+      id: get_chart_version
     - name: Trigger Alfresco DBP Pipeline
       run: |
         BRANCH=${{ steps.extract_branch.outputs.branch }}
+        CHART_VERSION=${{ steps.get_chart_version.outputs.CHART_VERSION }}
         CRUMB=$(curl -u builduser:${{ secrets.JenkinsToken }} 'http://jenkins-jx.jx-ps.dev.alfresco.me/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)')
-        curl -X POST -u builduser:${{ secrets.JenkinsToken }} -H "$CRUMB" 'http://jenkins-jx.jx-ps.dev.alfresco.me/job/platform-services/job/alfresco-dbp-test/job/bamboo/buildWithParameters?BRANCH_NAME=$BRANCH'
+        curl -X POST -u builduser:${{ secrets.JenkinsToken }} -H "$CRUMB" 'http://jenkins-jx.jx-ps.dev.alfresco.me/job/platform-services/job/alfresco-dbp-test/job/bamboo/buildWithParameters?CHART_VERSION=$CHART_VERSION&&BRANCH_NAME=$BRANCH'

@@ -1,7 +1,8 @@
 name: CI
 
 on:
-  status
+  check_run:
+    types: [completed]
 
 jobs:
   build:

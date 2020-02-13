@@ -1,7 +1,8 @@
 name: CI
 
 on:
-  status
+  pull_request:
+    types: [opened, edited]
 
 jobs:
   build:

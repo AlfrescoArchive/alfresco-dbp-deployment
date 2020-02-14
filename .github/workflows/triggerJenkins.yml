@@ -1,7 +1,7 @@
 name: CI
 
 on:
-  issues
+  check_suite
 
 jobs:
   build:

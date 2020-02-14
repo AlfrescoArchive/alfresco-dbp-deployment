@@ -15,7 +15,7 @@ jobs:
       id: extract_branch
     - name: Extract event
       shell: bash
-      run: echo "##[set-output name=event;]$(echo ${GITHUB_EVENT_PATH})"
+      run: echo "##[set-output name=event;]$(cat ${GITHUB_EVENT_PATH})"
       id: extract_event
     - name: Checkout
       uses: actions/checkout@v1
@@ -32,7 +32,7 @@ jobs:
         BRANCH=${{ steps.extract_branch.outputs.branch }}
         CHART_VERSION=${{ steps.get_chart_version.outputs.CHART_VERSION }}
         EVENT=${{ steps.extract_event.outputs.event }}
-        HEAD_REF=${{ github.head_ref }}
-        BASE_REF=${{ github.base_ref }}
+        HEAD_REF:${{ github.head_ref }}
+        BASE_REF:${{ github.base_ref }}
         CRUMB=$(curl -u builduser:${{ secrets.JenkinsToken }} 'http://jenkins-jx.jx-ps.dev.alfresco.me/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)')
         curl -X POST -u builduser:${{ secrets.JenkinsToken }} -H "$CRUMB" "http://jenkins-jx.jx-ps.dev.alfresco.me/job/platform-services/job/alfresco-dbp-test/job/bamboo/buildWithParameters?DBP_VERSION=$CHART_VERSION&&BRANCH_NAME=$BRANCH&&EVENT=$EVENT"

@@ -11,11 +11,11 @@ jobs:
     steps:
     - name: Extract branch name
       shell: bash
-      run: echo "##[set-output name=branch;]$(echo $(cat ${GITHUB_REF#refs/heads/}))"
+      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
       id: extract_branch
     - name: Extract event
       shell: bash
-      run: echo "##[set-output name=event;]$(cat ${GITHUB_EVENT_PATH})"
+      run: echo "##[set-output name=event;]$(echo $(cat ${GITHUB_EVENT_PATH}))"
       id: extract_event
     - name: Checkout
       uses: actions/checkout@v1

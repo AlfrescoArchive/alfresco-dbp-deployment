@@ -15,7 +15,7 @@ jobs:
       id: extract_branch
     - name: Extract event
       shell: bash
-      run: echo "##[set-output name=event;]$(echo $(cat ${GITHUB_EVENT_PATH}))"
+      run: echo "##[set-output name=event;]$(echo "$(cat ${GITHUB_EVENT_PATH})")"
       id: extract_event
     - name: Checkout
       uses: actions/checkout@v1

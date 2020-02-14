@@ -1,7 +1,7 @@
 name: CI
 
 on:
-  push
+  issue
 
 jobs:
   build:
@@ -32,5 +32,5 @@ jobs:
         BRANCH=${{ steps.extract_branch.outputs.branch }}
         CHART_VERSION=${{ steps.get_chart_version.outputs.CHART_VERSION }}
         EVENT=${{ steps.extract_event.outputs.event }}
-        CRUMB=$(curl -u builduser:${{ secrets.JenkinsToken }} 'http://jenkins-jx.jx-ps.dev.alfresco.me/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)')
-        curl -X POST -u builduser:${{ secrets.JenkinsToken }} -H "$CRUMB" "http://jenkins-jx.jx-ps.dev.alfresco.me/job/platform-services/job/alfresco-dbp-test/job/bamboo/buildWithParameters?DBP_VERSION=$CHART_VERSION&&BRANCH_NAME=$BRANCH&&EVENT=$EVENT"
+#        CRUMB=$(curl -u builduser:${{ secrets.JenkinsToken }} 'http://jenkins-jx.jx-ps.dev.alfresco.me/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)')
+#        curl -X POST -u builduser:${{ secrets.JenkinsToken }} -H "$CRUMB" "http://jenkins-jx.jx-ps.dev.alfresco.me/job/platform-services/job/alfresco-dbp-test/job/bamboo/buildWithParameters?DBP_VERSION=$CHART_VERSION&&BRANCH_NAME=$BRANCH&&EVENT=$EVENT"

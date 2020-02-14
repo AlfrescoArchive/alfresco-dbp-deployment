@@ -1,7 +1,7 @@
 name: CI
 
 on:
-  check_suite
+  pull_request
 
 jobs:
   build:

@@ -1,8 +1,8 @@
 name: CI
 
 on:
-  pull_request:
-    types: [synchronize, opened]
+  check_run:
+    types: [completed]
 
 jobs:
   build:
@@ -14,6 +14,14 @@ jobs:
       shell: bash
       run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
       id: extract_branch
+    - name: Extract event
+      shell: bash
+      run: echo "##[set-output name=event;]$(echo \"$(cat ${GITHUB_EVENT_PATH})\")"
+      id: extract_event
+    - name: Extract check run status
+      shell: bash
+      run: echo "##[set-output name=status;]$(echo \"$(cat ${GITHUB_EVENT_PATH})\")"
+      id: extract_event
     - name: Checkout
       uses: actions/checkout@v1
     - name: Get Chart Version
@@ -28,5 +36,7 @@ jobs:
       run: |
         BRANCH=${{ steps.extract_branch.outputs.branch }}
         CHART_VERSION=${{ steps.get_chart_version.outputs.CHART_VERSION }}
-        CRUMB=$(curl -u builduser:${{ secrets.JenkinsToken }} 'http://jenkins-jx.jx-ps.dev.alfresco.me/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)')
-        curl -X POST -u builduser:${{ secrets.JenkinsToken }} -H "$CRUMB" "http://jenkins-jx.jx-ps.dev.alfresco.me/job/platform-services/job/alfresco-dbp-test/job/bamboo/buildWithParameters?DBP_VERSION=$CHART_VERSION&&DBP_DEPLOYMENT_BRANCH_NAME=$BRANCH"
+        EVENT=${{ steps.extract_event.event }}
+        CHECK_RUN_STATUS= ${{ event.check_run[status] }}
+#        CRUMB=$(curl -u builduser:${{ secrets.JenkinsToken }} 'http://jenkins-jx.jx-ps.dev.alfresco.me/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)')
+#        curl -X POST -u builduser:${{ secrets.JenkinsToken }} -H "$CRUMB" "http://jenkins-jx.jx-ps.dev.alfresco.me/job/platform-services/job/alfresco-dbp-test/job/bamboo/buildWithParameters?DBP_VERSION=$CHART_VERSION&&BRANCH_NAME=$BRANCH"

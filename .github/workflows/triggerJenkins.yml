@@ -1,7 +1,7 @@
 name: CI
 
 on:
-  status
+  repository_dispatch
 
 jobs:
   build:
@@ -16,10 +16,6 @@ jobs:
     - name: Extract event
       shell: bash
       run: echo "##[set-output name=event;]$(echo \"$(cat ${GITHUB_EVENT_PATH})\")"
-      id: extract_event
-    - name: Extract check run status
-      shell: bash
-      run: echo "##[set-output name=status;]$(echo \"$(cat ${GITHUB_EVENT_PATH})\")"
       id: extract_event
     - name: Checkout
       uses: actions/checkout@v1
@@ -36,6 +32,5 @@ jobs:
         BRANCH=${{ steps.extract_branch.outputs.branch }}
         CHART_VERSION=${{ steps.get_chart_version.outputs.CHART_VERSION }}
         EVENT=${{ steps.extract_event.event }}
-        CHECK_RUN_STATUS= ${{ github.event.status.state }}
 #        CRUMB=$(curl -u builduser:${{ secrets.JenkinsToken }} 'http://jenkins-jx.jx-ps.dev.alfresco.me/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)')
 #        curl -X POST -u builduser:${{ secrets.JenkinsToken }} -H "$CRUMB" "http://jenkins-jx.jx-ps.dev.alfresco.me/job/platform-services/job/alfresco-dbp-test/job/bamboo/buildWithParameters?DBP_VERSION=$CHART_VERSION&&BRANCH_NAME=$BRANCH"

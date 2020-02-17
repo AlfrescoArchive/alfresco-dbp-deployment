@@ -1,6 +1,6 @@
 name: CI
 
-on: repository_dispatch
+on: status
 
 jobs:
   build:

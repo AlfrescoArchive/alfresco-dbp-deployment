@@ -16,7 +16,7 @@ jobs:
       env:
         BRANCH: ${{github.event.client_payload.ref}}
       run: |
-        PRS=$(curl -X GET -u ${{ secrets.GITHUB_USER }}:${{ secrets.GITHUB_TOKEN }} -H "Content-Type: application/vnd.github.v3+json" "https://api.github.com/repos/Alfresco/alfresco-dbp-deployment/pulls?head=Alfresco:$BRANCH" | jq length)
+        PRS=$(curl -X GET -u alfresco-build:${{ secrets.GITHUBTOKEN }} -H "Content-Type: application/vnd.github.v3+json" "https://api.github.com/repos/Alfresco/alfresco-dbp-deployment/pulls?head=Alfresco:$BRANCH" | jq length)
         echo "::set-output name=prs::$PRS"
       id: check_prs
 

@@ -12,20 +12,21 @@ This deployment comprises:
 - Alfresco Governance Services 3.3.0
 - Alfresco Digital Workspace 1.3.0
 - Alfresco Process Workspace 1.3.4
-- Alfresco Sync Service 3.1.2
+- Alfresco Sync Service 3.2.0
 
 ##### Shared Services
 - Alfresco Identity Management Service 1.2.0
 - Alfresco Shared File Store 0.5.3
-- Alfresco Tika 2.0.17
-- Alfresco LibreOffice 2.0.17
+- Alfresco Tika 2.1.0
+- Alfresco LibreOffice 2.1.0
 - Alfresco Search Services 1.4.0
-- Alfresco PDF Renderer 2.0.17
-- Alfresco Transform Router 1.0.2.1
-- Alfresco Imagemagick 2.0.17
+- Alfresco PDF Renderer 2.1.0
+- Alfresco Transform Router 1.1.0
+- Alfresco Imagemagick 2.1.0
 - Alfresco Event Gateway 0.3
+- Alfresco Transform Misc 2.1.0
 
-For a more detailed list see [this diagram](alfresco-dbp-1.6.png)
+For a more detailed list see [this diagram](alfresco-dbp-2.0.png)
 
 The Alfresco Digital Business Platform can be deployed to different environments such as AWS or locally.
 

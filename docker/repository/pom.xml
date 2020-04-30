@@ -13,22 +13,22 @@
         <alfresco.saml.repo.version>1.1.1</alfresco.saml.repo.version>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.alfresco</groupId>
-            <artifactId>alfresco-governance-services-enterprise-repo</artifactId>
-            <version>${alfresco.gs.repo.version}</version>
-            <classifier>enterprise</classifier>
-            <type>amp</type>
-        </dependency>
-        <dependency>
-            <groupId>org.alfresco.saml</groupId>
-            <artifactId>alfresco-saml-repo</artifactId>
-            <version>${alfresco.saml.repo.version}</version>
-            <classifier>enterprise</classifier>
-            <type>amp</type>
-        </dependency>
-    </dependencies>
+<!--    <dependencies>-->
+<!--        <dependency>-->
+<!--            <groupId>org.alfresco</groupId>-->
+<!--            <artifactId>alfresco-governance-services-enterprise-repo</artifactId>-->
+<!--            <version>${alfresco.gs.repo.version}</version>-->
+<!--            <classifier>enterprise</classifier>-->
+<!--            <type>amp</type>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.alfresco.saml</groupId>-->
+<!--            <artifactId>alfresco-saml-repo</artifactId>-->
+<!--            <version>${alfresco.saml.repo.version}</version>-->
+<!--            <classifier>enterprise</classifier>-->
+<!--            <type>amp</type>-->
+<!--        </dependency>-->
+<!--    </dependencies>-->
 
     <build>
         <plugins>

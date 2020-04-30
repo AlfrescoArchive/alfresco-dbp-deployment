@@ -1,4 +1,4 @@
-FROM alfresco/alfresco-content-repository:6.2.0
+FROM alfresco/alfresco-content-repository:6.2.1-RC3
 
 ARG GROUPNAME=Alfresco
 ARG USERNAME=alfresco
@@ -11,18 +11,18 @@ USER root
 # Also, change ownership to be the same as the base image.
 COPY --chown=root:${GROUPNAME} target/amps ${TOMCAT_DIR}/amps/dbp
 
-COPY --chown=root:${GROUPNAME} saml ${TOMCAT_DIR}/keystore
+# COPY --chown=root:${GROUPNAME} saml ${TOMCAT_DIR}/keystore
 
 # After applying AMPs, change the group and mod of the added files and directories from the AMPs,
 # to be the same as the base image settings.
 RUN java -jar ${TOMCAT_DIR}/alfresco-mmt/alfresco-mmt*.jar install \
-        ${TOMCAT_DIR}/amps/dbp ${TOMCAT_DIR}/webapps/alfresco -directory -nobackup && \
-        chgrp -R ${GROUPNAME} ${TOMCAT_DIR} && \
-        find ${TOMCAT_DIR}/webapps -type d -exec chmod 0750 {} \; && \
-        find ${TOMCAT_DIR}/webapps -type f -exec chmod 0640 {} \; && \
-        find ${TOMCAT_DIR}/keystore -type d -exec chmod 0750 {} \; && \
-        find ${TOMCAT_DIR}/keystore -type f -exec chmod 0640 {} \; && \
-        chmod -R g+r ${TOMCAT_DIR}/webapps
+        ${TOMCAT_DIR}/amps/dbp ${TOMCAT_DIR}/webapps/alfresco -directory -nobackup -force 
+        # chgrp -R ${GROUPNAME} ${TOMCAT_DIR} && \
+        # find ${TOMCAT_DIR}/webapps -type d -exec chmod 0750 {} \; && \
+        # find ${TOMCAT_DIR}/webapps -type f -exec chmod 0640 {} \; && \
+        # find ${TOMCAT_DIR}/keystore -type d -exec chmod 0750 {} \; && \
+        # find ${TOMCAT_DIR}/keystore -type f -exec chmod 0640 {} \; && \
+        # chmod -R g+r ${TOMCAT_DIR}/webapps
 
 # Switch back to 'alfresco' user
 USER ${USERNAME}

@@ -1,4 +1,4 @@
-FROM alfresco/alfresco-share:6.2.0
+FROM alfresco/alfresco-share:6.2.1-RC3
 
 ARG TOMCAT_DIR=/usr/local/tomcat
 

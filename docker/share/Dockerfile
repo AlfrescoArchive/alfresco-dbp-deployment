@@ -7,8 +7,7 @@ COPY target/amps ${TOMCAT_DIR}/amps_share/dbp
 
 COPY keycloak/keycloak.json /usr/local/tomcat/webapps/share/WEB-INF/keycloak.json
 
-# Enable AIMS in share-config-custom.xml
-RUN sed -i ':a;N;$!ba; s/<aims>\n\ *<enabled>false<\/enabled>/<aims>\n\         <enabled>true<\/enabled>/g' ./usr/local/tomcat/webapps/share/WEB-INF/classes/alfresco/share-config.xml
+COPY config/share-config.xml /usr/local/tomcat/webapps/share/WEB-INF/classes/alfresco/
 
 RUN java -jar ${TOMCAT_DIR}/alfresco-mmt/alfresco-mmt*.jar install \
        ${TOMCAT_DIR}/amps_share/dbp ${TOMCAT_DIR}/webapps/share -directory -nobackup

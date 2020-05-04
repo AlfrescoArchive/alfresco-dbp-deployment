@@ -188,7 +188,7 @@ alfresco-content-services:
   share:
     image:
       repository: quay.io/alfresco/alfresco-dbp-share
-      tag: "6.2.0-RC2"
+      tag: "6.2.1-RC1"
   repository:
     image:
       repository: quay.io/alfresco/alfresco-dbp-repository

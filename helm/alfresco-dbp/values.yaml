@@ -192,7 +192,7 @@ alfresco-content-services:
   repository:
     image:
       repository: quay.io/alfresco/alfresco-dbp-repository
-      tag: "6.2.1-RC3"
+      tag: "6.2.1-RC4"
     environment:
       # The IDENTITY_SERVICE_URI should contain the details of the ingress host and port.
       IDENTITY_SERVICE_URI: "https://alfresco-identity-service.REPLACEME/auth"

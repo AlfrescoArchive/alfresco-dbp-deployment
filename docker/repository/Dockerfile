@@ -1,4 +1,4 @@
-FROM alfresco/alfresco-content-repository:6.2.1-RC3
+FROM alfresco/alfresco-content-repository:6.2.1-RC4
 
 ARG GROUPNAME=Alfresco
 ARG USERNAME=alfresco

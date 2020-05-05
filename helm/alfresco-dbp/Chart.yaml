@@ -1,5 +1,5 @@
 name: alfresco-dbp
-version: 1.6.0-kerberos
+version: 1.6.0-SNAPSHOT-kerberos
 description: A Helm chart for the Alfresco Digital Business Platform
 keywords:
 - alfresco

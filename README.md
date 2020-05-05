@@ -7,8 +7,8 @@ This deployment comprises:
 ##### Core products
 - Alfresco Process Services 1.10
 - Alfresco Process Services Admin 1.10
-- Alfresco Content Repository 6.2.1-RC3
-- Alfresco Content Share 6.2.0-RC2
+- Alfresco Content Repository 6.2.1-RC4
+- Alfresco Content Share 6.2.1-RC1
 - Alfresco Governance Services 3.3.0
 - Alfresco Digital Workspace 1.3.0
 - Alfresco Process Workspace 1.3.4

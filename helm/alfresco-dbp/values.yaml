@@ -10,6 +10,26 @@ global:
     client: alfresco
     url: "https://alfresco-identity-service.REPLACEME/auth"
 
+persistence:
+  enabled: true
+  baseSize: 20Gi
+  storageClass: #enable and define if you already have a custom storage class defined
+    enabled: false
+    accessModes:
+      - ReadWriteMany
+    name: "nfs-client" #Custom storage classs name
+
+nginx-ingress:
+  enabled: true
+  rbac:
+    create: true
+  controller:
+    scope:
+      enabled: true  
+    config:
+      ssl-redirect: "false"
+      server-tokens: "false"
+
 alfresco-process-services:
   enabled: true
   alfresco-infrastructure:
@@ -40,140 +60,140 @@ alfresco-process-services:
       APP_CONFIG_OAUTH2_REDIRECT_LOGOUT: "/process-workspace/"
       APP_CONFIG_OAUTH2_REDIRECT_SILENT_IFRAME_URI: "http://alfresco-process.REPLACEME/process-workspace/assets/silent-refresh.html"
 
-alfresco-infrastructure:
+activemq:
   enabled: true
-  activemq:
-    persistence:
-      subPath: "alfresco-infrastructure/activemq-data-infra"
-  alfresco-identity-service:
-    keycloak:
-      postgresql:
-        postgresPassword: "keycloak" #Setting this password is only needed for 1.5.0 chart version
-    realm:
-      alfresco:
-        extraAdminUserRealmRoles:
-          - "ACTIVITI_ADMIN"
-          - "ACTIVITI_MODELER"
-          - "ACTIVITI_USER"
-        extraRealmRoles:
-        - name: "ACTIVITI_USER"
-        - name: "ACTIVITI_MODELER"
-        - name: "ACTIVITI_ADMIN"
-        extraGroups:
-          - name: "hr"
-          - name: "testgroup"
-        extraUsers:
-          - username: client
-            enabled: true
-            firstName: "client"
-            lastName: User
-            email: "client@test.com"
-            credentials:
-            - type: password
-              value: client
-            realmRoles:
-              - "offline_access"
-              - "uma_authorization"
-              - "ACTIVITI_USER"
-            clientRoles:
-              account:
-                - "manage-account"
-                - "view-profile"
-          - username: modeler
-            enabled: true
-            firstName: "modeler"
-            lastName: User
-            email: "modeler@test.com"
-            credentials:
-            - type: password
-              value: password
-            realmRoles:
-              - "offline_access"
-              - "uma_authorization"
-              - "ACTIVITI_MODELER"
-            clientRoles:
-              account:
-                - "manage-account"
-                - "view-profile"
-          - username: hruser
-            enabled: true
-            firstName: "hruser"
-            lastName: hruser
-            email: "hruser@test.com"
-            credentials:
-            - type: password
-              value: password
-            realmRoles:
-              - "offline_access"
-              - "uma_authorization"
-              - "ACTIVITI_USER"
-            clientRoles:
-              account:
-                - "manage-account"
-                - "view-profile"
-            groups:
-              - "hr"
-          - username: hradmin
-            enabled: true
-            firstName: "hradmin"
-            lastName: hradmin
-            email: "hradmin@test.com"
-            credentials:
-            - type: password
-              value: password
-            realmRoles:
-              - "offline_access"
-              - "uma_authorization"
-              - "ACTIVITI_USER"
-              - "ACTIVITI_ADMIN"
-            clientRoles:
-              account:
-                - "manage-account"
-                - "view-profile"
-            groups:
-              - "hr"
-          - username: testuser
-            enabled: true
-            firstName: "testuser"
-            lastName: testuser
-            email: "testuser@test.com"
-            credentials:
-            - type: password
-              value: password
-            realmRoles:
-              - "offline_access"
-              - "uma_authorization"
-              - "ACTIVITI_USER"
-            clientRoles:
-              account:
-                - "manage-account"
-                - "view-profile"
-            groups:
-              - "testgroup"
-          - username: testadmin
-            enabled: true
-            firstName: "testadmin"
-            lastName: testadmin
-            email: "testadmin@test.com"
-            credentials:
-            - type: password
-              value: password
-            realmRoles:
-              - "offline_access"
-              - "uma_authorization"
-              - "ACTIVITI_USER"
-              - "ACTIVITI_ADMIN"
-            clientRoles:
-              account:
-                - "manage-account"
-                - "view-profile"
-            groups:
-              - "testgroup"
-        client:
-          webOrigins:
-            - "*"
-          redirectUris:
-            - "*"
+  persistence:
+    subPath: "alfresco-infrastructure/activemq-data-infra"
+alfresco-identity-service:
+  enabled: true
+  keycloak:
+    postgresql:
+      postgresPassword: "keycloak" #Setting this password is only needed for 1.5.0 chart version
+  realm:
+    alfresco:
+      extraAdminUserRealmRoles:
+        - "ACTIVITI_ADMIN"
+        - "ACTIVITI_MODELER"
+        - "ACTIVITI_USER"
+      extraRealmRoles:
+      - name: "ACTIVITI_USER"
+      - name: "ACTIVITI_MODELER"
+      - name: "ACTIVITI_ADMIN"
+      extraGroups:
+        - name: "hr"
+        - name: "testgroup"
+      extraUsers:
+        - username: client
+          enabled: true
+          firstName: "client"
+          lastName: User
+          email: "client@test.com"
+          credentials:
+          - type: password
+            value: client
+          realmRoles:
+            - "offline_access"
+            - "uma_authorization"
+            - "ACTIVITI_USER"
+          clientRoles:
+            account:
+              - "manage-account"
+              - "view-profile"
+        - username: modeler
+          enabled: true
+          firstName: "modeler"
+          lastName: User
+          email: "modeler@test.com"
+          credentials:
+          - type: password
+            value: password
+          realmRoles:
+            - "offline_access"
+            - "uma_authorization"
+            - "ACTIVITI_MODELER"
+          clientRoles:
+            account:
+              - "manage-account"
+              - "view-profile"
+        - username: hruser
+          enabled: true
+          firstName: "hruser"
+          lastName: hruser
+          email: "hruser@test.com"
+          credentials:
+          - type: password
+            value: password
+          realmRoles:
+            - "offline_access"
+            - "uma_authorization"
+            - "ACTIVITI_USER"
+          clientRoles:
+            account:
+              - "manage-account"
+              - "view-profile"
+          groups:
+            - "hr"
+        - username: hradmin
+          enabled: true
+          firstName: "hradmin"
+          lastName: hradmin
+          email: "hradmin@test.com"
+          credentials:
+          - type: password
+            value: password
+          realmRoles:
+            - "offline_access"
+            - "uma_authorization"
+            - "ACTIVITI_USER"
+            - "ACTIVITI_ADMIN"
+          clientRoles:
+            account:
+              - "manage-account"
+              - "view-profile"
+          groups:
+            - "hr"
+        - username: testuser
+          enabled: true
+          firstName: "testuser"
+          lastName: testuser
+          email: "testuser@test.com"
+          credentials:
+          - type: password
+            value: password
+          realmRoles:
+            - "offline_access"
+            - "uma_authorization"
+            - "ACTIVITI_USER"
+          clientRoles:
+            account:
+              - "manage-account"
+              - "view-profile"
+          groups:
+            - "testgroup"
+        - username: testadmin
+          enabled: true
+          firstName: "testadmin"
+          lastName: testadmin
+          email: "testadmin@test.com"
+          credentials:
+          - type: password
+            value: password
+          realmRoles:
+            - "offline_access"
+            - "uma_authorization"
+            - "ACTIVITI_USER"
+            - "ACTIVITI_ADMIN"
+          clientRoles:
+            account:
+              - "manage-account"
+              - "view-profile"
+          groups:
+            - "testgroup"
+      client:
+        webOrigins:
+          - "*"
+        redirectUris:
+          - "*"
 
 alfresco-content-services:
   enabled: true
@@ -188,11 +208,11 @@ alfresco-content-services:
   share:
     image:
       repository: quay.io/alfresco/alfresco-dbp-share
-      tag: "6.2.1-RC1"
+      tag: "6.2.2-RC1"
   repository:
     image:
       repository: quay.io/alfresco/alfresco-dbp-repository
-      tag: "6.2.1-RC4"
+      tag: "6.2.2-RC1"
     environment:
       # The IDENTITY_SERVICE_URI should contain the details of the ingress host and port.
       IDENTITY_SERVICE_URI: "https://alfresco-identity-service.REPLACEME/auth"

@@ -87,6 +87,12 @@ alfresco-content-services:
       limits:
         memory: "512Mi"
   share:
+    environment:
+      JAVA_OPTS: " -Daims.enabled=true
+        -Daims.realm=alfresco
+        -Daims.resource=alfresco
+        -Daims.publicClient=true
+        -Daims.authServerUrl=\"https://alfresco-identity-service.REPLACEME.nip.io/auth\""
     replicaCount: 1
     resources:
       requests:

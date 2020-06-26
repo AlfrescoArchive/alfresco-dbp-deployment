@@ -1,5 +1,5 @@
 name: alfresco-dbp
-version: 1.7.0-SNAPSHOT
+version: 1.7.0-With-AIMS1.2
 description: A Helm chart for the Alfresco Digital Business Platform
 keywords:
 - alfresco
@@ -8,4 +8,4 @@ keywords:
 home: https://www.alfresco.com/platform
 maintainers:
 - name: Alfresco Platform Services Team
-appVersion: 1.7.0-SNAPSHOT
+appVersion: 1.7.0-With-AIMS1.2

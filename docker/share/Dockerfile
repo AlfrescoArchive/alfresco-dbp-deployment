@@ -1,13 +1,9 @@
-FROM alfresco/alfresco-share:6.2.0
+FROM alfresco/alfresco-share:6.2.2-RC2
 
 ARG TOMCAT_DIR=/usr/local/tomcat
 
 # Copy DBP AMPs into 'dbp' fir to avoid reinstalling the existing AMPs
 COPY target/amps ${TOMCAT_DIR}/amps_share/dbp
-
-COPY keycloak/keycloak.json /usr/local/tomcat/webapps/share/WEB-INF/keycloak.json
-
-COPY config/share-config.xml /usr/local/tomcat/webapps/share/WEB-INF/classes/alfresco/
 
 RUN java -jar ${TOMCAT_DIR}/alfresco-mmt/alfresco-mmt*.jar install \
        ${TOMCAT_DIR}/amps_share/dbp ${TOMCAT_DIR}/webapps/share -directory -nobackup

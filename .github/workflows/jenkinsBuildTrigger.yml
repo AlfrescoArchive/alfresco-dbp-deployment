@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  repository_dispatch:
+    types: [bamboo-build]
+
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check if branch is involved in a PR
+      shell: bash
+      env:
+        BRANCH: ${{github.event.client_payload.ref}}
+      run: |
+        PRS=$(curl -X GET -u alfresco-build:${{ secrets.GITHUBTOKEN }} -H "Content-Type: application/vnd.github.v3+json" "https://api.github.com/repos/Alfresco/alfresco-dbp-deployment/pulls?head=Alfresco:$BRANCH" | jq length)
+        echo "::set-output name=prs::$PRS"
+      id: check_prs
+
+    - name: Checkout branch
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ github.event.client_payload.ref }}
+      if: steps.check_prs.outputs.prs == 1
+
+    - name: Get Chart Version
+      if: steps.check_prs.outputs.prs == 1
+      shell: bash
+      run: |
+        cd helm/alfresco-dbp
+        version=$(sed -n 's/^version:[[:space:]]*//p' Chart.yaml)
+        echo "Chart version: "$version
+        echo "::set-output name=CHART_VERSION::$version"
+      id: get_chart_version
+
+    - name: Trigger Alfresco DBP Pipeline
+      if: steps.check_prs.outputs.prs == 1
+      run: |
+        BRANCH=${{ github.event.client_payload.ref }}
+        CHART_VERSION=${{ steps.get_chart_version.outputs.CHART_VERSION }}
+        CRUMB=$(curl -u builduser:${{ secrets.JenkinsToken }} 'http://jenkins-jx.jx-ps.dev.alfresco.me/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)')
+        curl -X POST -u builduser:${{ secrets.JenkinsToken }} -H "$CRUMB" "http://jenkins-jx.jx-ps.dev.alfresco.me/job/platform-services/job/alfresco-dbp-test/job/bamboo/buildWithParameters?DBP_VERSION=$CHART_VERSION&&BRANCH_NAME=$BRANCH"

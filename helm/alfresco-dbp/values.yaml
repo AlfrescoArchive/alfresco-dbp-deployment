@@ -209,6 +209,12 @@ alfresco-content-services:
     image:
       repository: quay.io/alfresco/alfresco-dbp-share
       tag: "6.2.2"
+    environment:
+      JAVA_OPTS: " -Daims.enabled=true
+        -Daims.realm=alfresco
+        -Daims.resource=alfresco
+        -Daims.publicClient=true
+        -Daims.authServerUrl=\"https://alfresco-identity-service.REPLACEME/auth\""
   repository:
     image:
       repository: quay.io/alfresco/alfresco-dbp-repository

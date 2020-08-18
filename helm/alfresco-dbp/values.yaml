@@ -208,7 +208,7 @@ alfresco-content-services:
   share:
     image:
       repository: quay.io/alfresco/alfresco-dbp-share
-      tag: "7.0.0-A3"
+      tag: "6.2.2"
     environment:
       JAVA_OPTS: " -Daims.enabled=true
         -Daims.realm=alfresco
@@ -218,7 +218,7 @@ alfresco-content-services:
   repository:
     image:
       repository: quay.io/alfresco/alfresco-dbp-repository
-      tag: "7.0.0-A3"
+      tag: "6.2.2-RC2"
     environment:
       # The IDENTITY_SERVICE_URI should contain the details of the ingress host and port.
       IDENTITY_SERVICE_URI: "https://alfresco-identity-service.REPLACEME/auth"

@@ -1,12 +1,12 @@
 dependencies:
   - name: alfresco-content-services
-    version: 4.1.0
+    version: 4.1.1
     condition: alfresco-content-services.enabled
     repository: https://kubernetes-charts.alfresco.com/incubator
   - name: alfresco-process-services
-    version: 0.2.1
+    version: 0.3.0
     condition: alfresco-process-services.enabled
-    repository: https://kubernetes-charts.alfresco.com/stable
+    repository: https://kubernetes-charts.alfresco.com/incubator
   - name: activemq
     version: ^1.1.1
     repository: https://kubernetes-charts.alfresco.com/stable
@@ -14,7 +14,7 @@ dependencies:
   - name: alfresco-identity-service
     version: 2.1.0
     condition: alfresco-identity-service.enabled
-    repository: https://kubernetes-charts.alfresco.com/incubator
+    repository: https://kubernetes-charts.alfresco.com/stable
   - name: nginx-ingress
     condition: nginx-ingress.enabled
     repository: https://kubernetes-charts.storage.googleapis.com/

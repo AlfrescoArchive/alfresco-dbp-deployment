@@ -173,7 +173,7 @@ alfresco-content-services:
   repository:
     image:
       repository: \"alfresco/alfresco-content-repository-aws\"
-      tag: \"6.1.0-EA3\"
+      tag: \"7.0.0-A3\"
     replicaCount: $REPO_PODS
     adminPassword: \"$ALFRESCO_PASSWORD\"
     environment:

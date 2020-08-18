@@ -7,15 +7,15 @@ This deployment comprises:
 ##### Core products
 - Alfresco Process Services 1.10
 - Alfresco Process Services Admin 1.10
-- Alfresco Content Repository 6.2.1-RC4
-- Alfresco Content Share 6.2.1-RC1
+- Alfresco Content Repository 7.0.0-A3
+- Alfresco Content Share 7.0.0-A3
 - Alfresco Governance Services 3.3.0
 - Alfresco Digital Workspace 1.3.0
 - Alfresco Process Workspace 1.3.4
 - Alfresco Sync Service 3.1.2
 
 ##### Shared Services
-- Alfresco Identity Management Service 1.2.0
+- Alfresco Identity Management Service 1.3.0
 - Alfresco Shared File Store 0.5.3
 - Alfresco Tika 2.0.17
 - Alfresco LibreOffice 2.0.17
